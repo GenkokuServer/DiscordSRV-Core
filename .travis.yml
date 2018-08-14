@@ -1,4 +1,11 @@
 language: java
-
 before_install: chmod a+x gradlew
-after_success: ./gradlew uploadArchives
+deploy:
+    provider: script
+    script: "./gradlew uploadArchives"
+    on:
+        branch: master
+
+env:
+    matrix:
+        secure: yj9+hr8APwrU/KkeXP3fFueUyVR7LSS2Z6cyH+mUgwADVuCyPouiPh65zQz5WMVw3gadTG2b/dnTSmzc6VtgchkbcIemu/McpfamqOZ3dzApJfO+j6iyZ3xmcriPRKPB2bDUwWTZHxOG2x2/PCE9AN7Rvq3u5KnJhO5SiRmPx8eQell45DY/tGyc/QyRIZY1hHwW7qbDNMVFgfJXdKbT7wDrtnmBKkaYLVG/eWll5ZXwb+7Fomn5YOqBUatapDuT0UbYUbUff7h+m18ET6bjMRoYUyVUpLY7OL43Y7X30YNBCGKUjtLIXJMTcFqw7UPGfnjthFQ2p9lu8vNpCNageIX1G/KZG5ovsCiEsdXve6VHrvwwKyMY0HXKDpiUvkPGxG8sRiYM7y03yXNRWFMv5aCiH+8ux2MmpkmOjn0d/h9tQlicSQ8cnwKWr0NImVCN1tXRDMzo8IQ4FqqEUkSUitf6NEXPf1BeP6ss2uMwslbk+TGWHdcGfuXbCSo4jjJxfvJO8UruRziXMF1HixhUBLe1Ypf2ZEDBicH1zvP/UwE2gpQsK8uBXySyk9rl/dXXPrDhm+tJrD+11HUxdwomR3usklgzL9Ez+TJLG9EIoh4KjT3j4HqehO5NIbjYhoY4Br0g0i9yZVDkkEwBLE8kAA7tfESyKgKDGC1ogS7WFAQ=
