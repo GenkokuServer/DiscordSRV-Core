@@ -15,32 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.common.functional;
-
-import com.google.common.util.concurrent.FutureCallback;
-
-import javax.annotation.concurrent.ThreadSafe;
-
 /**
- * Translator type, for translating from one thing to another.
- *
- * @param <T>
- *         The original type to translate from.
- * @param <R>
- *         The type of the result of the translation.
+ * Commons API package for the DiscordSRV2-Core library.
  */
-@ThreadSafe
-@FunctionalInterface
-public interface Translator<T, R> {
-
-    /**
-     * Convert from the original type to the target translation.
-     *
-     * @param original
-     *         The original instance to translate.
-     * @param callback
-     *         The callback to invoke after translation.
-     */
-    void translate(T original, FutureCallback<R> callback);
-
-}
+package com.discordsrv.core.api.common;

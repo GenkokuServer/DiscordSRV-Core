@@ -15,19 +15,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.channel;
-
-import com.discordsrv.core.common.unit.Messageable;
-import com.discordsrv.core.common.unit.Named;
-import com.discordsrv.core.common.unit.Translatable;
-import net.dv8tion.jda.core.entities.TextChannel;
-
-import javax.annotation.concurrent.ThreadSafe;
-
 /**
- * Chat type, for representing Minecraft chats.
+ * Common functional interfaces API package for the DiscordSRV2-Core library.
  */
-@ThreadSafe
-public interface Chat extends Translatable<String, TextChannel>, Named, Messageable<ChatMessage, Void> {
+@CheckReturnValue @ParametersAreNonnullByDefault
+package com.discordsrv.core.api.common.functional;
 
-}
+import javax.annotation.CheckReturnValue;
+import javax.annotation.ParametersAreNonnullByDefault;

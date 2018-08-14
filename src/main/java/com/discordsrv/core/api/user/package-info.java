@@ -15,22 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.auth;
-
 /**
- * State enum, for representing the various states of authentication.
+ * User API package for the DiscordSRV2-Core library.
  */
-public enum State {
-    /**
-     * Establishes that this {@link Authenticatable} is unauthenticated and has not started the authentication process.
-     */
-    UNAUTHENTICATED,
-    /**
-     * Establishes that this {@link Authenticatable} is part of the way through the authentication process.
-     */
-    AUTHENTICATING,
-    /**
-     * Establishes that this {@link Authenticatable} is authenticated.
-     */
-    AUTHENTICATED
-}
+package com.discordsrv.core.api.user;

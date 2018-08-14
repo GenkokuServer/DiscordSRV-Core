@@ -15,43 +15,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.channel;
+package com.discordsrv.core.api.role;
 
-import com.discordsrv.core.common.unit.Named;
-import com.discordsrv.core.common.unit.UniquelyIdentifiable;
+import com.discordsrv.core.api.common.unit.Named;
+import com.discordsrv.core.api.common.unit.Translatable;
+import net.dv8tion.jda.core.entities.Role;
 
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Collection;
 import java.util.function.Consumer;
 
 /**
- * ChatMessage type, for representing messages in Minecraft chats.
+ * Team type, for establishing a team or organization of members.
  *
  * @param <T>
- *         The type to uniquely identify this chat by.
+ *         The type that this team contains.
  */
-@NotThreadSafe
-@CheckReturnValue
-@Nonnull
-public interface ChatMessage<T> extends UniquelyIdentifiable<T> {
+@ParametersAreNonnullByDefault
+public interface Team<T> extends Translatable<String, Role>, Named {
 
     /**
-     * Gets the sender of this message.
+     * Fetches the members of this team.
      *
-     * @return sender The sender of this message.
+     * @param callback
+     *         The callback for the getter.
      */
-    Named getSender();
-
-    /**
-     * Gets the message to be sent to the Minecraft chat.
-     *
-     * @return message The message to be sent.
-     */
-    String getMessage();
-
-    @Override
-    void getUniqueIdentifier(@Nullable Consumer<T> callback);
+    void getMembers(Consumer<Collection<T>> callback);
 
 }

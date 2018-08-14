@@ -15,7 +15,29 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package com.discordsrv.core.api.common.unit;
+
+import com.google.common.util.concurrent.FutureCallback;
+
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
- * Authentication package for the DiscordSRV2-Core library.
+ * Translatable type, for establishing types that may be translated from this type to another.
+ *
+ * @param <T>
+ *         The type to be used to identify this identifiable.
+ * @param <R>
+ *         The type to be converted to. Note that this type is not necessarily also {@link UniquelyIdentifiable}.
  */
-package com.discordsrv.core.auth;
+@ThreadSafe
+public interface Translatable<T, R> extends UniquelyIdentifiable<T> {
+
+    /**
+     * Translates this instance to the target translatable type.
+     *
+     * @param callback
+     *         The callback for this getter.
+     */
+    void translateTo(FutureCallback<R> callback);
+
+}

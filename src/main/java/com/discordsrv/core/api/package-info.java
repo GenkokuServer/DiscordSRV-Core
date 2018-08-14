@@ -16,6 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * Role package for the DiscordSRV2-Core library.
+ * Abstract-only API package for the DiscordSRV2-Core library.
  */
-package com.discordsrv.core.role;
+package com.discordsrv.core.api;

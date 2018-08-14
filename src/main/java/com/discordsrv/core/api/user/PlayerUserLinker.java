@@ -15,9 +15,9 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.user;
+package com.discordsrv.core.api.user;
 
-import com.discordsrv.core.common.functional.Translator;
+import com.discordsrv.core.api.common.functional.Translator;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.User;
 

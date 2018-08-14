@@ -15,24 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.role;
+package com.discordsrv.core.api.channel;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Collection;
-import java.util.function.Consumer;
+import com.discordsrv.core.api.common.unit.Messageable;
+import com.discordsrv.core.api.common.unit.Named;
+import com.discordsrv.core.api.common.unit.Translatable;
+import net.dv8tion.jda.core.entities.TextChannel;
+
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * Teamable type, for expressing that a type may be affiliated with a team.
+ * Chat type, for representing Minecraft chats.
  */
-@ParametersAreNonnullByDefault
-public interface Teamable {
-
-    /**
-     * Fetches the current collection of teams of this Teamable instance.
-     *
-     * @param callback
-     *         The callback for the getter.
-     */
-    void getTeams(Consumer<Collection<Team>> callback);
+@ThreadSafe
+public interface Chat extends Translatable<String, TextChannel>, Named, Messageable<ChatMessage, Void> {
 
 }

@@ -16,10 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * Common functional interfaces package for the DiscordSRV2-Core library.
+ * Channel API package for the DiscordSRV2-Core library.
  */
-@CheckReturnValue @ParametersAreNonnullByDefault
-package com.discordsrv.core.common.functional;
-
-import javax.annotation.CheckReturnValue;
-import javax.annotation.ParametersAreNonnullByDefault;
+package com.discordsrv.core.api.channel;

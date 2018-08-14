@@ -16,10 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * Common units package for the DiscordSRV2-Core library.
+ * Role API package for the DiscordSRV2-Core library.
  */
-@CheckReturnValue @ParametersAreNonnullByDefault
-package com.discordsrv.core.common.unit;
-
-import javax.annotation.CheckReturnValue;
-import javax.annotation.ParametersAreNonnullByDefault;
+package com.discordsrv.core.api.role;

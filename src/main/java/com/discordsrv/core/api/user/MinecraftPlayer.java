@@ -15,31 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.role;
+package com.discordsrv.core.api.user;
 
-import com.discordsrv.core.common.unit.Named;
-import com.discordsrv.core.common.unit.Translatable;
-import net.dv8tion.jda.core.entities.Role;
-
-import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Collection;
-import java.util.function.Consumer;
+import com.discordsrv.core.api.auth.Authenticatable;
+import com.discordsrv.core.api.common.unit.Messageable;
+import com.discordsrv.core.api.common.unit.Named;
+import net.dv8tion.jda.core.entities.User;
 
 /**
- * Team type, for establishing a team or organization of members.
- *
- * @param <T>
- *         The type that this team contains.
+ * MinecraftPlayer type, for representing players in Minecraft servers.
  */
-@ParametersAreNonnullByDefault
-public interface Team<T> extends Translatable<String, Role>, Named {
-
-    /**
-     * Fetches the members of this team.
-     *
-     * @param callback
-     *         The callback for the getter.
-     */
-    void getMembers(Consumer<Collection<T>> callback);
+public interface MinecraftPlayer extends Authenticatable<String, User>, Messageable<String, Void>, Named {
 
 }

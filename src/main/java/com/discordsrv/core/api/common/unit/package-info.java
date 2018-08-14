@@ -16,6 +16,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * Commons package for the DiscordSRV2-Core library.
+ * Common units API package for the DiscordSRV2-Core library.
  */
-package com.discordsrv.core.common;
+@CheckReturnValue @ParametersAreNonnullByDefault
+package com.discordsrv.core.api.common.unit;
+
+import javax.annotation.CheckReturnValue;
+import javax.annotation.ParametersAreNonnullByDefault;

@@ -15,7 +15,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package com.discordsrv.core.api.role;
+
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Collection;
+import java.util.function.Consumer;
+
 /**
- * User package for the DiscordSRV2-Core library.
+ * Teamable type, for expressing that a type may be affiliated with a team.
  */
-package com.discordsrv.core.user;
+@ParametersAreNonnullByDefault
+public interface Teamable {
+
+    /**
+     * Fetches the current collection of teams of this Teamable instance.
+     *
+     * @param callback
+     *         The callback for the getter.
+     */
+    void getTeams(Consumer<Collection<Team>> callback);
+
+}

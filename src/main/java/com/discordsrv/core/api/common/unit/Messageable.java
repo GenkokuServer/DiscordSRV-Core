@@ -15,29 +15,33 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.common.unit;
+package com.discordsrv.core.api.common.unit;
 
 import com.google.common.util.concurrent.FutureCallback;
 
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * Translatable type, for establishing types that may be translated from this type to another.
+ * Messageable type, for establishing that this type can be messaged.
  *
- * @param <T>
- *         The type to be used to identify this identifiable.
+ * @param <M>
+ *         The type of message to be sent.
  * @param <R>
- *         The type to be converted to. Note that this type is not necessarily also {@link UniquelyIdentifiable}.
+ *         The result type of this message.
  */
 @ThreadSafe
-public interface Translatable<T, R> extends UniquelyIdentifiable<T> {
+public interface Messageable<M, R> {
 
     /**
-     * Translates this instance to the target translatable type.
+     * Sends a message to this instance. If the message could not be completed, the {@link
+     * FutureCallback#onFailure(Throwable)} method will be invoked. Otherwise, a result will be sent to {@link
+     * FutureCallback#onSuccess(Object)} which is appropriate for this message (possibly null).
      *
-     * @param callback
-     *         The callback for this getter.
+     * @param message
+     *         The message which needs to be sent.
+     * @param resultCallback
+     *         The callback for this method.
      */
-    void translateTo(FutureCallback<R> callback);
+    void sendMessage(M message, FutureCallback<R> resultCallback);
 
 }

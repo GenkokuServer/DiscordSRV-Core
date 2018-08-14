@@ -15,7 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package com.discordsrv.core.api.auth;
+
+import com.discordsrv.core.api.common.unit.UniquelyIdentifiable;
+
+import javax.annotation.concurrent.ThreadSafe;
+
 /**
- * Channel package for the DiscordSRV2-Core library.
+ * Token type, for representing authentication tokens.
  */
-package com.discordsrv.core.channel;
+@ThreadSafe
+public interface Token extends UniquelyIdentifiable<String> {
+
+}

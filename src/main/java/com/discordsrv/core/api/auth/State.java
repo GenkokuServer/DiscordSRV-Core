@@ -15,16 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.user;
-
-import com.discordsrv.core.auth.Authenticatable;
-import com.discordsrv.core.common.unit.Messageable;
-import com.discordsrv.core.common.unit.Named;
-import net.dv8tion.jda.core.entities.User;
+package com.discordsrv.core.api.auth;
 
 /**
- * MinecraftPlayer type, for representing players in Minecraft servers.
+ * State enum, for representing the various states of authentication.
  */
-public interface MinecraftPlayer extends Authenticatable<String, User>, Messageable<String, Void>, Named {
-
+public enum State {
+    /**
+     * Establishes that this {@link Authenticatable} is unauthenticated and has not started the authentication process.
+     */
+    UNAUTHENTICATED,
+    /**
+     * Establishes that this {@link Authenticatable} is part of the way through the authentication process.
+     */
+    AUTHENTICATING,
+    /**
+     * Establishes that this {@link Authenticatable} is authenticated.
+     */
+    AUTHENTICATED
 }

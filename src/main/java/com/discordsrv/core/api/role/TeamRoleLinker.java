@@ -15,69 +15,70 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.channel;
+package com.discordsrv.core.api.role;
 
-import com.discordsrv.core.common.functional.Translator;
+import com.discordsrv.core.api.common.functional.Translator;
+import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.google.common.util.concurrent.FutureCallback;
-import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.Role;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * ChatChannelLinker type, for linking {@link Chat} instances and {@link TextChannel} instances and performing lookups
- * between them.
+ * TeamRoleLinker type, for linking {@link Team} instances and {@link Role} instances and performing lookups between
+ * them.
  */
 @ThreadSafe
 @ParametersAreNonnullByDefault
-public interface ChatChannelLinker {
+public interface TeamRoleLinker {
 
     /**
-     * Translates from a {@link Chat} to a {@link TextChannel}.
+     * Translates from a {@link Team} to a {@link Role}.
      * <p>
      * Convert this to a {@link Translator} with {@code linker::translate}.
      *
-     * @param chat
-     *         The chat to translate.
+     * @param team
+     *         The team to translate.
      * @param callback
      *         The callback to invoke once a translation is (not) found.
      */
-    void translate(Chat chat, FutureCallback<TextChannel> callback);
+    void translate(Team<MinecraftPlayer> team, FutureCallback<Role> callback);
 
     /**
-     * Performs a lookup for {@link TextChannel} instances given a specific id.
+     * Performs a lookup for {@link Role} instances given a specific id.
      * <p>
      * Convert this to a {@link Translator} with {@code linker::lookup}.
      *
      * @param id
-     *         The ID of the channel.
+     *         The ID of the role.
      * @param callback
      *         The callback to invoke when (not) found.
      */
-    void lookup(long id, FutureCallback<TextChannel> callback);
+    void lookup(long id, FutureCallback<Role> callback);
 
     /**
-     * Translates from a {@link TextChannel} to a {@link Chat}.
+     * Translates from a {@link Role} to a {@link Team}.
      * <p>
      * Convert this to a {@link Translator} with {@code linker::translate}.
      *
-     * @param channel
-     *         The channel to translate.
+     * @param role
+     *         The role to translate.
      * @param callback
      *         The callback to invoke once a translation is (not) found.
      */
-    void translate(TextChannel channel, FutureCallback<Chat> callback);
+    void translate(Role role, FutureCallback<Team<MinecraftPlayer>> callback);
 
     /**
-     * Performs a lookup for {@link Chat} instances given a specific id.
+     * Performs a lookup for {@link Team} instances given a specific id.
      * <p>
      * Convert this to a {@link Translator} with {@code linker::lookup}.
      *
      * @param id
-     *         The ID of the chat.
+     *         The ID of the team.
      * @param callback
      *         The callback to invoke when (not) found.
      */
-    void lookup(String id, FutureCallback<Chat> callback);
+    void lookup(String id, FutureCallback<Team<MinecraftPlayer>> callback);
 
 }

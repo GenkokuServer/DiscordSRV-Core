@@ -15,23 +15,40 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.common.unit;
+package com.discordsrv.core.api.auth;
 
+import com.discordsrv.core.api.common.unit.Translatable;
+
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.ThreadSafe;
 import java.util.function.Consumer;
 
 /**
- * Named type, for establishing types as named.
+ * Authenticatable type, for representing types that require authentication.
+ *
+ * @param <T>
+ *         The type to uniquely identify this authenticatable instance with.
+ * @param <R>
+ *         The type to authenticate this instance as.
  */
 @ThreadSafe
-public interface Named {
+@ParametersAreNonnullByDefault
+public interface Authenticatable<T, R> extends Translatable<T, R> {
 
     /**
-     * Fetches the name of this named instance.
+     * Fetches the authentication state of this authenticatable instance.
      *
      * @param callback
      *         The callback for this getter.
      */
-    void getName(Consumer<CharSequence> callback);
+    void getAuthenticationStage(Consumer<State> callback);
+
+    /**
+     * Sets the authentication state of this authenticatable instance.
+     *
+     * @param state
+     *         The new state of this authenticatable instance.
+     */
+    void setAuthenticationStage(State state);
 
 }
