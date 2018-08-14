@@ -15,68 +15,68 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.user;
+package com.discordsrv.core.channel;
 
 import com.google.common.util.concurrent.FutureCallback;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.TextChannel;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * PlayerUserLinker type, for linking {@link MinecraftPlayer} instances and {@link User} instances and performing
- * lookups between them.
+ * ChatChannelLinker type, for linking {@link Chat} instances and {@link TextChannel} instances and performing lookups
+ * between them.
  */
 @ThreadSafe
 @ParametersAreNonnullByDefault
-public interface PlayerUserLinker {
+public interface ChatChannelLinker {
 
     /**
-     * Translates from a {@link MinecraftPlayer} to a {@link User}.
+     * Translates from a {@link Chat} to a {@link TextChannel}.
      * <p>
      * Convert this to a {@link com.discordsrv.core.common.unit.Translator} with {@code linker::translate}.
      *
-     * @param player
-     *         The player to translate.
+     * @param chat
+     *         The chat to translate.
      * @param callback
      *         The callback to invoke once a translation is (not) found.
      */
-    void translate(MinecraftPlayer player, FutureCallback<User> callback);
+    void translate(Chat chat, FutureCallback<TextChannel> callback);
 
     /**
-     * Performs a lookup for {@link User} instances given a specific id.
+     * Performs a lookup for {@link TextChannel} instances given a specific id.
      * <p>
      * Convert this to a {@link com.discordsrv.core.common.unit.Translator} with {@code linker::lookup}.
      *
      * @param id
-     *         The ID of the user.
+     *         The ID of the channel.
      * @param callback
      *         The callback to invoke when (not) found.
      */
-    void lookup(long id, FutureCallback<User> callback);
+    void lookup(long id, FutureCallback<TextChannel> callback);
 
     /**
-     * Translates from a {@link User} to a {@link MinecraftPlayer}.
+     * Translates from a {@link TextChannel} to a {@link Chat}.
      * <p>
      * Convert this to a {@link com.discordsrv.core.common.unit.Translator} with {@code linker::translate}.
      *
-     * @param user
-     *         The user to translate.
+     * @param channel
+     *         The channel to translate.
      * @param callback
      *         The callback to invoke once a translation is (not) found.
      */
-    void translate(User user, FutureCallback<MinecraftPlayer> callback);
+    void translate(TextChannel channel, FutureCallback<Chat> callback);
 
     /**
-     * Performs a lookup for {@link MinecraftPlayer} instances given a specific id.
+     * Performs a lookup for {@link Chat} instances given a specific id.
      * <p>
      * Convert this to a {@link com.discordsrv.core.common.unit.Translator} with {@code linker::lookup}.
      *
      * @param id
-     *         The ID of the player.
+     *         The ID of the chat.
      * @param callback
      *         The callback to invoke when (not) found.
      */
-    void lookup(String id, FutureCallback<MinecraftPlayer> callback);
+    void lookup(String id, FutureCallback<Chat> callback);
 
 }

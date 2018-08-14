@@ -18,8 +18,7 @@
 /**
  * Common units package for the DiscordSRV2-Core library.
  */
-@CheckReturnValue
-@ParametersAreNonnullByDefault
+@CheckReturnValue @ParametersAreNonnullByDefault
 package com.discordsrv.core.common.unit;
 
 import javax.annotation.CheckReturnValue;
