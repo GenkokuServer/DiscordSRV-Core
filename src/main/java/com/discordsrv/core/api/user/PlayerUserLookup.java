@@ -15,45 +15,44 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.api.role;
+package com.discordsrv.core.api.user;
 
 import com.discordsrv.core.api.common.functional.Translator;
-import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.google.common.util.concurrent.FutureCallback;
-import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.core.entities.User;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * TeamRoleLinker type, for linking {@link Team} instances and {@link Role} instances.
+ * PlayerUserLookup type, for looking up {@link MinecraftPlayer} instances and {@link User} instances.
  */
 @ThreadSafe
 @ParametersAreNonnullByDefault
-public interface TeamRoleLinker {
+public interface PlayerUserLookup {
 
     /**
-     * Translates from a {@link Team} to a {@link Role}.
+     * Performs a lookup for {@link User} instances given a specific id.
      * <p>
-     * Convert this to a {@link Translator} with {@code linker::translate}.
+     * Convert this to a {@link Translator} with {@code lookup::lookup}.
      *
-     * @param team
-     *         The team to translate.
+     * @param id
+     *         The ID of the user.
      * @param callback
-     *         The callback to invoke once a translation is (not) found.
+     *         The callback to invoke when (not) found.
      */
-    void translate(Team<MinecraftPlayer> team, FutureCallback<Role> callback);
+    void lookup(long id, FutureCallback<User> callback);
 
     /**
-     * Translates from a {@link Role} to a {@link Team}.
+     * Performs a lookup for {@link MinecraftPlayer} instances given a specific id.
      * <p>
-     * Convert this to a {@link Translator} with {@code linker::translate}.
+     * Convert this to a {@link Translator} with {@code lookup::lookup}.
      *
-     * @param role
-     *         The role to translate.
+     * @param id
+     *         The ID of the player.
      * @param callback
-     *         The callback to invoke once a translation is (not) found.
+     *         The callback to invoke when (not) found.
      */
-    void translate(Role role, FutureCallback<Team<MinecraftPlayer>> callback);
+    void lookup(String id, FutureCallback<MinecraftPlayer> callback);
 
 }

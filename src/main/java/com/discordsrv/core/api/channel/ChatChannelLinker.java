@@ -25,8 +25,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * ChatChannelLinker type, for linking {@link Chat} instances and {@link TextChannel} instances and performing lookups
- * between them.
+ * ChatChannelLinker type, for linking {@link Chat} instances and {@link TextChannel} instances.
  */
 @ThreadSafe
 @ParametersAreNonnullByDefault
@@ -45,18 +44,6 @@ public interface ChatChannelLinker {
     void translate(Chat chat, FutureCallback<TextChannel> callback);
 
     /**
-     * Performs a lookup for {@link TextChannel} instances given a specific id.
-     * <p>
-     * Convert this to a {@link Translator} with {@code linker::lookup}.
-     *
-     * @param id
-     *         The ID of the channel.
-     * @param callback
-     *         The callback to invoke when (not) found.
-     */
-    void lookup(long id, FutureCallback<TextChannel> callback);
-
-    /**
      * Translates from a {@link TextChannel} to a {@link Chat}.
      * <p>
      * Convert this to a {@link Translator} with {@code linker::translate}.
@@ -67,17 +54,5 @@ public interface ChatChannelLinker {
      *         The callback to invoke once a translation is (not) found.
      */
     void translate(TextChannel channel, FutureCallback<Chat> callback);
-
-    /**
-     * Performs a lookup for {@link Chat} instances given a specific id.
-     * <p>
-     * Convert this to a {@link Translator} with {@code linker::lookup}.
-     *
-     * @param id
-     *         The ID of the chat.
-     * @param callback
-     *         The callback to invoke when (not) found.
-     */
-    void lookup(String id, FutureCallback<Chat> callback);
 
 }

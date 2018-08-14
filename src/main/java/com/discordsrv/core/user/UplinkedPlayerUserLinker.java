@@ -19,6 +19,7 @@ package com.discordsrv.core.user;
 
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.discordsrv.core.api.user.PlayerUserLinker;
+import com.discordsrv.core.api.user.PlayerUserLookup;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.User;
 
@@ -32,19 +33,24 @@ import java.util.function.Consumer;
  * <p>
  * TODO Finish link.scarsz.me
  */
-public abstract class UplinkedPlayerUserLinker implements PlayerUserLinker {
+public class UplinkedPlayerUserLinker implements PlayerUserLinker {
 
     private final ConcurrentMap<String, User> playerCache;
+    private final PlayerUserLookup lookup;
     private final Consumer<Runnable> runnableConsumer;
 
     /**
      * Main constructor for the UplinkedPlayerUserLinker abstract type.
      *
+     * @param lookup
+     *         The lookup resolver for Players and Users.
      * @param runnableConsumer
      *         The consumer which accepts runnables for optionally async execution. (You could also just pass {@code
      *         Runnable::run} for synchronous handling).
      */
-    protected UplinkedPlayerUserLinker(final @Nonnull Consumer<Runnable> runnableConsumer) {
+    protected UplinkedPlayerUserLinker(final @Nonnull PlayerUserLookup lookup,
+                                       final @Nonnull Consumer<Runnable> runnableConsumer) {
+        this.lookup = lookup;
         this.runnableConsumer = runnableConsumer;
         this.playerCache = new ConcurrentHashMap<>();
     }

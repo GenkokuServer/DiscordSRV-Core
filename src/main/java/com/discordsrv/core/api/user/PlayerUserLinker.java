@@ -25,8 +25,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * PlayerUserLinker type, for linking {@link MinecraftPlayer} instances and {@link User} instances and performing
- * lookups between them.
+ * PlayerUserLinker type, for linking {@link MinecraftPlayer} instances and {@link User} instances.
  */
 @ThreadSafe
 @ParametersAreNonnullByDefault
@@ -45,18 +44,6 @@ public interface PlayerUserLinker {
     void translate(MinecraftPlayer player, FutureCallback<User> callback);
 
     /**
-     * Performs a lookup for {@link User} instances given a specific id.
-     * <p>
-     * Convert this to a {@link Translator} with {@code linker::lookup}.
-     *
-     * @param id
-     *         The ID of the user.
-     * @param callback
-     *         The callback to invoke when (not) found.
-     */
-    void lookup(long id, FutureCallback<User> callback);
-
-    /**
      * Translates from a {@link User} to a {@link MinecraftPlayer}.
      * <p>
      * Convert this to a {@link Translator} with {@code linker::translate}.
@@ -67,17 +54,5 @@ public interface PlayerUserLinker {
      *         The callback to invoke once a translation is (not) found.
      */
     void translate(User user, FutureCallback<MinecraftPlayer> callback);
-
-    /**
-     * Performs a lookup for {@link MinecraftPlayer} instances given a specific id.
-     * <p>
-     * Convert this to a {@link Translator} with {@code linker::lookup}.
-     *
-     * @param id
-     *         The ID of the player.
-     * @param callback
-     *         The callback to invoke when (not) found.
-     */
-    void lookup(String id, FutureCallback<MinecraftPlayer> callback);
 
 }

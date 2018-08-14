@@ -26,34 +26,34 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * TeamRoleLinker type, for linking {@link Team} instances and {@link Role} instances.
+ * TeamRoleLinker type, for looking up {@link Team} instances and {@link Role} instances.
  */
 @ThreadSafe
 @ParametersAreNonnullByDefault
-public interface TeamRoleLinker {
+public interface TeamRoleLookup {
 
     /**
-     * Translates from a {@link Team} to a {@link Role}.
+     * Performs a lookup for {@link Role} instances given a specific id.
      * <p>
-     * Convert this to a {@link Translator} with {@code linker::translate}.
+     * Convert this to a {@link Translator} with {@code lookup::lookup}.
      *
-     * @param team
-     *         The team to translate.
+     * @param id
+     *         The ID of the role.
      * @param callback
-     *         The callback to invoke once a translation is (not) found.
+     *         The callback to invoke when (not) found.
      */
-    void translate(Team<MinecraftPlayer> team, FutureCallback<Role> callback);
+    void lookup(long id, FutureCallback<Role> callback);
 
     /**
-     * Translates from a {@link Role} to a {@link Team}.
+     * Performs a lookup for {@link Team} instances given a specific id.
      * <p>
-     * Convert this to a {@link Translator} with {@code linker::translate}.
+     * Convert this to a {@link Translator} with {@code lookup::lookup}.
      *
-     * @param role
-     *         The role to translate.
+     * @param id
+     *         The ID of the team.
      * @param callback
-     *         The callback to invoke once a translation is (not) found.
+     *         The callback to invoke when (not) found.
      */
-    void translate(Role role, FutureCallback<Team<MinecraftPlayer>> callback);
+    void lookup(String id, FutureCallback<Team<MinecraftPlayer>> callback);
 
 }
