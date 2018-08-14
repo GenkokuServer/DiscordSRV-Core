@@ -21,6 +21,7 @@ import com.discordsrv.core.common.unit.Named;
 import com.discordsrv.core.common.unit.UniquelyIdentifiable;
 
 import javax.annotation.CheckReturnValue;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import java.util.function.Consumer;
@@ -33,6 +34,7 @@ import java.util.function.Consumer;
  */
 @NotThreadSafe
 @CheckReturnValue
+@Nonnull
 public interface ChatMessage<T> extends UniquelyIdentifiable<T> {
 
     /**
