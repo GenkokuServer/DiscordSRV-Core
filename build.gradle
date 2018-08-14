@@ -20,6 +20,7 @@ plugins {
     id 'java'
     id 'idea'
     id 'checkstyle'
+    id 'maven'
 }
 
 group 'com.discordsrv'
@@ -49,6 +50,16 @@ checkstyleMain {
 }
 checkstyleTest {
     source = sourceSets.test.allJava
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        configuration = project.configurations.deployerJars
+        repository(url: System.env.mavenRepo) {
+            authentication(userName: System.env.mavenRepoUsername, password: System.env.mavenRepoPassword)
+        }
+    }
+    dependsOn check
 }
 
 test {
