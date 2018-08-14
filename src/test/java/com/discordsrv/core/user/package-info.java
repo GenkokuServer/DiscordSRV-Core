@@ -15,27 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.test.user;
-
-import com.discordsrv.core.api.user.MinecraftPlayer;
-import com.discordsrv.core.api.user.PlayerUserLookup;
-import com.google.common.util.concurrent.FutureCallback;
-import net.dv8tion.jda.core.entities.User;
-
-import javax.annotation.Nonnull;
-
 /**
- * A simple Test implementation of the PlayerUserLookup interface.
- * <p>
- * TODO
+ * Tests of the User package.
  */
-public class TestPlayerUserLookup implements PlayerUserLookup {
-
-    @Override
-    public void lookup(final long id, final @Nonnull FutureCallback<User> callback) {
-    }
-
-    @Override
-    public void lookup(final @Nonnull String id, final @Nonnull FutureCallback<MinecraftPlayer> callback) {
-    }
-}
+package com.discordsrv.core.user;
