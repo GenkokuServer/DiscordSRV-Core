@@ -15,5 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-package com.discordsrv.core.unit.user;
+/**
+ * Channel package for the DiscordSRV2-Core library.
+ */
+package com.discordsrv.core.channel;
