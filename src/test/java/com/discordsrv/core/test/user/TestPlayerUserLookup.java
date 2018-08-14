@@ -15,19 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.api.common.unit;
+package com.discordsrv.core.test.user;
 
-import javax.annotation.concurrent.ThreadSafe;
+import com.discordsrv.core.api.user.MinecraftPlayer;
+import com.discordsrv.core.api.user.PlayerUserLookup;
+import com.google.common.util.concurrent.FutureCallback;
+import net.dv8tion.jda.core.entities.User;
 
-/**
- * Translatable type, for establishing types that may be translated from this type to another.
- *
- * @param <T>
- *         The type to be used to identify this identifiable.
- * @param <R>
- *         The type to be converted to. Note that this type is not necessarily also {@link UniquelyIdentifiable}.
- */
-@ThreadSafe
-public interface Translatable<T, R> extends UniquelyIdentifiable<T> {
+import javax.annotation.Nonnull;
 
+public class TestPlayerUserLookup implements PlayerUserLookup {
+
+    @Override
+    public void lookup(final long id, final @Nonnull FutureCallback<User> callback) {
+    }
+
+    @Override
+    public void lookup(final @Nonnull String id, final @Nonnull FutureCallback<MinecraftPlayer> callback) {
+    }
 }

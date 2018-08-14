@@ -21,6 +21,7 @@ plugins {
     id 'idea'
     id 'checkstyle'
     id 'maven'
+    id 'io.franzbecker.gradle-lombok' version '1.14'
 }
 
 group 'com.discordsrv'
@@ -32,6 +33,11 @@ targetCompatibility = 1.8
 repositories {
     jcenter()
     mavenCentral()
+}
+
+lombok {
+    version = '1.18.2'
+    sha256 = ""
 }
 
 configurations {

@@ -15,43 +15,48 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.user;
+package com.discordsrv.core.test.user;
 
+import com.discordsrv.core.api.auth.State;
 import com.discordsrv.core.api.user.MinecraftPlayer;
-import com.discordsrv.core.api.user.PlayerUserLinker;
-import com.discordsrv.core.api.user.PlayerUserLookup;
 import com.google.common.util.concurrent.FutureCallback;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import net.dv8tion.jda.core.entities.User;
 
 import javax.annotation.Nonnull;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.function.Consumer;
 
 /**
- * Leverages link.scarsz.me to perform lookups of users.
- * <p>
- * TODO Finish link.scarsz.me
+ * A simple test implementation of the {@link MinecraftPlayer} type.
  */
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class UplinkedPlayerUserLinker implements PlayerUserLinker {
+@RequiredArgsConstructor
+public class TestMinecraftPlayer implements MinecraftPlayer {
 
-    private final ConcurrentMap<String, User> playerCache = new ConcurrentHashMap<>();
-    private final PlayerUserLookup lookup;
-    private final Consumer<Runnable> runnableConsumer;
+    private State state = State.UNAUTHENTICATED;
+    private final CharSequence name;
+    private final String identifier;
 
     @Override
-    public void translate(final @Nonnull MinecraftPlayer player, final @Nonnull FutureCallback<User> callback) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public synchronized void getAuthenticationStage(final @Nonnull Consumer<State> callback) {
+        callback.accept(state);
     }
 
     @Override
-    public void translate(final @Nonnull User user, final @Nonnull FutureCallback<MinecraftPlayer> callback) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public synchronized void setAuthenticationStage(final @Nonnull State state) {
+        this.state = state;
     }
 
+    @Override
+    public void sendMessage(final @Nonnull String message, final @Nonnull FutureCallback<Void> resultCallback) {
+        resultCallback.onSuccess(null);
+    }
+
+    @Override
+    public void getName(final @Nonnull Consumer<CharSequence> callback) {
+        callback.accept(this.name);
+    }
+
+    @Override
+    public void getUniqueIdentifier(final @Nonnull Consumer<String> callback) {
+        callback.accept(this.identifier);
+    }
 }

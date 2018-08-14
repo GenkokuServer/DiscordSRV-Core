@@ -15,19 +15,5 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.api.common.unit;
 
-import javax.annotation.concurrent.ThreadSafe;
-
-/**
- * Translatable type, for establishing types that may be translated from this type to another.
- *
- * @param <T>
- *         The type to be used to identify this identifiable.
- * @param <R>
- *         The type to be converted to. Note that this type is not necessarily also {@link UniquelyIdentifiable}.
- */
-@ThreadSafe
-public interface Translatable<T, R> extends UniquelyIdentifiable<T> {
-
-}
+package com.discordsrv.core.test;
