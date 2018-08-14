@@ -17,6 +17,7 @@
  */
 package com.discordsrv.core.channel;
 
+import com.discordsrv.core.common.functional.Translator;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.TextChannel;
 
@@ -34,7 +35,7 @@ public interface ChatChannelLinker {
     /**
      * Translates from a {@link Chat} to a {@link TextChannel}.
      * <p>
-     * Convert this to a {@link com.discordsrv.core.common.unit.Translator} with {@code linker::translate}.
+     * Convert this to a {@link Translator} with {@code linker::translate}.
      *
      * @param chat
      *         The chat to translate.
@@ -46,7 +47,7 @@ public interface ChatChannelLinker {
     /**
      * Performs a lookup for {@link TextChannel} instances given a specific id.
      * <p>
-     * Convert this to a {@link com.discordsrv.core.common.unit.Translator} with {@code linker::lookup}.
+     * Convert this to a {@link Translator} with {@code linker::lookup}.
      *
      * @param id
      *         The ID of the channel.
@@ -58,7 +59,7 @@ public interface ChatChannelLinker {
     /**
      * Translates from a {@link TextChannel} to a {@link Chat}.
      * <p>
-     * Convert this to a {@link com.discordsrv.core.common.unit.Translator} with {@code linker::translate}.
+     * Convert this to a {@link Translator} with {@code linker::translate}.
      *
      * @param channel
      *         The channel to translate.
@@ -70,7 +71,7 @@ public interface ChatChannelLinker {
     /**
      * Performs a lookup for {@link Chat} instances given a specific id.
      * <p>
-     * Convert this to a {@link com.discordsrv.core.common.unit.Translator} with {@code linker::lookup}.
+     * Convert this to a {@link Translator} with {@code linker::lookup}.
      *
      * @param id
      *         The ID of the chat.

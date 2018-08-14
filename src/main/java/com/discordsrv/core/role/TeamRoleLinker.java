@@ -17,6 +17,7 @@
  */
 package com.discordsrv.core.role;
 
+import com.discordsrv.core.common.functional.Translator;
 import com.discordsrv.core.user.MinecraftPlayer;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.Role;
@@ -35,7 +36,7 @@ public interface TeamRoleLinker {
     /**
      * Translates from a {@link Team} to a {@link Role}.
      * <p>
-     * Convert this to a {@link com.discordsrv.core.common.unit.Translator} with {@code linker::translate}.
+     * Convert this to a {@link Translator} with {@code linker::translate}.
      *
      * @param team
      *         The team to translate.
@@ -47,7 +48,7 @@ public interface TeamRoleLinker {
     /**
      * Performs a lookup for {@link Role} instances given a specific id.
      * <p>
-     * Convert this to a {@link com.discordsrv.core.common.unit.Translator} with {@code linker::lookup}.
+     * Convert this to a {@link Translator} with {@code linker::lookup}.
      *
      * @param id
      *         The ID of the role.
@@ -59,7 +60,7 @@ public interface TeamRoleLinker {
     /**
      * Translates from a {@link Role} to a {@link Team}.
      * <p>
-     * Convert this to a {@link com.discordsrv.core.common.unit.Translator} with {@code linker::translate}.
+     * Convert this to a {@link Translator} with {@code linker::translate}.
      *
      * @param role
      *         The role to translate.
@@ -71,7 +72,7 @@ public interface TeamRoleLinker {
     /**
      * Performs a lookup for {@link Team} instances given a specific id.
      * <p>
-     * Convert this to a {@link com.discordsrv.core.common.unit.Translator} with {@code linker::lookup}.
+     * Convert this to a {@link Translator} with {@code linker::lookup}.
      *
      * @param id
      *         The ID of the team.

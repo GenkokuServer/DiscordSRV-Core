@@ -17,6 +17,7 @@
  */
 package com.discordsrv.core.user;
 
+import com.discordsrv.core.common.functional.Translator;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.User;
 
@@ -34,7 +35,7 @@ public interface PlayerUserLinker {
     /**
      * Translates from a {@link MinecraftPlayer} to a {@link User}.
      * <p>
-     * Convert this to a {@link com.discordsrv.core.common.unit.Translator} with {@code linker::translate}.
+     * Convert this to a {@link Translator} with {@code linker::translate}.
      *
      * @param player
      *         The player to translate.
@@ -46,7 +47,7 @@ public interface PlayerUserLinker {
     /**
      * Performs a lookup for {@link User} instances given a specific id.
      * <p>
-     * Convert this to a {@link com.discordsrv.core.common.unit.Translator} with {@code linker::lookup}.
+     * Convert this to a {@link Translator} with {@code linker::lookup}.
      *
      * @param id
      *         The ID of the user.
@@ -58,7 +59,7 @@ public interface PlayerUserLinker {
     /**
      * Translates from a {@link User} to a {@link MinecraftPlayer}.
      * <p>
-     * Convert this to a {@link com.discordsrv.core.common.unit.Translator} with {@code linker::translate}.
+     * Convert this to a {@link Translator} with {@code linker::translate}.
      *
      * @param user
      *         The user to translate.
@@ -70,7 +71,7 @@ public interface PlayerUserLinker {
     /**
      * Performs a lookup for {@link MinecraftPlayer} instances given a specific id.
      * <p>
-     * Convert this to a {@link com.discordsrv.core.common.unit.Translator} with {@code linker::lookup}.
+     * Convert this to a {@link Translator} with {@code linker::lookup}.
      *
      * @param id
      *         The ID of the player.
