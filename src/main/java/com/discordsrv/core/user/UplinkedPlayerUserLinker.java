@@ -29,15 +29,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
- * Leverages link.scarsz.me to perform lookups of player/user links.
+ * Leverages link.discordsrv.com to perform lookups of player/user links.
  * <p>
- * TODO Finish link.scarsz.me
+ * TODO Finish link.discordsrv.com
  */
 @RequiredArgsConstructor
 public class UplinkedPlayerUserLinker implements PlayerUserLinker {
 
     private final ConcurrentMap<String, User> playerCache = new ConcurrentHashMap<>();
-    private final PlayerUserLookup lookup;
+    private final PlayerUserLookup lookup = null;
 
     @Override
     public void translate(final @Nonnull MinecraftPlayer player, final @Nonnull FutureCallback<User> callback) {
