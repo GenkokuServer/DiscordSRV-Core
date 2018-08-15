@@ -1,0 +1,6 @@
+com:
+    discordsrv:
+        core:
+            conf:
+                ConfiguredType:
+                    name: "Test"

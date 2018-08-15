@@ -1,0 +1,7 @@
+com:
+    discordsrv:
+        core:
+            discord:
+                commands:
+                    Authenticate:
+                        name: "authenticate"

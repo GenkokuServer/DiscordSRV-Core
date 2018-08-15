@@ -86,7 +86,6 @@ public class PlayerUserAuthenticatorTest {
      */
     @Test
     public void stage1BeginAuth() {
-        player.getAuthenticationState(System.out::println);
         authenticator.beginAuth(player, new FutureCallback<Token>() {
             @Override
             public void onSuccess(@Nullable final Token result) {
@@ -163,6 +162,7 @@ public class PlayerUserAuthenticatorTest {
 
             @Override
             public void onFailure(final @Nonnull Throwable t) {
+                t.printStackTrace();
                 fail();
             }
         });

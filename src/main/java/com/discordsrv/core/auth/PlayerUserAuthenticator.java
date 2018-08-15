@@ -36,11 +36,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 /**
  * PlayerUserAuthenticator type, for performing OAuth handshakes between users and players.
  */
+@SuppressWarnings("WeakerAccess")
 public class PlayerUserAuthenticator {
 
     private final SecureRandom random;
@@ -102,8 +104,10 @@ public class PlayerUserAuthenticator {
      */
     public void attemptVerify(final @Nonnull User user, final @Nonnull String tokenString,
                               final @Nonnull FutureCallback<Pair<MinecraftPlayer, User>> callback) {
+        final AtomicBoolean matched = new AtomicBoolean(false);
         this.tokenMap.forEach((key, value) -> key.getUniqueIdentifier(tokenIdent -> {
             if (tokenIdent.equals(tokenString)) {
+                matched.set(true);
                 userStore.push(value, user, new FutureCallback<Boolean>() {
                     @Override
                     public void onSuccess(@Nullable final Boolean result) {
@@ -130,10 +134,11 @@ public class PlayerUserAuthenticator {
                         callback.onFailure(t);
                     }
                 });
-            } else {
-                callback.onFailure(new AuthenticationException());
             }
         }));
+        if (!matched.get()) {
+            callback.onFailure(new AuthenticationException());
+        }
     }
 
     /**
@@ -166,8 +171,9 @@ public class PlayerUserAuthenticator {
         private @Getter(onMethod_ = @Synchronized) boolean valid;
 
         private UserAuthToken() {
-            this.ident = String.format("%1$5s",
-                Integer.toString(random.nextInt(Integer.parseInt("zzzzz", 36)), 36).toUpperCase().replace(' ', '0'));
+            this.ident = String
+                .format("%1$5s", Integer.toString(random.nextInt(Integer.parseInt("zzzzz", 36)), 36).toUpperCase())
+                .replace(' ', '0');
         }
 
         @Synchronized

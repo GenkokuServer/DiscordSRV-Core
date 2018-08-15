@@ -93,8 +93,9 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
                 lookup.lookup(player, new FutureCallback<MinecraftPlayer>() {
                     @Override
                     public void onSuccess(@Nullable final MinecraftPlayer result) {
-                        assert result != null;
-                        result.setAuthenticationState(State.UNAUTHENTICATED);
+                        if (result != null) {
+                            result.setAuthenticationState(State.UNAUTHENTICATED);
+                        }
                         callback.onSuccess(true);
                     }
 
