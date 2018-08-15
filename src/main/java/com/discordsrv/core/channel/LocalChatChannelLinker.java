@@ -35,6 +35,14 @@ public class LocalChatChannelLinker implements ChatChannelLinker {
     private final BidiMap<String, Long> channelStorage;
     private final ChatChannelLookup lookup;
 
+    /**
+     * Main constructor for the LocalChatChannelLinker type.
+     *
+     * @param channelStorage
+     *         The map to store the links in. This should update files when updated.
+     * @param lookup
+     *         The lookup service.
+     */
     public LocalChatChannelLinker(final BidiMap<String, Long> channelStorage, final ChatChannelLookup lookup) {
         this.channelStorage = channelStorage;
         this.lookup = lookup;

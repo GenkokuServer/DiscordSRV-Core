@@ -36,6 +36,14 @@ public class LocalTeamRoleLinker implements TeamRoleLinker {
     private final BidiMap<String, Long> roleStorage;
     private final TeamRoleLookup lookup;
 
+    /**
+     * Main constructor for the LocalTeamRoleLinker type.
+     *
+     * @param roleStorage
+     *         The map to store the links in. This should update files when updated.
+     * @param lookup
+     *         The lookup service.
+     */
     public LocalTeamRoleLinker(final BidiMap<String, Long> roleStorage, final TeamRoleLookup lookup) {
         this.roleStorage = roleStorage;
         this.lookup = lookup;

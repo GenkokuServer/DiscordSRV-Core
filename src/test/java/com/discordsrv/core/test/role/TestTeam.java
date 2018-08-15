@@ -36,6 +36,14 @@ public class TestTeam implements Team<MinecraftPlayer> {
     private final CharSequence name;
     private final String identifier;
 
+    /**
+     * Main constructor for the TestTeam type.
+     *
+     * @param name
+     *         The name of this instance.
+     * @param identifier
+     *         The unique identifier to be associated with this instance.
+     */
     public TestTeam(final List<MinecraftPlayer> players, final CharSequence name, final String identifier) {
         this.players = players;
         this.name = name;

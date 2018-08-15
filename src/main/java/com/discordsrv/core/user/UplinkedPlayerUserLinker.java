@@ -37,6 +37,12 @@ public class UplinkedPlayerUserLinker implements PlayerUserLinker {
     private final ConcurrentMap<String, User> playerCache = new ConcurrentHashMap<>();
     private final PlayerUserLookup lookup;
 
+    /**
+     * Main constructor for the UplinkedPlayerUserLinker type.
+     *
+     * @param lookup
+     *         The lookup service.
+     */
     public UplinkedPlayerUserLinker(final PlayerUserLookup lookup) {
         this.lookup = lookup;
     }

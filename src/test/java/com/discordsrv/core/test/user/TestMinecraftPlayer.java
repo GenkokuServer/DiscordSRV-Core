@@ -33,6 +33,14 @@ public class TestMinecraftPlayer implements MinecraftPlayer {
     private final String identifier;
     private State state = State.UNAUTHENTICATED;
 
+    /**
+     * Main constructor for the TestMinecraftPlayer type.
+     *
+     * @param name
+     *         The name of this instance.
+     * @param identifier
+     *         The unique identifier to be associated with this instance.
+     */
     public TestMinecraftPlayer(final CharSequence name, final String identifier) {
         this.name = name;
         this.identifier = identifier;

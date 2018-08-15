@@ -32,6 +32,14 @@ public class TestChat implements Chat {
     private final CharSequence name;
     private final String identifier;
 
+    /**
+     * Main constructor for the TestChat type.
+     *
+     * @param name
+     *         The name of this instance.
+     * @param identifier
+     *         The unique identifier to be associated with this instance.
+     */
     public TestChat(final CharSequence name, final String identifier) {
         this.name = name;
         this.identifier = identifier;

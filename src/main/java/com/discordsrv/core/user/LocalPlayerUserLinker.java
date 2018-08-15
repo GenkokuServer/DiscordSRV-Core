@@ -37,6 +37,14 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
     private final BidiMap<String, Long> playerStorage;
     private final PlayerUserLookup lookup;
 
+    /**
+     * Main constructor for the LocalPlayerUserLinker type.
+     *
+     * @param playerStorage
+     *         The map to store the links in. This should update files when updated.
+     * @param lookup
+     *         The lookup service.
+     */
     public LocalPlayerUserLinker(final BidiMap<String, Long> playerStorage, final PlayerUserLookup lookup) {
         this.playerStorage = playerStorage;
         this.lookup = lookup;
