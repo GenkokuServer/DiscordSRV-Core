@@ -18,10 +18,7 @@
 package com.discordsrv.core.test.mocker;
 
 import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.requests.restaction.MessageAction;
 
 import javax.annotation.Nonnull;
@@ -34,6 +31,7 @@ import java.util.function.Function;
 /**
  * Mocks various interfaces within the JDA library.
  */
+@SuppressWarnings("WeakerAccess")
 public class Mocker {
 
     /**
@@ -94,6 +92,28 @@ public class Mocker {
     @Nonnull
     public User getMockedUser(final long id) {
         return getInstance(User.class, new NoopInvocationHandler() {
+            @Override
+            public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
+                if (method.equals(User.class.getMethod("getIdLong"))) {
+                    return id;
+                } else {
+                    return super.invoke(proxy, method, args);
+                }
+            }
+        });
+    }
+
+    /**
+     * Mocks a Role instance.
+     *
+     * @param id
+     *         The ID of this Role.
+     *
+     * @return user A mocked Role instance.
+     */
+    @Nonnull
+    public Role getMockedRole(final long id) {
+        return getInstance(Role.class, new NoopInvocationHandler() {
             @Override
             public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
                 if (method.equals(User.class.getMethod("getIdLong"))) {

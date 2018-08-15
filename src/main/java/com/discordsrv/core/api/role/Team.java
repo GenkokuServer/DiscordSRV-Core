@@ -19,6 +19,7 @@ package com.discordsrv.core.api.role;
 
 import com.discordsrv.core.api.common.unit.Named;
 import com.discordsrv.core.api.common.unit.Translatable;
+import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.Role;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -41,5 +42,15 @@ public interface Team<T> extends Translatable<String, Role>, Named {
      *         The callback for the getter.
      */
     void getMembers(Consumer<Collection<T>> callback);
+
+    /**
+     * Adds members to this team.
+     *
+     * @param member
+     *         The member to add.
+     * @param callback
+     *         The callback for this method.
+     */
+    void addMember(T member, FutureCallback<Void> callback);
 
 }

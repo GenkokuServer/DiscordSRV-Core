@@ -15,14 +15,15 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.user;
+package com.discordsrv.core.role;
 
+import com.discordsrv.core.api.role.Team;
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.discordsrv.core.test.mocker.Mocker;
-import com.discordsrv.core.test.user.TestMinecraftPlayer;
-import com.discordsrv.core.test.user.TestPlayerUserLookup;
+import com.discordsrv.core.test.role.TestTeam;
+import com.discordsrv.core.test.role.TestTeamRoleLookup;
 import com.google.common.util.concurrent.FutureCallback;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.entities.Role;
 import org.apache.commons.collections4.bidimap.DualTreeBidiMap;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -31,16 +32,17 @@ import org.junit.Test;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.LinkedList;
 
 import static org.junit.Assert.*;
 
 /**
- * Tests {@link LocalPlayerUserLinker}.
+ * Tests {@link LocalTeamRoleLinker}.
  */
 @FixMethodOrder
-public class LocalPlayerUserLinkerTest {
+public class LocalTeamRoleLinkerTest {
 
-    private static LocalPlayerUserLinker linker;
+    private static LocalTeamRoleLinker linker;
     private final String testMCId = "1234";
     private final long testDiscordId = 1234;
     private final Mocker mocker = new Mocker();
@@ -50,7 +52,7 @@ public class LocalPlayerUserLinkerTest {
      */
     @BeforeClass
     public static void setup() {
-        linker = new LocalPlayerUserLinker(new DualTreeBidiMap<>(), new TestPlayerUserLookup());
+        linker = new LocalTeamRoleLinker(new DualTreeBidiMap<>(), new TestTeamRoleLookup());
     }
 
     /**
@@ -62,21 +64,21 @@ public class LocalPlayerUserLinkerTest {
     }
 
     /**
-     * Tests {@link LocalPlayerUserLinker#push(MinecraftPlayer, User)}.
+     * Tests {@link LocalTeamRoleLinker#push(Team, Role)}.
      */
     @Test
     public void stage1Push() {
-        linker.push(new TestMinecraftPlayer("Test", testMCId), mocker.getMockedUser(testDiscordId));
+        linker.push(new TestTeam(new LinkedList<>(), "Test", testMCId), mocker.getMockedRole(testDiscordId));
     }
 
     /**
-     * Tests {@link LocalPlayerUserLinker#translate(MinecraftPlayer, FutureCallback)}.
+     * Tests {@link LocalTeamRoleLinker#translate(Team, FutureCallback)}.
      */
     @Test
     public void stage2Translate() {
-        linker.translate(new TestMinecraftPlayer("Test", testMCId), new FutureCallback<User>() {
+        linker.translate(new TestTeam(new LinkedList<>(), "Test", testMCId), new FutureCallback<Role>() {
             @Override
-            public void onSuccess(@Nullable final User result) {
+            public void onSuccess(@Nullable final Role result) {
                 assertNotNull(result);
                 assertEquals(testDiscordId, result.getIdLong());
             }
@@ -89,13 +91,13 @@ public class LocalPlayerUserLinkerTest {
     }
 
     /**
-     * Tests {@link LocalPlayerUserLinker#translate(User, FutureCallback)}.
+     * Tests {@link LocalTeamRoleLinker#translate(Role, FutureCallback)}.
      */
     @Test
     public void stage3Translate() {
-        linker.translate(mocker.getMockedUser(testDiscordId), new FutureCallback<MinecraftPlayer>() {
+        linker.translate(mocker.getMockedRole(testDiscordId), new FutureCallback<Team<MinecraftPlayer>>() {
             @Override
-            public void onSuccess(@Nullable final MinecraftPlayer result) {
+            public void onSuccess(@Nullable final Team<MinecraftPlayer> result) {
                 assertNotNull(result);
                 result.getUniqueIdentifier(ident -> assertEquals(testMCId, ident));
             }
@@ -108,11 +110,11 @@ public class LocalPlayerUserLinkerTest {
     }
 
     /**
-     * Tests {@link LocalPlayerUserLinker#remove(MinecraftPlayer, User)}.
+     * Tests {@link LocalTeamRoleLinker#remove(Team, Role)}.
      */
     @Test
     public void stage4Remove() {
-        linker.remove(new TestMinecraftPlayer("Test", testMCId), mocker.getMockedUser(testDiscordId));
+        linker.remove(new TestTeam(new LinkedList<>(), "Test", testMCId), mocker.getMockedRole(testDiscordId));
         try {
             stage2Translate();
             fail();
