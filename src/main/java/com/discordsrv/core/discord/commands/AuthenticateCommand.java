@@ -30,9 +30,9 @@ import lombok.Setter;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.tuple.Pair;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 /**
@@ -88,56 +88,40 @@ public class AuthenticateCommand extends Command {
     @Override
     protected void execute(final CommandEvent event) {
         try {
-            lookup.lookup(event.getAuthor().getIdLong(), new FutureCallback<User>() {
+            linker.translate(event.getAuthor(), new FutureCallback<MinecraftPlayer>() {
                 @Override
-                public void onSuccess(@Nullable final User result) {
+                public void onSuccess(@Nullable final MinecraftPlayer result) {
                     if (result != null) {
-                        linker.translate(event.getAuthor(), new FutureCallback<MinecraftPlayer>() {
-                            @Override
-                            public void onSuccess(@Nullable final MinecraftPlayer result) {
-                                if (result != null) {
-                                    result.getName(name -> {
-                                        event.reactWarning();
-                                        event.reply(alreadyAuth.replace("%author%", event.getAuthor().getAsMention())
-                                            .replace("%player%", name));
-                                    });
-                                } else {
-                                    authenticator.attemptVerify(event.getAuthor(), event.getArgs(),
-                                        new FutureCallback<Pair<MinecraftPlayer, User>>() {
-                                            @Override
-                                            public void onSuccess(@Nullable final Pair<MinecraftPlayer, User> result) {
-                                                if (result != null) {
-                                                    result.getLeft().getName(name -> {
-                                                        event.reactSuccess();
-                                                        event.reply(successfulAuth
-                                                            .replace("%author%", result.getRight().getAsMention())
-                                                            .replace("%player%", name));
-                                                    });
-                                                } else {
-                                                    event.reactError();
-                                                    event.reply(badConfig.replace("%owner%",
-                                                        event.getJDA().getUserById(event.getClient().getOwnerId())
-                                                            .getAsMention()));
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(final @Nonnull Throwable t) {
-                                                event.reactWarning();
-                                                event.reply(failedAuth.replace("%token%", event.getArgs()));
-                                            }
-                                        });
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(final @Nonnull Throwable t) {
-                                event.reactError();
-                                event.reply(badConfig.replace("%owner%",
-                                    event.getJDA().getUserById(event.getClient().getOwnerId()).getAsMention()));
-                            }
+                        result.getName(name -> {
+                            event.reactWarning();
+                            event.reply(alreadyAuth.replace("%author%", event.getAuthor().getAsMention())
+                                .replace("%player%", name));
                         });
                     } else {
+                        authenticator.attemptVerify(event.getAuthor(), event.getArgs(),
+                            new FutureCallback<Pair<MinecraftPlayer, User>>() {
+                                @Override
+                                public void onSuccess(@Nullable final Pair<MinecraftPlayer, User> result) {
+                                    if (result != null) {
+                                        result.getLeft().getName(name -> {
+                                            event.reactSuccess();
+                                            event.reply(
+                                                successfulAuth.replace("%author%", result.getRight().getAsMention())
+                                                    .replace("%player%", name));
+                                        });
+                                    } else {
+                                        event.reactError();
+                                        event.reply(badConfig.replace("%owner%",
+                                            event.getJDA().getUserById(event.getClient().getOwnerId()).getAsMention()));
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(final @Nonnull Throwable t) {
+                                    event.reactWarning();
+                                    event.reply(failedAuth.replace("%token%", event.getArgs()));
+                                }
+                            });
                     }
                 }
 

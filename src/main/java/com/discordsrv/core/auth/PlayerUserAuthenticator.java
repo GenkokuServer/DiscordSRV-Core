@@ -26,9 +26,9 @@ import lombok.Getter;
 import lombok.Synchronized;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.tuple.Pair;
-import org.checkerframework.checker.nullness.qual.Nullable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.naming.AuthenticationException;
 import java.security.SecureRandom;
 import java.util.Objects;
