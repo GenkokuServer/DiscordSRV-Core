@@ -17,38 +17,59 @@
  */
 package com.discordsrv.core.user;
 
+import com.discordsrv.core.api.auth.AuthenticationStore;
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.discordsrv.core.api.user.PlayerUserLinker;
 import com.discordsrv.core.api.user.PlayerUserLookup;
 import com.google.common.util.concurrent.FutureCallback;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.entities.User;
+import org.apache.commons.collections4.BidiMap;
 
 import javax.annotation.Nonnull;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import javax.annotation.Nullable;
 
 /**
- * Leverages link.scarsz.me to perform lookups of player/user links.
- * <p>
- * TODO Finish link.scarsz.me
+ * Leverages a local storage for player/user linking.
  */
 @RequiredArgsConstructor
-public class UplinkedPlayerUserLinker implements PlayerUserLinker {
+public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationStore<MinecraftPlayer, User> {
 
-    private final ConcurrentMap<String, User> playerCache = new ConcurrentHashMap<>();
+    private final BidiMap<String, Long> playerStorage;
     private final PlayerUserLookup lookup;
 
     @Override
     public void translate(final @Nonnull MinecraftPlayer player, final @Nonnull FutureCallback<User> callback) {
-        // TODO
-        throw new UnsupportedOperationException();
+        player.getUniqueIdentifier(ident -> {
+            @Nullable Long result = playerStorage.get(ident);
+            if (result == null) {
+                callback.onSuccess(null);
+            } else {
+                lookup.lookup(result, callback);
+            }
+        });
     }
 
     @Override
     public void translate(final @Nonnull User user, final @Nonnull FutureCallback<MinecraftPlayer> callback) {
-        // TODO
-        throw new UnsupportedOperationException();
+        @Nullable String result = playerStorage.getKey(user.getIdLong());
+        if (result == null) {
+            callback.onSuccess(null);
+        } else {
+            lookup.lookup(result, callback);
+        }
     }
 
+    @Override
+    public void push(final @Nonnull MinecraftPlayer first, final @Nonnull User last) {
+        first.getUniqueIdentifier(ident -> playerStorage.put(ident, last.getIdLong()));
+    }
+
+    @Override
+    public void remove(final @Nonnull MinecraftPlayer first, final @Nonnull User last) {
+        first.getUniqueIdentifier(ident -> {
+            playerStorage.remove(ident);
+            playerStorage.removeValue(last.getIdLong());
+        });
+    }
 }

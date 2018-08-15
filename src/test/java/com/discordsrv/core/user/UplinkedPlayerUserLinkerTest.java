@@ -42,7 +42,7 @@ public class UplinkedPlayerUserLinkerTest {
     @Ignore // TODO remove
     @Test
     public void translate() {
-        UplinkedPlayerUserLinker linker = new UplinkedPlayerUserLinker(new TestPlayerUserLookup(), Runnable::run);
+        UplinkedPlayerUserLinker linker = new UplinkedPlayerUserLinker(new TestPlayerUserLookup());
         MinecraftPlayer player = new TestMinecraftPlayer("Scarsz", "d7c1db4d-e57b-488b-b8bc-4462fe49a3e8");
         linker.translate(player, new FutureCallback<User>() {
             @Override
