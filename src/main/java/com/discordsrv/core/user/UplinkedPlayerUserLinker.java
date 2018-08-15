@@ -37,7 +37,7 @@ import java.util.concurrent.ConcurrentMap;
 public class UplinkedPlayerUserLinker implements PlayerUserLinker {
 
     private final ConcurrentMap<String, User> playerCache = new ConcurrentHashMap<>();
-    private final PlayerUserLookup lookup = null;
+    private final PlayerUserLookup lookup;
 
     @Override
     public void translate(final @Nonnull MinecraftPlayer player, final @Nonnull FutureCallback<User> callback) {
