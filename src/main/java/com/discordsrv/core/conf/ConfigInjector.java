@@ -96,7 +96,7 @@ public final class ConfigInjector {
      *
      * @return map The converted map.
      */
-    public static Map<String, Object> toMap(LinkedHashMap<String, Map<String, Object>> config) {
+    public static Map<String, Object> flatten(LinkedHashMap<String, Map<String, Object>> config) {
         HashMap<String, Object> map = new HashMap<>();
         config.forEach((key, value) -> toMapRecurse(key, value, map));
         return map;

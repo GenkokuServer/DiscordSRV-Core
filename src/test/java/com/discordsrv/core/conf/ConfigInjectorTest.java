@@ -63,7 +63,8 @@ public class ConfigInjectorTest {
                 this.getClass().getClassLoader().getResourceAsStream("conf.yaml"))
         ) {
             LinkedHashMap<String, Map<String, Object>> tree = yaml.load(reader);
-            ConfiguredType type = ConfigInjector.constructFromConfig(ConfigInjector.toMap(tree), ConfiguredType.class);
+            ConfiguredType type =
+                ConfigInjector.constructFromConfig(ConfigInjector.flatten(tree), ConfiguredType.class);
             assertEquals(name, type.getName());
         }
     }
