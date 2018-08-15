@@ -43,6 +43,7 @@ public class AuthenticateCommand extends Command {
     private final String failedAuth;
     private final String successfulAuth;
     private final String alreadyAuth;
+    private final String badConfig;
     private @Setter PlayerUserAuthenticator authenticator;
     private @Setter PlayerUserLinker linker;
     private @Setter PlayerUserLookup lookup;
@@ -67,10 +68,12 @@ public class AuthenticateCommand extends Command {
     public AuthenticateCommand(final @Val("name") String name, final @Val("aliases") ArrayList<String> aliases,
                                final @Val("arguments") String arguments, final @Val("failed_auth") String failedAuth,
                                final @Val("successful_auth") String successfulAuth,
-                               final @Val("already_auth") String alreadyAuth) {
+                               final @Val("already_auth") String alreadyAuth,
+                               final @Val("bad_config") String badConfig) {
         this.failedAuth = failedAuth;
         this.successfulAuth = successfulAuth;
         this.alreadyAuth = alreadyAuth;
+        this.badConfig = badConfig;
         this.name = name;
         this.aliases = aliases.toArray(new String[0]);
         this.arguments = arguments;
@@ -84,59 +87,71 @@ public class AuthenticateCommand extends Command {
 
     @Override
     protected void execute(final CommandEvent event) {
-        lookup.lookup(event.getAuthor().getIdLong(), new FutureCallback<User>() {
-            @Override
-            public void onSuccess(@Nullable final User result) {
-                if (result != null) {
-                    linker.translate(event.getAuthor(), new FutureCallback<MinecraftPlayer>() {
-                        @Override
-                        public void onSuccess(@Nullable final MinecraftPlayer result) {
-                            if (result != null) {
-                                result.getName(name -> {
-                                    event.reactWarning();
-                                    event.reply(alreadyAuth.replace("%author%", event.getAuthor().getAsMention())
-                                        .replace("%player%", name));
-                                });
-                            } else {
-                                event.reactError();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(final @Nonnull Throwable t) {
-                            event.reactError();
-                        }
-                    });
-                } else {
-                    authenticator.attemptVerify(event.getAuthor(), event.getArgs(),
-                        new FutureCallback<Pair<MinecraftPlayer, User>>() {
+        try {
+            lookup.lookup(event.getAuthor().getIdLong(), new FutureCallback<User>() {
+                @Override
+                public void onSuccess(@Nullable final User result) {
+                    if (result != null) {
+                        linker.translate(event.getAuthor(), new FutureCallback<MinecraftPlayer>() {
                             @Override
-                            public void onSuccess(@Nullable final Pair<MinecraftPlayer, User> result) {
+                            public void onSuccess(@Nullable final MinecraftPlayer result) {
                                 if (result != null) {
-                                    result.getLeft().getName(name -> {
-                                        event.reactSuccess();
-                                        event.reply(successfulAuth.replace("%author%", result.getRight().getAsMention())
+                                    result.getName(name -> {
+                                        event.reactWarning();
+                                        event.reply(alreadyAuth.replace("%author%", event.getAuthor().getAsMention())
                                             .replace("%player%", name));
                                     });
                                 } else {
-                                    event.reactError();
+                                    authenticator.attemptVerify(event.getAuthor(), event.getArgs(),
+                                        new FutureCallback<Pair<MinecraftPlayer, User>>() {
+                                            @Override
+                                            public void onSuccess(@Nullable final Pair<MinecraftPlayer, User> result) {
+                                                if (result != null) {
+                                                    result.getLeft().getName(name -> {
+                                                        event.reactSuccess();
+                                                        event.reply(successfulAuth
+                                                            .replace("%author%", result.getRight().getAsMention())
+                                                            .replace("%player%", name));
+                                                    });
+                                                } else {
+                                                    event.reactError();
+                                                    event.reply(badConfig.replace("%owner%",
+                                                        event.getJDA().getUserById(event.getClient().getOwnerId())
+                                                            .getAsMention()));
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(final @Nonnull Throwable t) {
+                                                event.reactWarning();
+                                                event.reply(failedAuth.replace("%token%", event.getArgs()));
+                                            }
+                                        });
                                 }
                             }
 
                             @Override
                             public void onFailure(final @Nonnull Throwable t) {
-                                event.reactWarning();
-                                event.reply(failedAuth.replace("%token%", event.getArgs()));
+                                event.reactError();
+                                event.reply(badConfig.replace("%owner%",
+                                    event.getJDA().getUserById(event.getClient().getOwnerId()).getAsMention()));
                             }
                         });
+                    } else {
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(final @Nonnull Throwable t) {
-                event.reactError();
-            }
-        });
-
+                @Override
+                public void onFailure(final @Nonnull Throwable t) {
+                    event.reactError();
+                    event.reply(badConfig
+                        .replace("%owner%", event.getJDA().getUserById(event.getClient().getOwnerId()).getAsMention()));
+                }
+            });
+        } catch (Throwable t) {
+            event.reactError();
+            event.reply(badConfig
+                .replace("%owner%", event.getJDA().getUserById(event.getClient().getOwnerId()).getAsMention()));
+        }
     }
 }
