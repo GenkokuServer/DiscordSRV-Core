@@ -25,8 +25,8 @@ import javax.naming.ConfigurationException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import static org.junit.Assert.assertEquals;
 
@@ -47,7 +47,7 @@ public class ConfigInjectorTest {
      * @throws IllegalAccessException
      *         As inherited.
      * @throws IOException
-     *         If the conversion process from yaml to properties to map fails.
+     *         If the conversion process from yaml to map fails.
      */
     @Test
     @SuppressWarnings("unchecked")
@@ -62,7 +62,7 @@ public class ConfigInjectorTest {
             InputStreamReader reader = new InputStreamReader(
                 this.getClass().getClassLoader().getResourceAsStream("conf.yaml"))
         ) {
-            TreeMap<String, Map<String, Object>> tree = yaml.loadAs(reader, TreeMap.class);
+            LinkedHashMap<String, Map<String, Object>> tree = yaml.load(reader);
             ConfiguredType type = ConfigInjector.constructFromConfig(ConfigInjector.toMap(tree), ConfiguredType.class);
             assertEquals(name, type.getName());
         }

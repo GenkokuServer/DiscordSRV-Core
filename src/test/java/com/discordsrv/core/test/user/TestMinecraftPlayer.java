@@ -32,9 +32,9 @@ import java.util.function.Consumer;
 @RequiredArgsConstructor
 public class TestMinecraftPlayer implements MinecraftPlayer {
 
-    private State state = State.UNAUTHENTICATED;
     private final CharSequence name;
     private final String identifier;
+    private State state = State.UNAUTHENTICATED;
 
     @Synchronized
     @Override

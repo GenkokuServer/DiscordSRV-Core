@@ -21,8 +21,6 @@ import com.discordsrv.core.conf.annotation.Configured;
 import com.discordsrv.core.conf.annotation.Val;
 
 import javax.naming.ConfigurationException;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
@@ -97,35 +95,22 @@ public final class ConfigInjector {
      *         The tree map config which this is loaded from.
      *
      * @return map The converted map.
-     *
-     * @throws IOException
-     *         This should never happen.
      */
-    public static Map<String, Object> toMap(TreeMap<String, Map<String, Object>> config) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        for (String key : config.keySet()) {
-            sb.append(toString(key, config.get(key)));
-        }
-        Properties properties = new Properties();
-        try (ByteArrayInputStream stream = new ByteArrayInputStream(sb.toString().getBytes())) {
-            properties.load(stream);
-        }
+    public static Map<String, Object> toMap(LinkedHashMap<String, Map<String, Object>> config) {
         HashMap<String, Object> map = new HashMap<>();
-        properties.forEach((k, v) -> map.put((String) k, v));
+        config.forEach((key, value) -> toMapRecurse(key, value, map));
         return map;
     }
 
     @SuppressWarnings("unchecked")
-    private static String toString(String key, Map<String, Object> map) {
-        StringBuilder sb = new StringBuilder();
-        for (String mapKey : map.keySet()) {
-            if (map.get(mapKey) instanceof Map) {
-                sb.append(toString(String.format("%s.%s", key, mapKey), (Map<String, Object>) map.get(mapKey)));
+    private static void toMapRecurse(String key, Map<String, Object> map, Map<String, Object> target) {
+        map.forEach((mapKey, value) -> {
+            if (value instanceof Map) {
+                toMapRecurse(String.format("%s.%s", key, mapKey), (Map<String, Object>) value, target);
             } else {
-                sb.append(String.format("%s.%s=%s%n", key, mapKey, map.get(mapKey).toString()));
+                target.put(String.format("%s.%s", key, mapKey), value);
             }
-        }
-        return sb.toString();
+        });
     }
 
 }

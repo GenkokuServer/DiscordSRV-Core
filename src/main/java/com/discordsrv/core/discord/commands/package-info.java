@@ -15,19 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.test.mocker;
-
 /**
- * Various values to be used within the tests (to make checkstyle stop complaining).
+ * Discord commands package for the DiscordSRV2-Core library.
  */
-@SuppressWarnings("WeakerAccess")
-public final class Values {
-
-    /** Timeout for latches and shutdowns. */
-    public static final int TIMEOUT = 10;
-
-    private Values() {
-        throw new UnsupportedOperationException();
-    }
-
-}
+package com.discordsrv.core.discord.commands;

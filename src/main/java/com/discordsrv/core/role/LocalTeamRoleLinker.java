@@ -40,7 +40,8 @@ public class LocalTeamRoleLinker implements TeamRoleLinker {
 
     @SuppressWarnings("Duplicates")
     @Override
-    public void translate(final @Nonnull Team<MinecraftPlayer> playerTeam, final @Nonnull FutureCallback<Role> callback) {
+    public void translate(final @Nonnull Team<MinecraftPlayer> playerTeam,
+                          final @Nonnull FutureCallback<Role> callback) {
         playerTeam.getUniqueIdentifier(ident -> {
             @Nullable Long result = roleStorage.get(ident);
             if (result == null) {

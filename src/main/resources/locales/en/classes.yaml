@@ -3,5 +3,11 @@ com:
         core:
             discord:
                 commands:
-                    Authenticate:
+                    AuthenticateCommand:
                         name: "authenticate"
+                        aliases:
+                        - "verify"
+                        arguments: "<token>"
+                        failed_auth: "'%token%' is not a recognized token."
+                        successful_auth: "Successfully registered %author% as %player%."
+                        already_auth: "%author% is already registered as %player%."
