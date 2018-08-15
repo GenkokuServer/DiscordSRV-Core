@@ -134,6 +134,7 @@ public class AuthenticateCommand extends Command {
 
             @Override
             public void onFailure(final @Nonnull Throwable t) {
+                event.reactError();
             }
         });
 
