@@ -76,8 +76,7 @@ public class AuthenticateCommand extends Command {
         this.arguments = arguments;
         this.botPermissions = new Permission[]{
             Permission.MESSAGE_READ,
-            Permission.MESSAGE_WRITE,
-            Permission.MANAGE_ROLES
+            Permission.MESSAGE_WRITE
         };
         this.cooldown = 10;
         this.cooldownScope = CooldownScope.USER;

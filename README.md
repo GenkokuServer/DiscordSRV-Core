@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation group: 'com.discordsrv', project: 'DiscordSRV2-Core', version: '2.0-SNAPSHOT'
+    implementation group: 'com.discordsrv', project: 'DiscordSRV2-Core', version: '2.0'
 }
 ```
 
@@ -55,7 +55,7 @@ dependencies {
     <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
-        <version>2.0-SNAPSHOT</version>
+        <version>2.0</version>
     </dependency>
     ...
 </dependencies>
