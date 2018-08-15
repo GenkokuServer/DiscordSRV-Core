@@ -114,7 +114,7 @@ public class PlayerUserAuthenticator {
         }
     }
 
-    private class PushCallback implements FutureCallback<Boolean> {
+    private final class PushCallback implements FutureCallback<Boolean> {
 
         private final UserAuthToken key;
         private final FutureCallback<Pair<MinecraftPlayer, User>> callback;
