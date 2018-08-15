@@ -22,9 +22,11 @@ import com.discordsrv.core.test.user.TestMinecraftPlayer;
 import com.discordsrv.core.test.user.TestPlayerUserLookup;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.User;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.Ignore;
 import org.junit.Test;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -51,7 +53,7 @@ public class UplinkedPlayerUserLinkerTest {
             }
 
             @Override
-            public void onFailure(final Throwable t) {
+            public void onFailure(final @Nonnull Throwable t) {
                 fail();
             }
         });

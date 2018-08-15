@@ -24,11 +24,13 @@ import com.discordsrv.core.test.user.TestPlayerUserLookup;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.collections4.bidimap.DualTreeBidiMap;
-import org.checkerframework.checker.nullness.qual.Nullable;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import static org.junit.Assert.*;
 
@@ -65,7 +67,7 @@ public class LocalPlayerUserLinkerTest {
             }
 
             @Override
-            public void onFailure(final Throwable t) {
+            public void onFailure(final @Nonnull Throwable t) {
                 fail();
             }
         });
@@ -77,13 +79,11 @@ public class LocalPlayerUserLinkerTest {
             @Override
             public void onSuccess(@Nullable final MinecraftPlayer result) {
                 assertNotNull(result);
-                result.getUniqueIdentifier(ident -> {
-                    assertEquals(testMCId, ident);
-                });
+                result.getUniqueIdentifier(ident -> assertEquals(testMCId, ident));
             }
 
             @Override
-            public void onFailure(final Throwable t) {
+            public void onFailure(final @Nonnull Throwable t) {
                 fail();
             }
         });
