@@ -106,36 +106,52 @@ public class PlayerUserAuthenticator {
         this.tokenMap.forEach((key, value) -> key.getUniqueIdentifier(tokenIdent -> {
             if (tokenIdent.equals(tokenString)) {
                 matched.set(true);
-                userStore.push(value, user, new FutureCallback<Boolean>() {
-                    @Override
-                    public void onSuccess(@Nullable final Boolean result) {
-                        if (Objects.requireNonNull(result)) {
-                            scheduler.execute(key::invalidate);
-                            callback.onSuccess(new Pair<MinecraftPlayer, User>() {
-                                @Override
-                                public MinecraftPlayer getLeft() {
-                                    return value;
-                                }
-
-                                @Override
-                                public User getRight() {
-                                    return user;
-                                }
-                            });
-                        } else {
-                            callback.onFailure(new IllegalStateException("User found to be already authenticated."));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(final @Nonnull Throwable t) {
-                        callback.onFailure(t);
-                    }
-                });
+                userStore.push(value, user, new PushCallback(key, callback, value, user));
             }
         }));
         if (!matched.get()) {
             callback.onFailure(new AuthenticationException());
+        }
+    }
+
+    private class PushCallback implements FutureCallback<Boolean> {
+
+        private final UserAuthToken key;
+        private final FutureCallback<Pair<MinecraftPlayer, User>> callback;
+        private final MinecraftPlayer player;
+        private final User user;
+
+        private PushCallback(final UserAuthToken key, final FutureCallback<Pair<MinecraftPlayer, User>> callback,
+                             final MinecraftPlayer player, final User user) {
+            this.key = key;
+            this.callback = callback;
+            this.player = player;
+            this.user = user;
+        }
+
+        @Override
+        public void onSuccess(@Nullable final Boolean result) {
+            if (Objects.requireNonNull(result)) {
+                scheduler.execute(key::invalidate);
+                callback.onSuccess(new Pair<MinecraftPlayer, User>() {
+                    @Override
+                    public MinecraftPlayer getLeft() {
+                        return player;
+                    }
+
+                    @Override
+                    public User getRight() {
+                        return user;
+                    }
+                });
+            } else {
+                callback.onFailure(new IllegalStateException("User found to be already authenticated."));
+            }
+        }
+
+        @Override
+        public void onFailure(final @Nonnull Throwable t) {
+            callback.onFailure(t);
         }
     }
 
