@@ -17,7 +17,6 @@
  */
 package com.discordsrv.core.role;
 
-import com.discordsrv.core.api.auth.AuthenticationStore;
 import com.discordsrv.core.api.role.Team;
 import com.discordsrv.core.api.role.TeamRoleLinker;
 import com.discordsrv.core.api.role.TeamRoleLookup;
@@ -34,7 +33,7 @@ import javax.annotation.Nullable;
  * Leverages a local storage for role/team linking.
  */
 @RequiredArgsConstructor
-public class LocalTeamRoleLinker implements TeamRoleLinker, AuthenticationStore<Team<MinecraftPlayer>, Role> {
+public class LocalTeamRoleLinker implements TeamRoleLinker {
 
     private final BidiMap<String, Long> roleStorage;
     private final TeamRoleLookup lookup;
@@ -63,16 +62,4 @@ public class LocalTeamRoleLinker implements TeamRoleLinker, AuthenticationStore<
         }
     }
 
-    @Override
-    public void push(final @Nonnull Team<MinecraftPlayer> first, final @Nonnull Role last) {
-        first.getUniqueIdentifier(ident -> roleStorage.put(ident, last.getIdLong()));
-    }
-
-    @Override
-    public void remove(final @Nonnull Team<MinecraftPlayer> first, final @Nonnull Role last) {
-        first.getUniqueIdentifier(ident -> {
-            roleStorage.remove(ident);
-            roleStorage.removeValue(last.getIdLong());
-        });
-    }
 }

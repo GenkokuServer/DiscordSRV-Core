@@ -43,16 +43,19 @@ import static org.junit.Assert.*;
 public class LocalTeamRoleLinkerTest {
 
     private static LocalTeamRoleLinker linker;
-    private final String testMCId = "1234";
-    private final long testDiscordId = 1234;
-    private final Mocker mocker = new Mocker();
+    private static String testMCId = "1234";
+    private static long testDiscordId = 1234;
+    private static Mocker mocker;
 
     /**
      * Creates the linker.
      */
     @BeforeClass
     public static void setup() {
-        linker = new LocalTeamRoleLinker(new DualTreeBidiMap<>(), new TestTeamRoleLookup());
+        mocker = new Mocker();
+        DualTreeBidiMap<String, Long> bidiMap = new DualTreeBidiMap<>();
+        bidiMap.put(testMCId, testDiscordId);
+        linker = new LocalTeamRoleLinker(bidiMap, new TestTeamRoleLookup());
     }
 
     /**
@@ -60,15 +63,8 @@ public class LocalTeamRoleLinkerTest {
      */
     @AfterClass
     public static void tearDown() {
+        mocker = null;
         linker = null;
-    }
-
-    /**
-     * Tests {@link LocalTeamRoleLinker#push(Team, Role)}.
-     */
-    @Test
-    public void stage1Push() {
-        linker.push(new TestTeam(new LinkedList<>(), "Test", testMCId), mocker.getMockedRole(testDiscordId));
     }
 
     /**
@@ -107,24 +103,6 @@ public class LocalTeamRoleLinkerTest {
                 fail();
             }
         });
-    }
-
-    /**
-     * Tests {@link LocalTeamRoleLinker#remove(Team, Role)}.
-     */
-    @Test
-    public void stage4Remove() {
-        linker.remove(new TestTeam(new LinkedList<>(), "Test", testMCId), mocker.getMockedRole(testDiscordId));
-        try {
-            stage2Translate();
-            fail();
-        } catch (AssertionError ignored) {
-        }
-        try {
-            stage3Translate();
-            fail();
-        } catch (AssertionError ignored) {
-        }
     }
 
 }
