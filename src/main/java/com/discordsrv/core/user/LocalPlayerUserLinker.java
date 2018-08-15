@@ -38,6 +38,7 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
     private final BidiMap<String, Long> playerStorage;
     private final PlayerUserLookup lookup;
 
+    @SuppressWarnings("Duplicates")
     @Override
     public void translate(final @Nonnull MinecraftPlayer player, final @Nonnull FutureCallback<User> callback) {
         player.getUniqueIdentifier(ident -> {

@@ -38,10 +38,9 @@ public class LocalTeamRoleLinker implements TeamRoleLinker {
     private final BidiMap<String, Long> roleStorage;
     private final TeamRoleLookup lookup;
 
+    @SuppressWarnings("Duplicates")
     @Override
-    public void translate(final @Nonnull Team<MinecraftPlayer> playerTeam,
-                          final @Nonnull FutureCallback<Role> callback) {
-        //noinspection Duplicates
+    public void translate(final @Nonnull Team<MinecraftPlayer> playerTeam, final @Nonnull FutureCallback<Role> callback) {
         playerTeam.getUniqueIdentifier(ident -> {
             @Nullable Long result = roleStorage.get(ident);
             if (result == null) {
