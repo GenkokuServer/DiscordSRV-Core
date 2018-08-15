@@ -22,8 +22,6 @@ import com.discordsrv.core.api.auth.State;
 import com.discordsrv.core.api.auth.Token;
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.google.common.util.concurrent.FutureCallback;
-import lombok.Getter;
-import lombok.Synchronized;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.tuple.Pair;
 
@@ -168,7 +166,7 @@ public class PlayerUserAuthenticator {
     private final class UserAuthToken implements Token {
 
         private final String ident;
-        private @Getter(onMethod_ = @Synchronized) boolean valid;
+        private boolean valid;
 
         private UserAuthToken() {
             this.ident = String
@@ -176,14 +174,12 @@ public class PlayerUserAuthenticator {
                 .replace(' ', '0');
         }
 
-        @Synchronized
         @Override
-        public void getUniqueIdentifier(final @Nonnull Consumer<String> callback) {
+        public synchronized void getUniqueIdentifier(final @Nonnull Consumer<String> callback) {
             callback.accept(ident);
         }
 
-        @Synchronized
-        public void invalidate() {
+        public synchronized void invalidate() {
             valid = false;
             tokenMap.remove(this);
         }
@@ -191,6 +187,10 @@ public class PlayerUserAuthenticator {
         @Override
         public int hashCode() {
             return Integer.parseInt(ident.toLowerCase(), 36);
+        }
+
+        public boolean isValid() {
+            return this.valid;
         }
     }
 }

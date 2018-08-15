@@ -22,7 +22,6 @@ import com.discordsrv.core.api.role.TeamRoleLinker;
 import com.discordsrv.core.api.role.TeamRoleLookup;
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.google.common.util.concurrent.FutureCallback;
-import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.entities.Role;
 import org.apache.commons.collections4.BidiMap;
 
@@ -32,11 +31,15 @@ import javax.annotation.Nullable;
 /**
  * Leverages a local storage for role/team linking.
  */
-@RequiredArgsConstructor
 public class LocalTeamRoleLinker implements TeamRoleLinker {
 
     private final BidiMap<String, Long> roleStorage;
     private final TeamRoleLookup lookup;
+
+    public LocalTeamRoleLinker(final BidiMap<String, Long> roleStorage, final TeamRoleLookup lookup) {
+        this.roleStorage = roleStorage;
+        this.lookup = lookup;
+    }
 
     @SuppressWarnings("Duplicates")
     @Override

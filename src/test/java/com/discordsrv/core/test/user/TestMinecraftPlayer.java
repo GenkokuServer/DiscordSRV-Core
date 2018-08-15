@@ -20,8 +20,6 @@ package com.discordsrv.core.test.user;
 import com.discordsrv.core.api.auth.State;
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.google.common.util.concurrent.FutureCallback;
-import lombok.RequiredArgsConstructor;
-import lombok.Synchronized;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -29,22 +27,24 @@ import java.util.function.Consumer;
 /**
  * A simple test implementation of the {@link MinecraftPlayer} type.
  */
-@RequiredArgsConstructor
 public class TestMinecraftPlayer implements MinecraftPlayer {
 
     private final CharSequence name;
     private final String identifier;
     private State state = State.UNAUTHENTICATED;
 
-    @Synchronized
+    public TestMinecraftPlayer(final CharSequence name, final String identifier) {
+        this.name = name;
+        this.identifier = identifier;
+    }
+
     @Override
-    public void getAuthenticationState(final @Nonnull Consumer<State> callback) {
+    public synchronized void getAuthenticationState(final @Nonnull Consumer<State> callback) {
         callback.accept(state);
     }
 
-    @Synchronized
     @Override
-    public void setAuthenticationState(final @Nonnull State state) {
+    public synchronized void setAuthenticationState(final @Nonnull State state) {
         this.state = state;
     }
 

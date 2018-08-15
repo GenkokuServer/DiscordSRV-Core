@@ -23,7 +23,6 @@ import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.discordsrv.core.api.user.PlayerUserLinker;
 import com.discordsrv.core.api.user.PlayerUserLookup;
 import com.google.common.util.concurrent.FutureCallback;
-import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.collections4.BidiMap;
 
@@ -33,11 +32,15 @@ import javax.annotation.Nullable;
 /**
  * Leverages a local storage for player/user linking.
  */
-@RequiredArgsConstructor
 public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationStore<MinecraftPlayer, User> {
 
     private final BidiMap<String, Long> playerStorage;
     private final PlayerUserLookup lookup;
+
+    public LocalPlayerUserLinker(final BidiMap<String, Long> playerStorage, final PlayerUserLookup lookup) {
+        this.playerStorage = playerStorage;
+        this.lookup = lookup;
+    }
 
     @SuppressWarnings("Duplicates")
     @Override

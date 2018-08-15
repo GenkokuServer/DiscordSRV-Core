@@ -21,7 +21,6 @@ import com.discordsrv.core.api.channel.Chat;
 import com.discordsrv.core.api.channel.ChatChannelLinker;
 import com.discordsrv.core.api.channel.ChatChannelLookup;
 import com.google.common.util.concurrent.FutureCallback;
-import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.entities.TextChannel;
 import org.apache.commons.collections4.BidiMap;
 
@@ -31,11 +30,15 @@ import javax.annotation.Nullable;
 /**
  * Leverages a local storage for chat/channel linking.
  */
-@RequiredArgsConstructor
 public class LocalChatChannelLinker implements ChatChannelLinker {
 
     private final BidiMap<String, Long> channelStorage;
     private final ChatChannelLookup lookup;
+
+    public LocalChatChannelLinker(final BidiMap<String, Long> channelStorage, final ChatChannelLookup lookup) {
+        this.channelStorage = channelStorage;
+        this.lookup = lookup;
+    }
 
     @SuppressWarnings("Duplicates")
     @Override

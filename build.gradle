@@ -21,10 +21,7 @@ plugins {
     id 'idea'
     id 'checkstyle'
     id 'maven'
-    id 'io.franzbecker.gradle-lombok' version '1.14'
 }
-
-import io.franzbecker.gradle.lombok.task.DelombokTask
 
 group 'com.discordsrv'
 version '2.0-SNAPSHOT'
@@ -37,32 +34,18 @@ repositories {
     mavenCentral()
 }
 
-lombok {
-    version = '1.18.2'
-    sha256 = ""
-}
-
 configurations {
     deployerJars
-}
-task delombok(type: DelombokTask, dependsOn: compileJava) {
-    ext.outputDir = file("$buildDir/delombok")
-    outputs.dir(outputDir)
-    sourceSets.main.java.srcDirs.each {
-        inputs.dir(it)
-        args(it, "-d", outputDir)
-    }
 }
 
 // Javadoc Task
 javadoc {
-    dependsOn delombok
-    source = delombok.outputDir
     options.memberLevel = JavadocMemberLevel.PUBLIC
     options.author()
     options.encoding = 'UTF-8'
     options.addBooleanOption('html5', true)
     options.addBooleanOption('Xdoclint:none', true)
+    failOnError = false
 }
 
 checkstyle {

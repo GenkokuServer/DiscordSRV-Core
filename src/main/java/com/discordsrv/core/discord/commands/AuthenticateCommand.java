@@ -26,7 +26,6 @@ import com.discordsrv.core.conf.annotation.Val;
 import com.google.common.util.concurrent.FutureCallback;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import lombok.Setter;
 import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.tuple.Pair;
@@ -44,9 +43,9 @@ public class AuthenticateCommand extends Command {
     private final String successfulAuth;
     private final String alreadyAuth;
     private final String badConfig;
-    private @Setter PlayerUserAuthenticator authenticator;
-    private @Setter PlayerUserLinker linker;
-    private @Setter PlayerUserLookup lookup;
+    private PlayerUserAuthenticator authenticator;
+    private PlayerUserLinker linker;
+    private PlayerUserLookup lookup;
 
     /**
      * Configured constructor for the AuthenticateCommand type.
@@ -137,5 +136,17 @@ public class AuthenticateCommand extends Command {
             event.reply(badConfig
                 .replace("%owner%", event.getJDA().getUserById(event.getClient().getOwnerId()).getAsMention()));
         }
+    }
+
+    public void setAuthenticator(final PlayerUserAuthenticator authenticator) {
+        this.authenticator = authenticator;
+    }
+
+    public void setLinker(final PlayerUserLinker linker) {
+        this.linker = linker;
+    }
+
+    public void setLookup(final PlayerUserLookup lookup) {
+        this.lookup = lookup;
     }
 }

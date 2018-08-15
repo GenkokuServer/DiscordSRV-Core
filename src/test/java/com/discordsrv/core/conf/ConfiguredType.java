@@ -19,15 +19,13 @@ package com.discordsrv.core.conf;
 
 import com.discordsrv.core.conf.annotation.Configured;
 import com.discordsrv.core.conf.annotation.Val;
-import lombok.Value;
 
 /**
  * An example configured type.
  */
-@Value
 public class ConfiguredType {
 
-    private String name;
+    private final String name;
 
     /**
      * A configured constructor.
@@ -40,4 +38,7 @@ public class ConfiguredType {
         this.name = name;
     }
 
+    String getName() {
+        return name;
+    }
 }

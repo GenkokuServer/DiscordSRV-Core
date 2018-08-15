@@ -20,7 +20,6 @@ package com.discordsrv.core.test.channel;
 import com.discordsrv.core.api.channel.Chat;
 import com.discordsrv.core.api.channel.ChatMessage;
 import com.google.common.util.concurrent.FutureCallback;
-import lombok.RequiredArgsConstructor;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -28,11 +27,15 @@ import java.util.function.Consumer;
 /**
  * A simple test implementation of the {@link Chat} type.
  */
-@RequiredArgsConstructor
 public class TestChat implements Chat {
 
     private final CharSequence name;
     private final String identifier;
+
+    public TestChat(final CharSequence name, final String identifier) {
+        this.name = name;
+        this.identifier = identifier;
+    }
 
     @Override
     public void getName(final @Nonnull Consumer<CharSequence> callback) {

@@ -21,7 +21,6 @@ import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.discordsrv.core.api.user.PlayerUserLinker;
 import com.discordsrv.core.api.user.PlayerUserLookup;
 import com.google.common.util.concurrent.FutureCallback;
-import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.core.entities.User;
 
 import javax.annotation.Nonnull;
@@ -33,11 +32,14 @@ import java.util.concurrent.ConcurrentMap;
  * <p>
  * TODO Finish link.discordsrv.com
  */
-@RequiredArgsConstructor
 public class UplinkedPlayerUserLinker implements PlayerUserLinker {
 
     private final ConcurrentMap<String, User> playerCache = new ConcurrentHashMap<>();
     private final PlayerUserLookup lookup;
+
+    public UplinkedPlayerUserLinker(final PlayerUserLookup lookup) {
+        this.lookup = lookup;
+    }
 
     @Override
     public void translate(final @Nonnull MinecraftPlayer player, final @Nonnull FutureCallback<User> callback) {

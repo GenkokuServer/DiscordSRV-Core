@@ -20,7 +20,6 @@ package com.discordsrv.core.test.role;
 import com.discordsrv.core.api.role.Team;
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.google.common.util.concurrent.FutureCallback;
-import lombok.RequiredArgsConstructor;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;
@@ -31,12 +30,17 @@ import java.util.function.Consumer;
 /**
  * A simple test implementation of the {@link Team} type.
  */
-@RequiredArgsConstructor
 public class TestTeam implements Team<MinecraftPlayer> {
 
     private final List<MinecraftPlayer> players;
     private final CharSequence name;
     private final String identifier;
+
+    public TestTeam(final List<MinecraftPlayer> players, final CharSequence name, final String identifier) {
+        this.players = players;
+        this.name = name;
+        this.identifier = identifier;
+    }
 
     @Override
     public void getName(final @Nonnull Consumer<CharSequence> callback) {
