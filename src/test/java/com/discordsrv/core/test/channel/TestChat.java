@@ -15,26 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.test.role;
+package com.discordsrv.core.test.channel;
 
-import com.discordsrv.core.api.role.Team;
-import com.discordsrv.core.api.user.MinecraftPlayer;
+import com.discordsrv.core.api.channel.Chat;
+import com.discordsrv.core.api.channel.ChatMessage;
 import com.google.common.util.concurrent.FutureCallback;
 import lombok.RequiredArgsConstructor;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * A simple test implementation of the {@link Team} type.
+ * A simple test implementation of the {@link Chat} type.
  */
 @RequiredArgsConstructor
-public class TestTeam implements Team<MinecraftPlayer> {
+public class TestChat implements Chat {
 
-    private final List<MinecraftPlayer> players;
     private final CharSequence name;
     private final String identifier;
 
@@ -49,18 +45,7 @@ public class TestTeam implements Team<MinecraftPlayer> {
     }
 
     @Override
-    public void getMembers(final @Nonnull Consumer<Collection<MinecraftPlayer>> callback) {
-        callback.accept(Collections.unmodifiableCollection(players));
+    public void sendMessage(final @Nonnull ChatMessage message, final @Nonnull FutureCallback<Void> resultCallback) {
+        throw new UnsupportedOperationException();
     }
-
-    @Override
-    public void addMember(final @Nonnull MinecraftPlayer member, final @Nonnull FutureCallback<Void> callback) {
-        try {
-            players.add(member);
-            callback.onSuccess(null);
-        } catch (Throwable t) {
-            callback.onFailure(t);
-        }
-    }
-
 }

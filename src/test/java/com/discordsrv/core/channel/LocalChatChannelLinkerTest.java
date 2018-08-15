@@ -15,15 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.role;
+package com.discordsrv.core.channel;
 
-import com.discordsrv.core.api.role.Team;
-import com.discordsrv.core.api.user.MinecraftPlayer;
+import com.discordsrv.core.api.channel.Chat;
+import com.discordsrv.core.test.channel.TestChat;
+import com.discordsrv.core.test.channel.TestChatChannelLookup;
 import com.discordsrv.core.test.mocker.Mocker;
-import com.discordsrv.core.test.role.TestTeam;
-import com.discordsrv.core.test.role.TestTeamRoleLookup;
 import com.google.common.util.concurrent.FutureCallback;
-import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.core.entities.TextChannel;
 import org.apache.commons.collections4.bidimap.DualTreeBidiMap;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -33,17 +32,16 @@ import org.junit.runners.MethodSorters;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.LinkedList;
 
 import static org.junit.Assert.*;
 
 /**
- * Tests {@link LocalTeamRoleLinker}.
+ * Tests {@link LocalChatChannelLinker}.
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class LocalTeamRoleLinkerTest {
+public class LocalChatChannelLinkerTest {
 
-    private static LocalTeamRoleLinker linker;
+    private static LocalChatChannelLinker linker;
     private static String testMCId = "1234";
     private static long testDiscordId = 1234;
     private static Mocker mocker;
@@ -56,7 +54,7 @@ public class LocalTeamRoleLinkerTest {
         mocker = new Mocker();
         DualTreeBidiMap<String, Long> bidiMap = new DualTreeBidiMap<>();
         bidiMap.put(testMCId, testDiscordId);
-        linker = new LocalTeamRoleLinker(bidiMap, new TestTeamRoleLookup());
+        linker = new LocalChatChannelLinker(bidiMap, new TestChatChannelLookup());
     }
 
     /**
@@ -69,13 +67,13 @@ public class LocalTeamRoleLinkerTest {
     }
 
     /**
-     * Tests {@link LocalTeamRoleLinker#translate(Team, FutureCallback)}.
+     * Tests {@link LocalChatChannelLinker#translate(Chat, FutureCallback)}.
      */
     @Test
     public void stage1Translate() {
-        linker.translate(new TestTeam(new LinkedList<>(), "Test", testMCId), new FutureCallback<Role>() {
+        linker.translate(new TestChat("Test", testMCId), new FutureCallback<TextChannel>() {
             @Override
-            public void onSuccess(@Nullable final Role result) {
+            public void onSuccess(@Nullable final TextChannel result) {
                 assertNotNull(result);
                 assertEquals(testDiscordId, result.getIdLong());
             }
@@ -88,13 +86,13 @@ public class LocalTeamRoleLinkerTest {
     }
 
     /**
-     * Tests {@link LocalTeamRoleLinker#translate(Role, FutureCallback)}.
+     * Tests {@link LocalChatChannelLinker#translate(TextChannel, FutureCallback)}.
      */
     @Test
     public void stage2Translate() {
-        linker.translate(mocker.getMockedRole(testDiscordId), new FutureCallback<Team<MinecraftPlayer>>() {
+        linker.translate(mocker.getSimpleMockedTextChannel(testDiscordId), new FutureCallback<Chat>() {
             @Override
-            public void onSuccess(@Nullable final Team<MinecraftPlayer> result) {
+            public void onSuccess(@Nullable final Chat result) {
                 assertNotNull(result);
                 result.getUniqueIdentifier(ident -> assertEquals(testMCId, ident));
             }
