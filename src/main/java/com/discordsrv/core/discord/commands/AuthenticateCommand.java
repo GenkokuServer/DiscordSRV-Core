@@ -19,7 +19,6 @@ package com.discordsrv.core.discord.commands;
 
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.discordsrv.core.api.user.PlayerUserLinker;
-import com.discordsrv.core.api.user.PlayerUserLookup;
 import com.discordsrv.core.auth.PlayerUserAuthenticator;
 import com.discordsrv.core.conf.annotation.Configured;
 import com.discordsrv.core.conf.annotation.Val;
@@ -45,34 +44,34 @@ public class AuthenticateCommand extends Command {
     private final String badConfig;
     private PlayerUserAuthenticator authenticator;
     private PlayerUserLinker linker;
-    private PlayerUserLookup lookup;
 
     /**
-     * Configured constructor for the AuthenticateCommand type.
+     * Main configured constructor for the AuthenticateCommand type.
      *
      * @param name
      *         The name of the command.
      * @param aliases
-     *         The list of aliases.
+     *         Aliases of the command.
      * @param arguments
-     *         The help menu arguments.
+     *         Argument help for the command.
+     * @param help
+     *         Help message for the command.
      * @param failedAuth
-     *         The message to display upon a failed auth attempt.
+     *         Message to send when an auth attempt fails.
      * @param successfulAuth
-     *         The message to display upon a successful auth attempt.
+     *         Message to send when an auth attempt succeeds.
      * @param alreadyAuth
-     *         The message to display when a user is already authenticated.
+     *         Message to send when a user requesting authentication already has an authentication entry.
+     * @param badConfig
+     *         If the server configuration is incorrect (i.e. authenticators or linkers are not provided).
      */
     @Configured
     public AuthenticateCommand(final @Val("name") String name, final @Val("aliases") ArrayList<String> aliases,
-                               final @Val("arguments") String arguments, final @Val("failed_auth") String failedAuth,
+                               final @Val("arguments") String arguments, final @Val("help") String help,
+                               final @Val("failed_auth") String failedAuth,
                                final @Val("successful_auth") String successfulAuth,
                                final @Val("already_auth") String alreadyAuth,
                                final @Val("bad_config") String badConfig) {
-        this.failedAuth = failedAuth;
-        this.successfulAuth = successfulAuth;
-        this.alreadyAuth = alreadyAuth;
-        this.badConfig = badConfig;
         this.name = name;
         this.aliases = aliases.toArray(new String[0]);
         this.arguments = arguments;
@@ -82,6 +81,11 @@ public class AuthenticateCommand extends Command {
         };
         this.cooldown = 10;
         this.cooldownScope = CooldownScope.USER;
+        this.help = help;
+        this.failedAuth = failedAuth;
+        this.successfulAuth = successfulAuth;
+        this.alreadyAuth = alreadyAuth;
+        this.badConfig = badConfig;
     }
 
     @Override
@@ -146,7 +150,4 @@ public class AuthenticateCommand extends Command {
         this.linker = linker;
     }
 
-    public void setLookup(final PlayerUserLookup lookup) {
-        this.lookup = lookup;
-    }
 }

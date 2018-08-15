@@ -8,6 +8,7 @@ com:
                         aliases:
                         - "verify"
                         arguments: "<token>"
+                        help: "Authenticate yourself using a token from the Minecraft server."
                         failed_auth: "'%token%' is not a recognized token."
                         successful_auth: "Successfully registered %author% as %player%."
                         already_auth: "%author% is already registered as %player%."
