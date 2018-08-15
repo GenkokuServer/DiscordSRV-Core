@@ -41,7 +41,7 @@ public interface Authenticatable<T, R> extends Translatable<T, R> {
      * @param callback
      *         The callback for this getter.
      */
-    void getAuthenticationStage(Consumer<State> callback);
+    void getAuthenticationState(Consumer<State> callback);
 
     /**
      * Sets the authentication state of this authenticatable instance.
@@ -49,6 +49,6 @@ public interface Authenticatable<T, R> extends Translatable<T, R> {
      * @param state
      *         The new state of this authenticatable instance.
      */
-    void setAuthenticationStage(State state);
+    void setAuthenticationState(State state);
 
 }

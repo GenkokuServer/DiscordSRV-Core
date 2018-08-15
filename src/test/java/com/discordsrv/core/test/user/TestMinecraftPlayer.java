@@ -21,6 +21,7 @@ import com.discordsrv.core.api.auth.State;
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.google.common.util.concurrent.FutureCallback;
 import lombok.RequiredArgsConstructor;
+import lombok.Synchronized;
 
 import javax.annotation.Nonnull;
 import java.util.function.Consumer;
@@ -35,13 +36,15 @@ public class TestMinecraftPlayer implements MinecraftPlayer {
     private final CharSequence name;
     private final String identifier;
 
+    @Synchronized
     @Override
-    public synchronized void getAuthenticationStage(final @Nonnull Consumer<State> callback) {
+    public void getAuthenticationState(final @Nonnull Consumer<State> callback) {
         callback.accept(state);
     }
 
+    @Synchronized
     @Override
-    public synchronized void setAuthenticationStage(final @Nonnull State state) {
+    public void setAuthenticationState(final @Nonnull State state) {
         this.state = state;
     }
 

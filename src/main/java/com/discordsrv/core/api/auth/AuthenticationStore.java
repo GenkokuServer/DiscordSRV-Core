@@ -17,7 +17,11 @@
  */
 package com.discordsrv.core.api.auth;
 
+import com.google.common.util.concurrent.FutureCallback;
+
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.ParametersAreNullableByDefault;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -33,24 +37,29 @@ import javax.annotation.concurrent.ThreadSafe;
 public interface AuthenticationStore<T, R> {
 
     /**
-     * Pushes an authenticated pair to this store.
+     * Pushes an authenticated pair to this store. States of authentication MUST be set after this method is invoked.
      *
      * @param first
      *         The first component of the authentication.
      * @param last
      *         The final component of the authentication.
+     * @param callback
+     *         The callback of this method.
      */
-    void push(T first, R last);
+    void push(T first, R last, FutureCallback<Boolean> callback);
 
     /**
      * Removes any authenticated pair from this store which has either the first as the first component or the final as
-     * the final component.
+     * the final component. States of authentication MUST be set after this method is invoked.
      *
      * @param first
      *         The first component of the authentication.
      * @param last
      *         The final component of the authentication.
+     * @param callback
+     *         The callback of this method.
      */
-    void remove(T first, R last);
+    @ParametersAreNullableByDefault
+    void remove(T first, R last, @Nonnull FutureCallback<Boolean> callback);
 
 }

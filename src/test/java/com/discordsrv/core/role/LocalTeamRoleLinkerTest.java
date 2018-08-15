@@ -29,19 +29,23 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.security.SecureRandom;
 import java.util.LinkedList;
+import java.util.Random;
 
 import static org.junit.Assert.*;
 
 /**
  * Tests {@link LocalTeamRoleLinker}.
  */
-@FixMethodOrder
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LocalTeamRoleLinkerTest {
 
+    private static Random random = new SecureRandom();
     private static LocalTeamRoleLinker linker;
     private static String testMCId = "1234";
     private static long testDiscordId = 1234;
@@ -71,7 +75,7 @@ public class LocalTeamRoleLinkerTest {
      * Tests {@link LocalTeamRoleLinker#translate(Team, FutureCallback)}.
      */
     @Test
-    public void stage2Translate() {
+    public void stage1Translate() {
         linker.translate(new TestTeam(new LinkedList<>(), "Test", testMCId), new FutureCallback<Role>() {
             @Override
             public void onSuccess(@Nullable final Role result) {
@@ -90,7 +94,7 @@ public class LocalTeamRoleLinkerTest {
      * Tests {@link LocalTeamRoleLinker#translate(Role, FutureCallback)}.
      */
     @Test
-    public void stage3Translate() {
+    public void stage2Translate() {
         linker.translate(mocker.getMockedRole(testDiscordId), new FutureCallback<Team<MinecraftPlayer>>() {
             @Override
             public void onSuccess(@Nullable final Team<MinecraftPlayer> result) {

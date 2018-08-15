@@ -28,6 +28,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -37,7 +38,7 @@ import static org.junit.Assert.*;
 /**
  * Tests {@link LocalPlayerUserLinker}.
  */
-@FixMethodOrder
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LocalPlayerUserLinkerTest {
 
     private static LocalPlayerUserLinker linker;
@@ -62,11 +63,24 @@ public class LocalPlayerUserLinkerTest {
     }
 
     /**
-     * Tests {@link LocalPlayerUserLinker#push(MinecraftPlayer, User)}.
+     * Tests {@link LocalPlayerUserLinker#push(MinecraftPlayer, User, FutureCallback)}.
      */
     @Test
     public void stage1Push() {
-        linker.push(new TestMinecraftPlayer("Test", testMCId), mocker.getMockedUser(testDiscordId));
+        linker.push(new TestMinecraftPlayer("Test", testMCId), mocker.getMockedUser(testDiscordId),
+            new FutureCallback<Boolean>() {
+                @Override
+                public void onSuccess(@Nullable final Boolean result) {
+                    assertNotNull(result);
+                    assertTrue(result);
+                }
+
+                @Override
+                public void onFailure(final @Nonnull Throwable t) {
+                    t.printStackTrace();
+                    fail();
+                }
+            });
     }
 
     /**
@@ -108,21 +122,33 @@ public class LocalPlayerUserLinkerTest {
     }
 
     /**
-     * Tests {@link LocalPlayerUserLinker#remove(MinecraftPlayer, User)}.
+     * Tests {@link LocalPlayerUserLinker#remove(MinecraftPlayer, User, FutureCallback)}.
      */
     @Test
     public void stage4Remove() {
-        linker.remove(new TestMinecraftPlayer("Test", testMCId), mocker.getMockedUser(testDiscordId));
-        try {
-            stage2Translate();
-            fail();
-        } catch (AssertionError ignored) {
-        }
-        try {
-            stage3Translate();
-            fail();
-        } catch (AssertionError ignored) {
-        }
+        linker.remove(new TestMinecraftPlayer("Test", testMCId), mocker.getMockedUser(testDiscordId),
+            new FutureCallback<Boolean>() {
+                @Override
+                public void onSuccess(@Nullable final Boolean result) {
+                    assertNotNull(result);
+                    assertTrue(result);
+                    try {
+                        stage2Translate();
+                        fail();
+                    } catch (AssertionError ignored) {
+                    }
+                    try {
+                        stage3Translate();
+                        fail();
+                    } catch (AssertionError ignored) {
+                    }
+                }
+
+                @Override
+                public void onFailure(final @Nonnull Throwable t) {
+                    fail();
+                }
+            });
     }
 
 }

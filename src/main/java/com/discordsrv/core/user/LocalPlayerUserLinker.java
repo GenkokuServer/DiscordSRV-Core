@@ -18,6 +18,7 @@
 package com.discordsrv.core.user;
 
 import com.discordsrv.core.api.auth.AuthenticationStore;
+import com.discordsrv.core.api.auth.State;
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.discordsrv.core.api.user.PlayerUserLinker;
 import com.discordsrv.core.api.user.PlayerUserLookup;
@@ -62,15 +63,51 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
     }
 
     @Override
-    public void push(final @Nonnull MinecraftPlayer first, final @Nonnull User last) {
-        first.getUniqueIdentifier(ident -> playerStorage.put(ident, last.getIdLong()));
+    public void push(final @Nonnull MinecraftPlayer first, final @Nonnull User last,
+                     final @Nonnull FutureCallback<Boolean> callback) {
+        first.getUniqueIdentifier(ident -> {
+            try {
+                boolean success = playerStorage.putIfAbsent(ident, last.getIdLong()) == null;
+                if (success) {
+                    first.setAuthenticationState(State.AUTHENTICATED);
+                }
+                callback.onSuccess(success);
+            } catch (Throwable t) {
+                callback.onFailure(t);
+            }
+        });
     }
 
     @Override
-    public void remove(final @Nonnull MinecraftPlayer first, final @Nonnull User last) {
-        first.getUniqueIdentifier(ident -> {
-            playerStorage.remove(ident);
-            playerStorage.removeValue(last.getIdLong());
-        });
+    public void remove(final @Nullable MinecraftPlayer first, final @Nullable User last,
+                       final @Nonnull FutureCallback<Boolean> callback) {
+        if (first != null) {
+            first.getUniqueIdentifier(key -> {
+                boolean success = playerStorage.remove(key) != null;
+                first.setAuthenticationState(State.UNAUTHENTICATED);
+                callback.onSuccess(success);
+            });
+        } else if (last != null) {
+            String player = playerStorage.removeValue(last.getIdLong());
+            if (player != null) {
+                lookup.lookup(player, new FutureCallback<MinecraftPlayer>() {
+                    @Override
+                    public void onSuccess(@Nullable final MinecraftPlayer result) {
+                        assert result != null;
+                        result.setAuthenticationState(State.UNAUTHENTICATED);
+                        callback.onSuccess(true);
+                    }
+
+                    @Override
+                    public void onFailure(final @Nonnull Throwable t) {
+                        callback.onFailure(t);
+                    }
+                });
+            } else {
+                callback.onSuccess(false);
+            }
+        } else {
+            callback.onFailure(new NullPointerException());
+        }
     }
 }
