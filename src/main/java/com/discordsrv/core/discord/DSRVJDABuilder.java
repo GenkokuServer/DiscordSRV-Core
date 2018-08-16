@@ -44,21 +44,18 @@ public class DSRVJDABuilder extends JDABuilder {
      *         The token to be used for this JDA instance.
      * @param prefix
      *         The prefix to be used for commands.
-     * @param owner
-     *         The owner of the bot.
      * @param gameName
      *         The name to use for the game.
      * @param gameType
      *         The type to use for the game.
      */
     @Configured
-    public DSRVJDABuilder(final @Val("token") String token, final @Val("prefix") String prefix, final @Val("owner") String owner, final @Val("game.name") String gameName,
-                          final @Val("game.type") int gameType) {
+    public DSRVJDABuilder(final @Val("token") String token, final @Val("prefix") String prefix,
+                          final @Val("game.name") String gameName, final @Val("game.type") int gameType) {
         super(AccountType.BOT);
         this.setToken(token);
         commandClientBuilder = new CommandClientBuilder();
         commandClientBuilder.setPrefix(prefix);
-        commandClientBuilder.setOwnerId(owner);
         commandClientBuilder.setGame(Game.of(Game.GameType.fromKey(gameType), gameName));
     }
 
