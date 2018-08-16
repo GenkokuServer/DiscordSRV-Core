@@ -56,6 +56,7 @@ public class DSRVJDABuilder extends JDABuilder {
         this.setToken(token);
         commandClientBuilder = new CommandClientBuilder();
         commandClientBuilder.setPrefix(prefix);
+        commandClientBuilder.setOwnerId("000000000000000000"); // Nobody
         commandClientBuilder.setGame(Game.of(Game.GameType.fromKey(gameType), gameName));
     }
 

@@ -32,6 +32,7 @@ import org.junit.runners.MethodSorters;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -42,8 +43,8 @@ import static org.junit.Assert.*;
 public class LocalPlayerUserLinkerTest {
 
     private static LocalPlayerUserLinker linker;
-    private final String testMCId = "1234";
-    private final long testDiscordId = 1234;
+    private static UUID testMCId;
+    private final String testDiscordId = "1234";
     private final Mocker mocker = new Mocker();
 
     /**
@@ -51,6 +52,7 @@ public class LocalPlayerUserLinkerTest {
      */
     @BeforeClass
     public static void setup() {
+        testMCId = UUID.randomUUID();
         linker = new LocalPlayerUserLinker(new DualTreeBidiMap<>(), new TestPlayerUserLookup());
     }
 
@@ -59,6 +61,7 @@ public class LocalPlayerUserLinkerTest {
      */
     @AfterClass
     public static void tearDown() {
+        testMCId = null;
         linker = null;
     }
 
@@ -92,7 +95,7 @@ public class LocalPlayerUserLinkerTest {
             @Override
             public void onSuccess(@Nullable final User result) {
                 assertNotNull(result);
-                assertEquals(testDiscordId, result.getIdLong());
+                assertEquals(testDiscordId, result.getId());
             }
 
             @Override

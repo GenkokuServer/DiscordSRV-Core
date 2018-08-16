@@ -37,12 +37,12 @@ public class TestTeamRoleLookup implements TeamRoleLookup {
     private final Mocker mocker = new Mocker();
 
     @Override
-    public void lookup(final long id, final @Nonnull FutureCallback<Role> callback) {
+    public void lookupRole(final @Nonnull String id, final @Nonnull FutureCallback<Role> callback) {
         callback.onSuccess(mocker.getMockedRole(id));
     }
 
     @Override
-    public void lookup(final @Nonnull String id, final @Nonnull FutureCallback<Team<MinecraftPlayer>> callback) {
+    public void lookupTeam(final @Nonnull String id, final @Nonnull FutureCallback<Team<MinecraftPlayer>> callback) {
         callback.onSuccess(new TestTeam(new LinkedList<>(), "Test", id));
     }
 }

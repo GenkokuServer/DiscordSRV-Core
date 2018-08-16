@@ -23,6 +23,7 @@ import net.dv8tion.jda.core.entities.User;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 /**
@@ -35,26 +36,26 @@ public interface PlayerUserLookup {
     /**
      * Performs a lookup for {@link User} instances given a specific id.
      * <p>
-     * Convert this to a {@link Translator} with {@code lookup::lookup}.
+     * Convert this to a {@link Translator} with {@code lookup::lookupUser}.
      *
      * @param id
      *         The ID of the user.
      * @param callback
      *         The callback to invoke when (not) found.
      */
-    void lookup(long id, FutureCallback<User> callback);
+    void lookupUser(String id, FutureCallback<User> callback);
 
     /**
      * Performs a lookup for {@link MinecraftPlayer} instances given a specific id.
      * <p>
-     * Convert this to a {@link Translator} with {@code lookup::lookup}.
+     * Convert this to a {@link Translator} with {@code lookup::lookupPlayer}.
      *
      * @param id
      *         The ID of the player.
      * @param callback
      *         The callback to invoke when (not) found.
      */
-    void lookup(String id, FutureCallback<MinecraftPlayer> callback);
+    void lookupPlayer(UUID id, FutureCallback<MinecraftPlayer> callback);
 
     /**
      * Fetches all online Minecraft players.

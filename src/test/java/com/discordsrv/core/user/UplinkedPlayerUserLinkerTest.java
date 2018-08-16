@@ -28,6 +28,7 @@ import org.junit.Test;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -47,12 +48,13 @@ public class UplinkedPlayerUserLinkerTest {
     @Test
     public void translate() {
         UplinkedPlayerUserLinker linker = new UplinkedPlayerUserLinker(new TestPlayerUserLookup());
-        MinecraftPlayer player = new TestMinecraftPlayer("Scarsz", "d7c1db4d-e57b-488b-b8bc-4462fe49a3e8");
+        MinecraftPlayer player =
+            new TestMinecraftPlayer("Scarsz", UUID.fromString("d7c1db4d-e57b-488b-b8bc-4462fe49a3e8"));
         linker.translate(player, new FutureCallback<User>() {
             @Override
             public void onSuccess(@Nullable final User result) {
                 assertNotNull(result);
-                assertEquals(95088531931672576L, result.getIdLong());
+                assertEquals("95088531931672576", result.getId());
             }
 
             @Override
@@ -69,12 +71,13 @@ public class UplinkedPlayerUserLinkerTest {
     @Test
     public void translate1() {
         UplinkedPlayerUserLinker linker = new UplinkedPlayerUserLinker(new TestPlayerUserLookup());
-        User user = mocker.getMockedUser(95088531931672576L);
+        User user = mocker.getMockedUser("95088531931672576");
         linker.translate(user, new FutureCallback<MinecraftPlayer>() {
             @Override
             public void onSuccess(@Nullable final MinecraftPlayer result) {
                 assertNotNull(result);
-                result.getUniqueIdentifier(ident -> assertEquals("d7c1db4d-e57b-488b-b8bc-4462fe49a3e8", ident));
+                result.getUniqueIdentifier(
+                    ident -> assertEquals(UUID.fromString("d7c1db4d-e57b-488b-b8bc-4462fe49a3e8"), ident));
             }
 
             @Override

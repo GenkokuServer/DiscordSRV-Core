@@ -35,25 +35,25 @@ public interface TeamRoleLookup {
     /**
      * Performs a lookup for {@link Role} instances given a specific id.
      * <p>
-     * Convert this to a {@link Translator} with {@code lookup::lookup}.
+     * Convert this to a {@link Translator} with {@code lookup::lookupRole}.
      *
      * @param id
      *         The ID of the role.
      * @param callback
      *         The callback to invoke when (not) found.
      */
-    void lookup(long id, FutureCallback<Role> callback);
+    void lookupRole(String id, FutureCallback<Role> callback);
 
     /**
      * Performs a lookup for {@link Team} instances given a specific id.
      * <p>
-     * Convert this to a {@link Translator} with {@code lookup::lookup}.
+     * Convert this to a {@link Translator} with {@code lookup::lookupTeam}.
      *
      * @param id
      *         The ID of the team.
      * @param callback
      *         The callback to invoke when (not) found.
      */
-    void lookup(String id, FutureCallback<Team<MinecraftPlayer>> callback);
+    void lookupTeam(String id, FutureCallback<Team<MinecraftPlayer>> callback);
 
 }

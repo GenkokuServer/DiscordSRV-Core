@@ -35,6 +35,7 @@ import org.junit.runners.MethodSorters;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -60,8 +61,8 @@ public class PlayerUserAuthenticatorTest {
     @BeforeClass
     public static void setup() {
         mocker = new Mocker();
-        player = new TestMinecraftPlayer("Test", "1234");
-        user = mocker.getMockedUser(1234);
+        player = new TestMinecraftPlayer("Test", UUID.randomUUID());
+        user = mocker.getMockedUser("1234");
         service = Executors.newSingleThreadScheduledExecutor();
         linker = new LocalPlayerUserLinker(new DualTreeBidiMap<>(), new TestPlayerUserLookup());
         authenticator = new PlayerUserAuthenticator(linker, service);
@@ -119,7 +120,7 @@ public class PlayerUserAuthenticatorTest {
                             @Override
                             public void onSuccess(@Nullable final User result) {
                                 assertNotNull(result);
-                                assertEquals(user.getIdLong(), result.getIdLong());
+                                assertEquals(user.getId(), result.getId());
                             }
 
                             @Override
@@ -157,7 +158,7 @@ public class PlayerUserAuthenticatorTest {
                         fail();
                     }
                 });
-                assertEquals(user.getIdLong(), result.getRight().getIdLong());
+                assertEquals(user.getId(), result.getRight().getId());
             }
 
             @Override

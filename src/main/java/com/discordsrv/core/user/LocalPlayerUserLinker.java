@@ -28,13 +28,15 @@ import org.apache.commons.collections4.BidiMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Leverages a local storage for player/user linking.
  */
 public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationStore<MinecraftPlayer, User> {
 
-    private final BidiMap<String, Long> playerStorage;
+    private final BidiMap<UUID, String> playerStorage;
     private final PlayerUserLookup lookup;
 
     /**
@@ -45,7 +47,7 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
      * @param lookup
      *         The lookup service.
      */
-    public LocalPlayerUserLinker(final BidiMap<String, Long> playerStorage, final PlayerUserLookup lookup) {
+    public LocalPlayerUserLinker(final BidiMap<UUID, String> playerStorage, final PlayerUserLookup lookup) {
         this.playerStorage = playerStorage;
         this.lookup = lookup;
     }
@@ -54,22 +56,24 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
     @Override
     public void translate(final @Nonnull MinecraftPlayer player, final @Nonnull FutureCallback<User> callback) {
         player.getUniqueIdentifier(ident -> {
-            @Nullable Long result = playerStorage.get(ident);
+            @Nullable String result =
+                playerStorage.entrySet().stream().filter(entry -> entry.getKey().equals(ident)).map(Map.Entry::getValue)
+                    .findFirst().orElse(null);
             if (result == null) {
                 callback.onSuccess(null);
             } else {
-                lookup.lookup(result, callback);
+                lookup.lookupUser(result, callback);
             }
         });
     }
 
     @Override
     public void translate(final @Nonnull User user, final @Nonnull FutureCallback<MinecraftPlayer> callback) {
-        @Nullable String result = playerStorage.getKey(user.getIdLong());
+        @Nullable UUID result = playerStorage.getKey(user.getId());
         if (result == null) {
             callback.onSuccess(null);
         } else {
-            lookup.lookup(result, callback);
+            lookup.lookupPlayer(result, callback);
         }
     }
 
@@ -78,7 +82,7 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
                      final @Nonnull FutureCallback<Boolean> callback) {
         first.getUniqueIdentifier(ident -> {
             try {
-                boolean success = playerStorage.putIfAbsent(ident, last.getIdLong()) == null;
+                boolean success = playerStorage.putIfAbsent(ident, last.getId()) == null;
                 if (success) {
                     first.setAuthenticationState(State.AUTHENTICATED);
                 }
@@ -99,9 +103,9 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
                 callback.onSuccess(success);
             });
         } else if (last != null) {
-            String player = playerStorage.removeValue(last.getIdLong());
+            UUID player = playerStorage.removeValue(last.getId());
             if (player != null) {
-                lookup.lookup(player, new FutureCallback<MinecraftPlayer>() {
+                lookup.lookupPlayer(player, new FutureCallback<MinecraftPlayer>() {
                     @Override
                     public void onSuccess(@Nullable final MinecraftPlayer result) {
                         if (result != null) {

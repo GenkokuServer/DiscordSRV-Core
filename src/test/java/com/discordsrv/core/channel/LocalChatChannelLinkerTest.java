@@ -44,7 +44,7 @@ public class LocalChatChannelLinkerTest {
 
     private static LocalChatChannelLinker linker;
     private static String testMCId = "1234";
-    private static long testDiscordId = 1234;
+    private static String testDiscordId = "1234";
     private static Mocker mocker;
 
     /**
@@ -53,7 +53,7 @@ public class LocalChatChannelLinkerTest {
     @BeforeClass
     public static void setup() {
         mocker = new Mocker();
-        DualTreeBidiMap<String, Long> bidiMap = new DualTreeBidiMap<>();
+        DualTreeBidiMap<String, String> bidiMap = new DualTreeBidiMap<>();
         bidiMap.put(testMCId, testDiscordId);
         linker = new LocalChatChannelLinker(bidiMap, new TestChatChannelLookup());
     }
@@ -76,7 +76,7 @@ public class LocalChatChannelLinkerTest {
             @Override
             public void onSuccess(@Nullable final TextChannel result) {
                 assertNotNull(result);
-                assertEquals(testDiscordId, result.getIdLong());
+                assertEquals(testDiscordId, result.getId());
             }
 
             @Override

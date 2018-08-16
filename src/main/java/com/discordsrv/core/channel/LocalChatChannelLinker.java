@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
  */
 public class LocalChatChannelLinker implements ChatChannelLinker {
 
-    private final BidiMap<String, Long> channelStorage;
+    private final BidiMap<String, String> channelStorage;
     private final ChatChannelLookup lookup;
 
     /**
@@ -43,7 +43,7 @@ public class LocalChatChannelLinker implements ChatChannelLinker {
      * @param lookup
      *         The lookup service.
      */
-    public LocalChatChannelLinker(final BidiMap<String, Long> channelStorage, final ChatChannelLookup lookup) {
+    public LocalChatChannelLinker(final BidiMap<String, String> channelStorage, final ChatChannelLookup lookup) {
         this.channelStorage = channelStorage;
         this.lookup = lookup;
     }
@@ -52,22 +52,22 @@ public class LocalChatChannelLinker implements ChatChannelLinker {
     @Override
     public void translate(final @Nonnull Chat chat, final @Nonnull FutureCallback<TextChannel> callback) {
         chat.getUniqueIdentifier(ident -> {
-            @Nullable Long result = channelStorage.get(ident);
+            @Nullable String result = channelStorage.get(ident);
             if (result == null) {
                 callback.onSuccess(null);
             } else {
-                lookup.lookup(result, callback);
+                lookup.lookupChannel(result, callback);
             }
         });
     }
 
     @Override
     public void translate(final @Nonnull TextChannel channel, final @Nonnull FutureCallback<Chat> callback) {
-        @Nullable String result = channelStorage.getKey(channel.getIdLong());
+        @Nullable String result = channelStorage.getKey(channel.getId());
         if (result == null) {
             callback.onSuccess(null);
         } else {
-            lookup.lookup(result, callback);
+            lookup.lookupChat(result, callback);
         }
     }
 

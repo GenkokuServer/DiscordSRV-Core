@@ -33,7 +33,7 @@ import javax.annotation.Nullable;
  */
 public class LocalTeamRoleLinker implements TeamRoleLinker {
 
-    private final BidiMap<String, Long> roleStorage;
+    private final BidiMap<String, String> roleStorage;
     private final TeamRoleLookup lookup;
 
     /**
@@ -44,7 +44,7 @@ public class LocalTeamRoleLinker implements TeamRoleLinker {
      * @param lookup
      *         The lookup service.
      */
-    public LocalTeamRoleLinker(final BidiMap<String, Long> roleStorage, final TeamRoleLookup lookup) {
+    public LocalTeamRoleLinker(final BidiMap<String, String> roleStorage, final TeamRoleLookup lookup) {
         this.roleStorage = roleStorage;
         this.lookup = lookup;
     }
@@ -54,22 +54,22 @@ public class LocalTeamRoleLinker implements TeamRoleLinker {
     public void translate(final @Nonnull Team<MinecraftPlayer> playerTeam,
                           final @Nonnull FutureCallback<Role> callback) {
         playerTeam.getUniqueIdentifier(ident -> {
-            @Nullable Long result = roleStorage.get(ident);
+            @Nullable String result = roleStorage.get(ident);
             if (result == null) {
                 callback.onSuccess(null);
             } else {
-                lookup.lookup(result, callback);
+                lookup.lookupRole(result, callback);
             }
         });
     }
 
     @Override
     public void translate(final @Nonnull Role role, final @Nonnull FutureCallback<Team<MinecraftPlayer>> callback) {
-        @Nullable String result = roleStorage.getKey(role.getIdLong());
+        @Nullable String result = roleStorage.getKey(role.getId());
         if (result == null) {
             callback.onSuccess(null);
         } else {
-            lookup.lookup(result, callback);
+            lookup.lookupTeam(result, callback);
         }
     }
 

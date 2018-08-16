@@ -41,7 +41,7 @@ public interface ChatChannelLookup {
      * @param callback
      *         The callback to invoke when (not) found.
      */
-    void lookup(long id, FutureCallback<TextChannel> callback);
+    void lookupChannel(String id, FutureCallback<TextChannel> callback);
 
     /**
      * Performs a lookup for {@link Chat} instances given a specific id.
@@ -53,6 +53,6 @@ public interface ChatChannelLookup {
      * @param callback
      *         The callback to invoke when (not) found.
      */
-    void lookup(String id, FutureCallback<Chat> callback);
+    void lookupChat(String id, FutureCallback<Chat> callback);
 
 }

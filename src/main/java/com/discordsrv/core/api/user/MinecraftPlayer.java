@@ -22,9 +22,11 @@ import com.discordsrv.core.api.common.unit.Messageable;
 import com.discordsrv.core.api.common.unit.Named;
 import net.dv8tion.jda.core.entities.User;
 
+import java.util.UUID;
+
 /**
  * MinecraftPlayer type, for representing players in Minecraft servers.
  */
-public interface MinecraftPlayer extends Authenticatable<String, User>, Messageable<String, Void>, Named {
+public interface MinecraftPlayer extends Authenticatable<UUID, User>, Messageable<String, Void>, Named {
 
 }

@@ -33,12 +33,12 @@ public class TestChatChannelLookup implements ChatChannelLookup {
     private final Mocker mocker = new Mocker();
 
     @Override
-    public void lookup(final long id, final @Nonnull FutureCallback<TextChannel> callback) {
+    public void lookupChannel(final @Nonnull String id, final @Nonnull FutureCallback<TextChannel> callback) {
         callback.onSuccess(mocker.getSimpleMockedTextChannel(id));
     }
 
     @Override
-    public void lookup(final @Nonnull String id, final @Nonnull FutureCallback<Chat> callback) {
+    public void lookupChat(final @Nonnull String id, final @Nonnull FutureCallback<Chat> callback) {
         callback.onSuccess(new TestChat("Test", id));
     }
 }

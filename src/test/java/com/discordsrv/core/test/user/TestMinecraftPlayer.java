@@ -22,6 +22,7 @@ import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.google.common.util.concurrent.FutureCallback;
 
 import javax.annotation.Nonnull;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 /**
@@ -30,7 +31,7 @@ import java.util.function.Consumer;
 public class TestMinecraftPlayer implements MinecraftPlayer {
 
     private final CharSequence name;
-    private final String identifier;
+    private final UUID identifier;
     private State state = State.UNAUTHENTICATED;
 
     /**
@@ -41,7 +42,7 @@ public class TestMinecraftPlayer implements MinecraftPlayer {
      * @param identifier
      *         The unique identifier to be associated with this instance.
      */
-    public TestMinecraftPlayer(final CharSequence name, final String identifier) {
+    public TestMinecraftPlayer(final CharSequence name, final UUID identifier) {
         this.name = name;
         this.identifier = identifier;
     }
@@ -67,7 +68,7 @@ public class TestMinecraftPlayer implements MinecraftPlayer {
     }
 
     @Override
-    public void getUniqueIdentifier(final @Nonnull Consumer<String> callback) {
+    public void getUniqueIdentifier(final @Nonnull Consumer<UUID> callback) {
         callback.accept(this.identifier);
     }
 }

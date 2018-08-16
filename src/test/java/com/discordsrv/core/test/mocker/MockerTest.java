@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
  */
 public class MockerTest {
 
-    private final long id = 1234;
+    private final String id = "1234";
     private final Mocker mocker = new Mocker();
 
     /**
@@ -45,10 +45,10 @@ public class MockerTest {
         JDA jda = mocker.getMockedJDA(mocker::getSimpleMockedTextChannel, mocker::getMockedUser);
         TextChannel channel = jda.getTextChannelById(id);
         assertNotNull(channel);
-        assertEquals(id, channel.getIdLong());
+        assertEquals(id, channel.getId());
         User user = jda.getUserById(id);
         assertNotNull(user);
-        assertEquals(id, user.getIdLong());
+        assertEquals(id, user.getId());
     }
 
     /**
@@ -57,7 +57,7 @@ public class MockerTest {
     @Test
     public void getMockedUser() {
         User user = mocker.getMockedUser(id);
-        assertEquals(id, user.getIdLong());
+        assertEquals(id, user.getId());
     }
 
     /**
@@ -70,7 +70,7 @@ public class MockerTest {
             latch.countDown();
             return null;
         }));
-        assertEquals(id, textChannel.getIdLong());
+        assertEquals(id, textChannel.getId());
         //noinspection ConstantConditions,ResultOfMethodCallIgnored
         textChannel.sendMessage((CharSequence) null);
         if (!latch.await(TIMEOUT, TimeUnit.SECONDS)) {
@@ -84,8 +84,8 @@ public class MockerTest {
     @Test
     public void getMockedGuildMessageReceivedEvent() {
         new GuildMessageReceivedEvent(mocker.getMockedJDA(mocker::getSimpleMockedTextChannel, mocker::getMockedUser), 0,
-            mocker.getMockedMessage(Long.toString(id), 0,
-                mocker.getMockedTextChannel(id, mocker.getMockedGuild(), (arg -> null)), mocker.getMockedUser(id)));
+            mocker.getMockedMessage(id, 0, mocker.getMockedTextChannel(id, mocker.getMockedGuild(), (arg -> null)),
+                mocker.getMockedUser(id)));
     }
 
 }
