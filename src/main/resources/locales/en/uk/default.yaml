@@ -6,7 +6,7 @@ com.discordsrv.core:
             owner: ""
             game:
                 name: "for !help"
-                type: 2
+                type: 3
         commands:
             AuthenticateCommand:
                 name: "authenticate"

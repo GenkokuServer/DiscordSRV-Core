@@ -31,12 +31,12 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Tests {@link ConfigInjector}.
+ * Tests {@link Configurator}.
  */
-public class ConfigInjectorTest {
+public class ConfiguratorTest {
 
     /**
-     * Tests {@link ConfigInjector#constructFromConfig(Map, Class)}.
+     * Tests {@link Configurator#constructFromConfig(Map, Class)}.
      *
      * @throws InvocationTargetException
      *         As inherited.
@@ -63,8 +63,7 @@ public class ConfigInjectorTest {
                 this.getClass().getClassLoader().getResourceAsStream("conf.yaml"))
         ) {
             LinkedHashMap<String, Map<String, Object>> tree = yaml.load(reader);
-            ConfiguredType type =
-                ConfigInjector.constructFromConfig(ConfigInjector.flatten(tree), ConfiguredType.class);
+            ConfiguredType type = Configurator.constructFromConfig(Configurator.flatten(tree), ConfiguredType.class);
             assertEquals(name, type.getName());
         }
     }

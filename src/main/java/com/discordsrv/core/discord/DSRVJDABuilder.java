@@ -40,10 +40,10 @@ public class DSRVJDABuilder extends JDABuilder {
                           final @Val("game.type") int gameType) {
         super(AccountType.BOT);
         this.setToken(token);
-        this.setGame(Game.of(Game.GameType.fromKey(gameType), gameName));
         commandClientBuilder = new CommandClientBuilder();
         commandClientBuilder.setPrefix(prefix);
         commandClientBuilder.setOwnerId(owner);
+        commandClientBuilder.setGame(Game.of(Game.GameType.fromKey(gameType), gameName));
     }
 
     public DSRVJDABuilder addCommands(final @Nonnull Command... commands) {

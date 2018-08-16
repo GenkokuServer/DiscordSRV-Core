@@ -19,20 +19,27 @@ package com.discordsrv.core.conf;
 
 import com.discordsrv.core.conf.annotation.Configured;
 import com.discordsrv.core.conf.annotation.Val;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.error.YAMLException;
 
 import javax.naming.ConfigurationException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
- * ConfigInjector, for injecting information from configs.
+ * Configurator, for injecting information from configs.
  */
 @SuppressWarnings("WeakerAccess")
-public final class ConfigInjector {
+public final class Configurator {
 
-    private ConfigInjector() {
+    private Configurator() {
         throw new UnsupportedOperationException();
     }
 
@@ -111,6 +118,37 @@ public final class ConfigInjector {
                 target.put(String.format("%s.%s", key, mapKey), value);
             }
         });
+    }
+
+    /**
+     * Creates a configuration by merging the passed yamls.
+     *
+     * @param yaml
+     *         The yaml parser to use.
+     * @param streams
+     *         The input streams to load the yamls from, in ascending order of priority (first will be overwritten by
+     *         last).
+     *
+     * @return config The constructed and merged config.
+     *
+     * @throws IOException
+     *         If an exception occurs while attempting to load/parse the yaml documents.
+     */
+    public static Map<String, Object> createConfig(Yaml yaml, InputStream... streams) throws IOException {
+        Map<String, Object> res = new ConcurrentSkipListMap<>();
+        List<InputStream> streamList = Arrays.asList(streams);
+        IOException exception = new IOException();
+        streamList.forEach(stream -> {
+            try (Reader reader = new InputStreamReader(stream)) {
+                res.putAll(flatten(yaml.load(reader)));
+            } catch (IOException | YAMLException e) {
+                exception.addSuppressed(e);
+            }
+        });
+        if (exception.getSuppressed().length > 0) {
+            throw exception;
+        }
+        return res;
     }
 
 }
