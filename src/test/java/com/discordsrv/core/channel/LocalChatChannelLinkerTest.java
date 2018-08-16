@@ -38,6 +38,7 @@ import static org.junit.Assert.*;
 /**
  * Tests {@link LocalChatChannelLinker}.
  */
+@SuppressWarnings("CanBeFinal")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LocalChatChannelLinkerTest {
 

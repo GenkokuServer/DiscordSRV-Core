@@ -23,6 +23,7 @@ import net.dv8tion.jda.core.entities.User;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.Collection;
 
 /**
  * PlayerUserLookup type, for looking up {@link MinecraftPlayer} instances and {@link User} instances.
@@ -54,5 +55,13 @@ public interface PlayerUserLookup {
      *         The callback to invoke when (not) found.
      */
     void lookup(String id, FutureCallback<MinecraftPlayer> callback);
+
+    /**
+     * Fetches all online Minecraft players.
+     *
+     * @param callback
+     *         The callback to invoke when users have been collected.
+     */
+    void getOnline(FutureCallback<Collection<MinecraftPlayer>> callback);
 
 }

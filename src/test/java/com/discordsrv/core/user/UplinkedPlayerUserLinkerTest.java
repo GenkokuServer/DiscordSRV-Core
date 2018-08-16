@@ -18,6 +18,7 @@
 package com.discordsrv.core.user;
 
 import com.discordsrv.core.api.user.MinecraftPlayer;
+import com.discordsrv.core.test.mocker.Mocker;
 import com.discordsrv.core.test.user.TestMinecraftPlayer;
 import com.discordsrv.core.test.user.TestPlayerUserLookup;
 import com.google.common.util.concurrent.FutureCallback;
@@ -28,8 +29,7 @@ import org.junit.Test;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * Tests for the {@link UplinkedPlayerUserLinker} class.
@@ -37,6 +37,8 @@ import static org.junit.Assert.fail;
  * TODO Finish link.scarsz.me first
  */
 public class UplinkedPlayerUserLinkerTest {
+
+    private final Mocker mocker = new Mocker();
 
     /**
      * Tests the player -> user translation.
@@ -50,6 +52,7 @@ public class UplinkedPlayerUserLinkerTest {
             @Override
             public void onSuccess(@Nullable final User result) {
                 assertNotNull(result);
+                assertEquals(95088531931672576L, result.getIdLong());
             }
 
             @Override
@@ -65,6 +68,20 @@ public class UplinkedPlayerUserLinkerTest {
     @Ignore // TODO remove
     @Test
     public void translate1() {
+        UplinkedPlayerUserLinker linker = new UplinkedPlayerUserLinker(new TestPlayerUserLookup());
+        User user = mocker.getMockedUser(95088531931672576L);
+        linker.translate(user, new FutureCallback<MinecraftPlayer>() {
+            @Override
+            public void onSuccess(@Nullable final MinecraftPlayer result) {
+                assertNotNull(result);
+                result.getUniqueIdentifier(ident -> assertEquals("d7c1db4d-e57b-488b-b8bc-4462fe49a3e8", ident));
+            }
+
+            @Override
+            public void onFailure(final @Nonnull Throwable t) {
+                fail();
+            }
+        });
     }
 
 }

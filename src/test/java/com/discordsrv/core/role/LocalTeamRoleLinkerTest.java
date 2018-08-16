@@ -40,6 +40,7 @@ import static org.junit.Assert.*;
 /**
  * Tests {@link LocalTeamRoleLinker}.
  */
+@SuppressWarnings("CanBeFinal")
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LocalTeamRoleLinkerTest {
 

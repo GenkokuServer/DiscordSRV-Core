@@ -24,11 +24,11 @@ import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.User;
 
 import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * A simple Test implementation of the PlayerUserLookup interface.
- * <p>
- * TODO
  */
 public class TestPlayerUserLookup implements PlayerUserLookup {
 
@@ -42,5 +42,10 @@ public class TestPlayerUserLookup implements PlayerUserLookup {
     @Override
     public void lookup(final @Nonnull String id, final @Nonnull FutureCallback<MinecraftPlayer> callback) {
         callback.onSuccess(new TestMinecraftPlayer("Test", id));
+    }
+
+    @Override
+    public void getOnline(final @Nonnull FutureCallback<Collection<MinecraftPlayer>> callback) {
+        callback.onSuccess(Collections.emptyList());
     }
 }
