@@ -63,7 +63,8 @@ public class AuthenticateCommand extends Command {
      * @param alreadyAuth
      *         Message to send when a user requesting authentication already has an authentication entry.
      * @param badConfig
-     *         If the server configuration is incorrect (i.e. authenticators or linkers are not provided).
+     *         Message to send if the server configuration is incorrect (i.e. authenticators or linkers are not
+     *         provided).
      */
     @Configured
     public AuthenticateCommand(final @Val("name") String name, final @Val("aliases") ArrayList<String> aliases,

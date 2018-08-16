@@ -33,6 +33,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * PlayerlistCommand type, for listing the online players.
+ */
 public class PlayerlistCommand extends Command {
 
     private final String listHeader;
@@ -40,6 +43,25 @@ public class PlayerlistCommand extends Command {
     private final String badConfig;
     private PlayerUserLookup lookup;
 
+    /**
+     * Main configured constructor for the PlayerlistCommand type.
+     *
+     * @param name
+     *         The name of the playerlist command.
+     * @param aliases
+     *         The aliases of the playerlist command.
+     * @param arguments
+     *         The arguments of the playerlist command.
+     * @param help
+     *         The help string of the playerlist command.
+     * @param listHeader
+     *         The header of the list result.
+     * @param listItem
+     *         The string for item formatting.
+     * @param badConfig
+     *         Message to send if the server configuration is incorrect (i.e. authenticators or linkers are not
+     *         provided).
+     */
     @Configured
     public PlayerlistCommand(final @Val("name") String name, final @Val("aliases") ArrayList<String> aliases,
                              final @Val("arguments") String arguments, final @Val("help") String help,
@@ -69,23 +91,19 @@ public class PlayerlistCommand extends Command {
                     event.reactSuccess();
                     List<MinecraftPlayer> collected = result.collect(Collectors.toList());
                     StringBuffer builder =
-                        new StringBuffer(listHeader.replace("%count%", Integer.toString(collected.size())))
-                            .append('\n');
-                    collected.forEach(player -> player
-                        .getName(name -> builder.append(String.format("%s\n", listItem.replace("%player%", name)))));
+                        new StringBuffer(listHeader.replace("%count%", Integer.toString(collected.size()))).append('\n');
+                    collected.forEach(player -> player.getName(name -> builder.append(String.format("%s\n", listItem.replace("%player%", name)))));
                     event.reply(builder.toString());
                 } else {
                     event.reactError();
-                    event.reply(badConfig
-                        .replace("%owner%", event.getJDA().getUserById(event.getClient().getOwnerId()).getAsMention()));
+                    event.reply(badConfig.replace("%owner%", event.getJDA().getUserById(event.getClient().getOwnerId()).getAsMention()));
                 }
             }
 
             @Override
             public void onFailure(final @Nonnull Throwable t) {
                 event.reactError();
-                event.reply(badConfig
-                    .replace("%owner%", event.getJDA().getUserById(event.getClient().getOwnerId()).getAsMention()));
+                event.reply(badConfig.replace("%owner%", event.getJDA().getUserById(event.getClient().getOwnerId()).getAsMention()));
             }
         });
     }

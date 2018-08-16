@@ -30,13 +30,29 @@ import net.dv8tion.jda.core.entities.Game;
 import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 
+/**
+ * DSRVJDABuilder type, for building JDAs for DSRV.
+ */
 public class DSRVJDABuilder extends JDABuilder {
 
     private final CommandClientBuilder commandClientBuilder;
 
+    /**
+     * Main configured constructor for the DSRVJDABuilder type.
+     *
+     * @param token
+     *         The token to be used for this JDA instance.
+     * @param prefix
+     *         The prefix to be used for commands.
+     * @param owner
+     *         The owner of the bot.
+     * @param gameName
+     *         The name to use for the game.
+     * @param gameType
+     *         The type to use for the game.
+     */
     @Configured
-    public DSRVJDABuilder(final @Val("token") String token, final @Val("prefix") String prefix,
-                          final @Val("owner") String owner, final @Val("game.name") String gameName,
+    public DSRVJDABuilder(final @Val("token") String token, final @Val("prefix") String prefix, final @Val("owner") String owner, final @Val("game.name") String gameName,
                           final @Val("game.type") int gameType) {
         super(AccountType.BOT);
         this.setToken(token);
@@ -46,6 +62,14 @@ public class DSRVJDABuilder extends JDABuilder {
         commandClientBuilder.setGame(Game.of(Game.GameType.fromKey(gameType), gameName));
     }
 
+    /**
+     * Add commands to this DSRV JDA instance.
+     *
+     * @param commands
+     *         The commands to be added.
+     *
+     * @return self This instance.
+     */
     public DSRVJDABuilder addCommands(final @Nonnull Command... commands) {
         commandClientBuilder.addCommands(commands);
         return this;

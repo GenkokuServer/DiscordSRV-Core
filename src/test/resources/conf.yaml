@@ -4,3 +4,4 @@ com:
             conf:
                 ConfiguredType:
                     name: "Test"
+                    value: "overwritten"

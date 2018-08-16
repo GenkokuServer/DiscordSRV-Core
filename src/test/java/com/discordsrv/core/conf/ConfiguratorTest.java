@@ -23,6 +23,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import javax.naming.ConfigurationException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
@@ -55,6 +56,7 @@ public class ConfiguratorTest {
         throws InvocationTargetException, InstantiationException, ConfigurationException, IllegalAccessException,
                IOException {
         String name = "Test";
+        String value = "overwritten";
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         Yaml yaml = new Yaml();
@@ -65,7 +67,36 @@ public class ConfiguratorTest {
             LinkedHashMap<String, Map<String, Object>> tree = yaml.load(reader);
             ConfiguredType type = Configurator.constructFromConfig(Configurator.flatten(tree), ConfiguredType.class);
             assertEquals(name, type.getName());
+            assertEquals(value, type.getValue());
         }
+    }
+
+    /**
+     * Tests {@link Configurator#createConfig(Yaml, InputStream...)}.
+     *
+     * @throws InvocationTargetException
+     *         As inherited.
+     * @throws InstantiationException
+     *         As inherited.
+     * @throws ConfigurationException
+     *         As inherited.
+     * @throws IllegalAccessException
+     *         As inherited.
+     * @throws IOException
+     *         If the conversion process from yaml to map fails.
+     */
+    @Test
+    public void createConfig()
+        throws IOException, InvocationTargetException, InstantiationException, ConfigurationException,
+               IllegalAccessException {
+        String name = "Test";
+        String value = "actual";
+        Map<String, Object> source = Configurator
+            .createConfig(new Yaml(), this.getClass().getClassLoader().getResourceAsStream("conf.yaml"),
+                this.getClass().getClassLoader().getResourceAsStream("conf2.yaml"));
+        ConfiguredType type = Configurator.constructFromConfig(source, ConfiguredType.class);
+        assertEquals(name, type.getName());
+        assertEquals(value, type.getValue());
     }
 
 }

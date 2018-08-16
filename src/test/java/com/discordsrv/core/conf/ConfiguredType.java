@@ -26,19 +26,26 @@ import com.discordsrv.core.conf.annotation.Val;
 public class ConfiguredType {
 
     private final String name;
+    private final String value;
 
     /**
      * A configured constructor.
      *
      * @param name
      *         The name to be tested.
+     * @param value
      */
     @Configured
-    public ConfiguredType(@Val("name") String name) {
+    public ConfiguredType(final @Val("name") String name, final @Val("value") String value) {
         this.name = name;
+        this.value = value;
     }
 
     String getName() {
         return name;
+    }
+
+    public String getValue() {
+        return value;
     }
 }
