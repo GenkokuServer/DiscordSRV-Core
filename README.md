@@ -61,5 +61,3 @@ dependencies {
 </dependencies>
 
 ```
-
-<sub>This maven repository is likely temporary until a DSRV-specific maven repo is established.</sub>

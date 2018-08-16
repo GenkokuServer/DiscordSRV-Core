@@ -24,8 +24,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.User;
 
 import javax.annotation.Nonnull;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.stream.Stream;
 
 /**
  * A simple Test implementation of the PlayerUserLookup interface.
@@ -45,7 +44,7 @@ public class TestPlayerUserLookup implements PlayerUserLookup {
     }
 
     @Override
-    public void getOnline(final @Nonnull FutureCallback<Collection<MinecraftPlayer>> callback) {
-        callback.onSuccess(Collections.emptyList());
+    public void getOnline(final @Nonnull FutureCallback<Stream<MinecraftPlayer>> callback) {
+        callback.onSuccess(Stream.empty());
     }
 }
