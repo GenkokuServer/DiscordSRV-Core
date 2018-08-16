@@ -28,7 +28,6 @@ import org.apache.commons.collections4.BidiMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -56,9 +55,7 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
     @Override
     public void translate(final @Nonnull MinecraftPlayer player, final @Nonnull FutureCallback<User> callback) {
         player.getUniqueIdentifier(ident -> {
-            @Nullable String result =
-                playerStorage.entrySet().stream().filter(entry -> entry.getKey().equals(ident)).map(Map.Entry::getValue)
-                    .findFirst().orElse(null);
+            @Nullable String result = playerStorage.get(ident);
             if (result == null) {
                 callback.onSuccess(null);
             } else {
