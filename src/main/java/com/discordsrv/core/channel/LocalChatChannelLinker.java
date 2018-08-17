@@ -25,11 +25,9 @@ import com.discordsrv.core.conf.annotation.Val;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.TextChannel;
 import org.apache.commons.collections4.BidiMap;
-import org.apache.commons.collections4.bidimap.DualTreeBidiMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Map;
 
 /**
  * Leverages a local storage for chat/channel linking.
@@ -48,9 +46,9 @@ public class LocalChatChannelLinker implements ChatChannelLinker {
      *         The lookup service.
      */
     @Configured
-    public LocalChatChannelLinker(final @Val("channels") Map<String, String> channelStorage,
+    public LocalChatChannelLinker(final @Val("channels") BidiMap<String, String> channelStorage,
                                   final @Val("lookup") ChatChannelLookup lookup) {
-        this.channelStorage = new DualTreeBidiMap<>(channelStorage);
+        this.channelStorage = channelStorage;
         this.lookup = lookup;
     }
 
