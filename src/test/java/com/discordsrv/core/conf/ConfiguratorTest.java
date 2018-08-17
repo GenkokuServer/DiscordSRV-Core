@@ -28,7 +28,9 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
+import static com.discordsrv.core.conf.Configurator.*;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -52,7 +54,7 @@ public class ConfiguratorTest {
      */
     @Test
     @SuppressWarnings("unchecked")
-    public void constructFromConfig()
+    public void constructFromConfigTest()
         throws InvocationTargetException, InstantiationException, ConfigurationException, IllegalAccessException,
                IOException {
         String name = "Test";
@@ -65,14 +67,15 @@ public class ConfiguratorTest {
                 this.getClass().getClassLoader().getResourceAsStream("conf.yaml"))
         ) {
             LinkedHashMap<String, Map<String, Object>> tree = yaml.load(reader);
-            ConfiguredType type = Configurator.constructFromConfig(Configurator.flatten(tree), ConfiguredType.class);
+            ConfiguredType type = constructFromConfig(flatten(tree), ConfiguredType.class);
             assertEquals(name, type.getName());
             assertEquals(value, type.getValue());
         }
     }
 
     /**
-     * Tests {@link Configurator#createConfig(Yaml, InputStream...)}.
+     * Tests {@link Configurator#createConfig(Yaml, InputStream...)}, {@link Configurator#mergeConfigs(Stream)}, and
+     * {@link Configurator#remapConfig(Map, String, String)}.
      *
      * @throws InvocationTargetException
      *         As inherited.
@@ -86,15 +89,17 @@ public class ConfiguratorTest {
      *         If the conversion process from yaml to map fails.
      */
     @Test
-    public void createConfig()
+    public void createConfigTest()
         throws IOException, InvocationTargetException, InstantiationException, ConfigurationException,
                IllegalAccessException {
         String name = "Test";
         String value = "actual";
-        Map<String, Object> source = Configurator
-            .createConfig(new Yaml(), this.getClass().getClassLoader().getResourceAsStream("conf.yaml"),
-                this.getClass().getClassLoader().getResourceAsStream("conf2.yaml"));
-        ConfiguredType type = Configurator.constructFromConfig(source, ConfiguredType.class);
+        Yaml yaml = new Yaml();
+        Map<String, Object> source = mergeConfigs(Stream
+            .of(createConfig(yaml, this.getClass().getClassLoader().getResourceAsStream("conf.yaml")),
+                remapConfig(createConfig(yaml, this.getClass().getClassLoader().getResourceAsStream("conf2.yaml")),
+                    "test", ConfiguredType.class.getName())));
+        ConfiguredType type = constructFromConfig(source, ConfiguredType.class);
         assertEquals(name, type.getName());
         assertEquals(value, type.getValue());
     }

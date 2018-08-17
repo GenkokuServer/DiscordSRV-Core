@@ -31,7 +31,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.util.*;
-import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.stream.Stream;
 
 /**
  * Configurator, for injecting information from configs.
@@ -66,6 +66,36 @@ public final class Configurator {
      */
     public static <T> T constructFromConfig(Map<String, Object> source, Class<T> type)
         throws ConfigurationException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        String prefix = type.getName();
+        Map<String, Object> reduced = new HashMap<>();
+        source.entrySet().stream().filter(entry -> entry.getKey().startsWith(prefix))
+            .forEach(entry -> reduced.put(entry.getKey().substring(prefix.length() + 1), entry.getValue()));
+        return constructFromReducedConfig(reduced, type);
+    }
+
+    /**
+     * Instantiates a type using a {@link Configured} constructor and injecting values from a config.
+     *
+     * @param reduced
+     *         The source of the injected values, without the class name prefixed.
+     * @param type
+     *         The type to be instantiated.
+     * @param <T>
+     *         The type argument of the instantiated type.
+     *
+     * @return instance A new instance constructed via the config.
+     *
+     * @throws ConfigurationException
+     *         If there are no constructors with the {@link Configured} annotation.
+     * @throws IllegalAccessException
+     *         If the constructor attempted to be used is not accessible.
+     * @throws InvocationTargetException
+     *         Shouldn't happen, but inherited from {@link Constructor#newInstance(Object...)}.
+     * @throws InstantiationException
+     *         If instantiation of the type fails.
+     */
+    public static <T> T constructFromReducedConfig(Map<String, Object> reduced, Class<T> type)
+        throws ConfigurationException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Constructor<?> constructor = null;
         for (Constructor<?> declared : type.getDeclaredConstructors()) {
             if (declared.isAnnotationPresent(Configured.class)) {
@@ -77,10 +107,6 @@ public final class Configurator {
             throw new ConfigurationException("No @Configured annotation present on any declared constructors.");
         }
         Object[] parameters = new Object[constructor.getParameterCount()];
-        String prefix = type.getName();
-        Map<String, Object> reduced = new HashMap<>();
-        source.entrySet().stream().filter(entry -> entry.getKey().startsWith(prefix))
-            .forEach(entry -> reduced.put(entry.getKey().substring(prefix.length() + 1), entry.getValue()));
         List<String> parameterValues = new ArrayList<>(constructor.getParameterCount());
         for (Parameter parameter : constructor.getParameters()) {
             parameterValues.add(parameter.getAnnotation(Val.class).value());
@@ -96,6 +122,47 @@ public final class Configurator {
     }
 
     /**
+     * Remaps a config to a different path.
+     * <p>
+     * Replaces in the format {@code /^<original>/<resultant>/}, where the bracketed items are the passed strings (regex
+     * escaped). If the regex shown is not matched, it will be left untouched and placed in the remapped config.
+     *
+     * @param config
+     *         The original config.
+     * @param original
+     *         The path to replace.
+     * @param resultant
+     *         The path to replace with.
+     *
+     * @return remapped The remapped config.
+     */
+    public static Map<String, Object> remapConfig(Map<String, Object> config, String original, String resultant) {
+        Map<String, Object> remapped = new HashMap<>(config.size());
+        config.forEach((key, value) -> {
+            if (key.startsWith(original)) {
+                remapped.put(resultant + key.substring(original.length()), value);
+            } else {
+                remapped.put(key, value);
+            }
+        });
+        return remapped;
+    }
+
+    /**
+     * Unreduces a config such that the type name provided is prepended to each member of the resulting config.
+     *
+     * @param reduced
+     *         The reduced config to unreduce.
+     * @param type
+     *         The type to unreduce from.
+     *
+     * @return unreduced The unreduced config.
+     */
+    public static Map<String, Object> unreduceConfig(Map<String, Object> reduced, Class<?> type) {
+        return remapConfig(reduced, "", type.getName() + ".");
+    }
+
+    /**
      * Converts a recursive tree map to a map with a period separator.
      *
      * @param config
@@ -105,7 +172,9 @@ public final class Configurator {
      */
     public static Map<String, Object> flatten(LinkedHashMap<String, Map<String, Object>> config) {
         HashMap<String, Object> map = new HashMap<>();
-        config.forEach((key, value) -> toMapRecurse(key, value, map));
+        config.forEach((key, value) -> {
+            toMapRecurse(key, value, map);
+        });
         return map;
     }
 
@@ -135,19 +204,33 @@ public final class Configurator {
      *         If an exception occurs while attempting to load/parse the yaml documents.
      */
     public static Map<String, Object> createConfig(Yaml yaml, InputStream... streams) throws IOException {
-        Map<String, Object> res = new ConcurrentSkipListMap<>();
-        List<InputStream> streamList = Arrays.asList(streams);
+        Stream<InputStream> streamList = Arrays.stream(streams);
         IOException exception = new IOException();
-        streamList.forEach(stream -> {
+        Stream<Map<String, Object>> mapStream = streamList.map(stream -> {
             try (Reader reader = new InputStreamReader(stream)) {
-                res.putAll(flatten(yaml.load(reader)));
+                return flatten(yaml.load(reader));
             } catch (IOException | YAMLException e) {
                 exception.addSuppressed(e);
+                return Collections.emptyMap();
             }
         });
         if (exception.getSuppressed().length > 0) {
             throw exception;
         }
+        return mergeConfigs(mapStream);
+    }
+
+    /**
+     * Merges 0..many configs together.
+     *
+     * @param configs
+     *         The configs to merge.
+     *
+     * @return merged The merged configs.
+     */
+    public static Map<String, Object> mergeConfigs(Stream<Map<String, Object>> configs) {
+        Map<String, Object> res = new HashMap<>();
+        configs.forEach(res::putAll);
         return res;
     }
 

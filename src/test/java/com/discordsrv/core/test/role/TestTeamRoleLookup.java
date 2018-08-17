@@ -29,8 +29,6 @@ import java.util.LinkedList;
 
 /**
  * A simple Test implementation of the TeamRoleLookup interface.
- * <p>
- * TODO
  */
 public class TestTeamRoleLookup implements TeamRoleLookup {
 
