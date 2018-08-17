@@ -24,8 +24,8 @@ import java.util.HashMap;
  */
 public class ParentAwareHashMap extends HashMap<String, Object> {
 
-    private final ParentAwareHashMap parent;
-    private final String name;
+    private ParentAwareHashMap parent;
+    private String name;
 
     /**
      * Child constructor of {@link HashMap#HashMap(int, float)}.
@@ -84,4 +84,11 @@ public class ParentAwareHashMap extends HashMap<String, Object> {
         return name;
     }
 
+    public void setParent(final ParentAwareHashMap parent) {
+        this.parent = parent;
+    }
+
+    public void setName(final String name) {
+        this.name = name;
+    }
 }

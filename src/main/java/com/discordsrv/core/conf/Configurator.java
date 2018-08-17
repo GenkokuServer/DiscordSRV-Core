@@ -137,28 +137,28 @@ public final class Configurator {
      *
      * @param config
      *         The original config.
-     * @param original
-     *         The path to replace.
-     * @param resultant
-     *         The path to replace with.
+     * @param remap
+     *         The map of strings to replace (key = original, value = resultant).
      *
      * @return remapped The remapped config.
      */
-    public static ParentAwareHashMap remapConfig(ParentAwareHashMap config, String original, String resultant) {
-        Map<String, Object> flattened = flatten(Collections.singleton(config));
+    public static ParentAwareHashMap remapConfig(ParentAwareHashMap config, Map<String, String> remap) {
+        Map<String, Object> flattened = flatten(Collections.singleton(config)); // required for path replacement
         Map<String, Object> remapped = new HashMap<>(flattened.size());
-        config.forEach((key, value) -> {
+        remap.forEach((original, resultant) -> config.forEach((key, value) -> {
             if (key.startsWith(original)) {
                 remapped.put(resultant + key.substring(original.length()), value);
             } else {
                 remapped.put(key, value);
             }
-        });
+        }));
         return unflatten(remapped);
     }
 
     /**
      * Unreduces a config such that the type name provided is prepended to each member of the resulting config.
+     * <p>
+     * This modifies the passed config!
      *
      * @param reduced
      *         The reduced config to unreduce.
@@ -168,7 +168,12 @@ public final class Configurator {
      * @return unreduced The unreduced config.
      */
     public static ParentAwareHashMap unreduceConfig(ParentAwareHashMap reduced, Class<?> type) {
-        return remapConfig(reduced, "", type.getName() + ".");
+        ParentAwareHashMap root = new ParentAwareHashMap(null, null);
+        ParentAwareHashMap result = createRecursive(root, new LinkedList<>(Arrays.asList(type.getName().split("\\."))));
+        result.put(type.getSimpleName(), reduced);
+        reduced.setParent(result);
+        reduced.setName(type.getSimpleName());
+        return root;
     }
 
     /**

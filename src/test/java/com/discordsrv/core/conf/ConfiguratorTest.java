@@ -70,8 +70,7 @@ public class ConfiguratorTest {
 
     /**
      * Tests {@link Configurator#createConfig(Yaml, InputStream...)}, {@link Configurator#constructFromConfig(ParentAwareHashMap,
-     * Class)}, {@link Configurator#mergeConfigs(Stream)}, {@link Configurator#remapConfig(ParentAwareHashMap, String,
-     * String)}, {@link Configurator#unreduceConfig(ParentAwareHashMap, Class)}.
+     * Class)}, {@link Configurator#mergeConfigs(Stream)}, {@link Configurator#unreduceConfig(ParentAwareHashMap, Class)}.
      *
      * @throws InvocationTargetException
      *         As inherited.
@@ -95,6 +94,7 @@ public class ConfiguratorTest {
             .of(createConfig(yaml, this.getClass().getClassLoader().getResourceAsStream("conf.yaml")),
                 unreduceConfig(createConfig(yaml, this.getClass().getClassLoader().getResourceAsStream("conf2.yaml")),
                     ConfiguredType.class)));
+        System.out.println(source);
         ConfiguredType type = constructFromConfig(source, ConfiguredType.class);
         assertEquals(name, type.getName());
         assertEquals(value, type.getValue());
