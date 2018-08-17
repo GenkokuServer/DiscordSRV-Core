@@ -72,15 +72,25 @@ public final class Configurator {
     public static <T> T constructFromConfig(ParentAwareHashMap source, Class<T> type)
         throws ConfigurationException, IllegalAccessException, InvocationTargetException, InstantiationException {
         return constructFromReducedConfig(
-            (ParentAwareHashMap) recurseInto(source, new LinkedList<>(Arrays.asList(type.getName().split("\\.")))),
+            (ParentAwareHashMap) traverseInto(source, new LinkedList<>(Arrays.asList(type.getName().split("\\.")))),
             type);
     }
 
-    private static Object recurseInto(Object target, LinkedList<String> path) {
+    /**
+     * Traverse into a target with a given path.
+     *
+     * @param target
+     *         The target to traverse into.
+     * @param path
+     *         The path to traverse to.
+     *
+     * @return result The result of the traversal.
+     */
+    public static Object traverseInto(Object target, LinkedList<String> path) {
         if (path.isEmpty()) {
             return target;
         } else {
-            return recurseInto(((ParentAwareHashMap) target).get(path.removeFirst()), path);
+            return traverseInto(((ParentAwareHashMap) target).get(path.removeFirst()), path);
         }
     }
 
@@ -124,7 +134,7 @@ public final class Configurator {
         }
         for (int i = 0; i < parameters.length; i++) {
             parameters[i] =
-                recurseInto(reduced, new LinkedList<>(Arrays.asList(parameterValues.removeFirst().split("\\."))));
+                traverseInto(reduced, new LinkedList<>(Arrays.asList(parameterValues.removeFirst().split("\\."))));
         }
         return type.cast(constructor.newInstance(parameters));
     }

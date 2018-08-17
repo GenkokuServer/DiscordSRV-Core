@@ -3,7 +3,6 @@ com.discordsrv.core:
         DSRVJDABuilder:
             token: ""
             prefix: "!"
-            owner: ""
             game:
                 name: "for !help"
                 type: 3

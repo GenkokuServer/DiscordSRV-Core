@@ -70,7 +70,8 @@ public class ConfiguratorTest {
 
     /**
      * Tests {@link Configurator#createConfig(Yaml, InputStream...)}, {@link Configurator#constructFromConfig(ParentAwareHashMap,
-     * Class)}, {@link Configurator#mergeConfigs(Stream)}, {@link Configurator#unreduceConfig(ParentAwareHashMap, Class)}.
+     * Class)}, {@link Configurator#mergeConfigs(Stream)}, {@link Configurator#unreduceConfig(ParentAwareHashMap,
+     * Class)}.
      *
      * @throws InvocationTargetException
      *         As inherited.

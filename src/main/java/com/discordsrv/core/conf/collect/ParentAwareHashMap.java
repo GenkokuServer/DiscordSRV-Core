@@ -17,7 +17,9 @@
  */
 package com.discordsrv.core.conf.collect;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * ParentAwareHashMap, for maps that know their roots (in trees of maps).
@@ -91,4 +93,40 @@ public class ParentAwareHashMap extends HashMap<String, Object> {
     public void setName(final String name) {
         this.name = name;
     }
+
+    @Override
+    public ParentAwareHashMap clone() {
+        final ParentAwareHashMap map = (ParentAwareHashMap) super.clone();
+        this.forEach((key, value) -> {
+            if (value instanceof ParentAwareHashMap) {
+                map.compute(key, (s, existing) -> {
+                    ParentAwareHashMap val = ((ParentAwareHashMap) value).clone();
+                    val.setName(((ParentAwareHashMap) value).name);
+                    val.setParent(map);
+                    return val;
+                });
+            } else {
+                map.put(key, value);
+            }
+        });
+        return map;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals(@Nullable Object o) {
+        return o instanceof ParentAwareHashMap && (
+            ((ParentAwareHashMap) o).parent == null && parent == null && o.toString().equals(this.toString()) || Objects
+                .equals(((ParentAwareHashMap) o).parent, parent)); // We only really want this true for clones.
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+        throw new UnsupportedOperationException();
+    }
+
 }
