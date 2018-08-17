@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.debug;
+package com.discordsrv.core.debug.proxy;
 
 /**
  * DebugProxy type, for establishing {@link java.lang.reflect.Proxy} instances we can track.

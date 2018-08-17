@@ -15,8 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.debug;
+package com.discordsrv.core.debug.proxy;
 
+import com.discordsrv.core.debug.Debugger;
+import com.discordsrv.core.debug.annotation.DisableDebug;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +51,9 @@ public class DebugInvocationHandler implements InvocationHandler, DebugProxy {
 
     @Override
     public Object invoke(final Object proxy, final Method method, final Object[] args) {
-        Debugger.logInvocation(method, args, logger);
+        if (method.getAnnotation(DisableDebug.class) == null) {
+            Debugger.logInvocation(method, args, logger);
+        }
         try {
             if (method.getReturnType().isInterface()) {
                 return debugger.getProxy(method.invoke(proxy, args), method.getReturnType());

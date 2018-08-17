@@ -21,6 +21,7 @@ import com.discordsrv.core.conf.ConfigAware;
 import com.discordsrv.core.conf.Configuration;
 import com.discordsrv.core.conf.annotation.Configured;
 import com.discordsrv.core.conf.annotation.Val;
+import com.discordsrv.core.debug.annotation.DisableDebug;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
@@ -61,6 +62,12 @@ public class DSRVJDABuilder extends JDABuilder implements ConfigAware {
         commandClientBuilder.setPrefix(prefix);
         commandClientBuilder.setOwnerId("000000000000000000"); // Nobody
         commandClientBuilder.setGame(Game.of(Game.GameType.fromKey(gameType), gameName));
+    }
+
+    @DisableDebug
+    @Override
+    public JDABuilder setToken(final String token) {
+        return super.setToken(token);
     }
 
     /**

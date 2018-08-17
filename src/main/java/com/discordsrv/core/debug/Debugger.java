@@ -19,6 +19,9 @@ package com.discordsrv.core.debug;
 
 import com.discordsrv.core.conf.annotation.Configured;
 import com.discordsrv.core.conf.annotation.Val;
+import com.discordsrv.core.debug.proxy.DebugInvocationHandler;
+import com.discordsrv.core.debug.proxy.DebugMethodInterceptor;
+import com.discordsrv.core.debug.proxy.DebugProxy;
 import net.sf.cglib.proxy.Enhancer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

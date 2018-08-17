@@ -15,8 +15,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.debug;
+package com.discordsrv.core.debug.proxy;
 
+import com.discordsrv.core.debug.Debugger;
+import com.discordsrv.core.debug.annotation.DisableDebug;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import org.slf4j.Logger;
@@ -45,7 +47,9 @@ public class DebugMethodInterceptor implements MethodInterceptor {
     @Override
     public Object intercept(final Object proxy, final Method method, final Object[] args, MethodProxy methodProxy)
         throws Throwable {
-        Debugger.logInvocation(method, args, logger);
+        if (method.getAnnotation(DisableDebug.class) == null) {
+            Debugger.logInvocation(method, args, logger);
+        }
         if (method.getReturnType().isInterface()) {
             return debugger.getProxy(methodProxy.invokeSuper(proxy, args), method.getReturnType());
         } else {
