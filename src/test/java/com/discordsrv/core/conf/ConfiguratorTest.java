@@ -94,7 +94,6 @@ public class ConfiguratorTest {
             .of(createConfig(yaml, this.getClass().getClassLoader().getResourceAsStream("conf.yaml")),
                 unreduceConfig(createConfig(yaml, this.getClass().getClassLoader().getResourceAsStream("conf2.yaml")),
                     ConfiguredType.class)));
-        System.out.println(source);
         ConfiguredType type = constructFromConfig(source, ConfiguredType.class);
         assertEquals(name, type.getName());
         assertEquals(value, type.getValue());
