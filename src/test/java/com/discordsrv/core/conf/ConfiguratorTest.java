@@ -26,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -39,7 +38,7 @@ import static org.junit.Assert.assertEquals;
 public class ConfiguratorTest {
 
     /**
-     * Tests {@link Configurator#constructFromConfig(Map, Class)}.
+     * Tests {@link Configurator#constructFromConfig(Map, Class)}, {@link Configurator#flatten(Iterable)}.
      *
      * @throws InvocationTargetException
      *         As inherited.
@@ -66,7 +65,7 @@ public class ConfiguratorTest {
             InputStreamReader reader = new InputStreamReader(
                 this.getClass().getClassLoader().getResourceAsStream("conf.yaml"))
         ) {
-            LinkedHashMap<String, Map<String, Object>> tree = yaml.load(reader);
+            Iterable<Object> tree = yaml.loadAll(reader);
             ConfiguredType type = constructFromConfig(flatten(tree), ConfiguredType.class);
             assertEquals(name, type.getName());
             assertEquals(value, type.getValue());
@@ -74,8 +73,9 @@ public class ConfiguratorTest {
     }
 
     /**
-     * Tests {@link Configurator#createConfig(Yaml, InputStream...)}, {@link Configurator#mergeConfigs(Stream)}, and
-     * {@link Configurator#remapConfig(Map, String, String)}.
+     * Tests {@link Configurator#createConfig(Yaml, InputStream...)}, {@link Configurator#constructFromConfig(Map, Class)}, {@link
+     * Configurator#mergeConfigs(Stream)}, {@link Configurator#remapConfig(Map, String, String)}, {@link
+     * Configurator#unreduceConfig(Map, Class)}.
      *
      * @throws InvocationTargetException
      *         As inherited.
@@ -97,8 +97,8 @@ public class ConfiguratorTest {
         Yaml yaml = new Yaml();
         Map<String, Object> source = mergeConfigs(Stream
             .of(createConfig(yaml, this.getClass().getClassLoader().getResourceAsStream("conf.yaml")),
-                remapConfig(createConfig(yaml, this.getClass().getClassLoader().getResourceAsStream("conf2.yaml")),
-                    "test", ConfiguredType.class.getName())));
+                unreduceConfig(createConfig(yaml, this.getClass().getClassLoader().getResourceAsStream("conf2.yaml")),
+                    ConfiguredType.class)));
         ConfiguredType type = constructFromConfig(source, ConfiguredType.class);
         assertEquals(name, type.getName());
         assertEquals(value, type.getValue());

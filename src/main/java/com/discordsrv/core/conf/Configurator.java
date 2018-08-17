@@ -163,17 +163,24 @@ public final class Configurator {
     }
 
     /**
-     * Converts a recursive tree map to a map with a period separator.
+     * Converts a recursive tree map to a map with a period separator. Pass the result of yaml#loadAll
      *
      * @param config
      *         The tree map config which this is loaded from.
      *
      * @return map The converted map.
      */
-    public static Map<String, Object> flatten(LinkedHashMap<String, Map<String, Object>> config) {
+    @SuppressWarnings("unchecked")
+    public static Map<String, Object> flatten(Iterable<Object> config) {
         HashMap<String, Object> map = new HashMap<>();
-        config.forEach((key, value) -> {
-            toMapRecurse(key, value, map);
+        config.forEach(configEntry -> {
+            ((LinkedHashMap) configEntry).forEach((key, value) -> {
+                if (value instanceof Map) {
+                    toMapRecurse((String) key, (Map<String, Object>) value, map);
+                } else {
+                    map.put((String) key, value);
+                }
+            });
         });
         return map;
     }
@@ -208,7 +215,7 @@ public final class Configurator {
         IOException exception = new IOException();
         Stream<Map<String, Object>> mapStream = streamList.map(stream -> {
             try (Reader reader = new InputStreamReader(stream)) {
-                return flatten(yaml.load(reader));
+                return flatten(yaml.loadAll(reader));
             } catch (IOException | YAMLException e) {
                 exception.addSuppressed(e);
                 return Collections.emptyMap();
