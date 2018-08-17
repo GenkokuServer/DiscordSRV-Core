@@ -22,12 +22,16 @@ import com.discordsrv.core.api.auth.State;
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.discordsrv.core.api.user.PlayerUserLinker;
 import com.discordsrv.core.api.user.PlayerUserLookup;
+import com.discordsrv.core.conf.annotation.Configured;
+import com.discordsrv.core.conf.annotation.Val;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.DualTreeBidiMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -46,8 +50,10 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
      * @param lookup
      *         The lookup service.
      */
-    public LocalPlayerUserLinker(final BidiMap<UUID, String> playerStorage, final PlayerUserLookup lookup) {
-        this.playerStorage = playerStorage;
+    @Configured
+    public LocalPlayerUserLinker(final @Val("users") Map<UUID, String> playerStorage,
+                                 final @Val("lookup") PlayerUserLookup lookup) {
+        this.playerStorage = new DualTreeBidiMap<>(playerStorage);
         this.lookup = lookup;
     }
 

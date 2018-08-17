@@ -22,6 +22,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import javax.annotation.CheckReturnValue;
+import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,11 +53,12 @@ public final class ConfigUtil {
      *
      * @return result The result of the traversal.
      */
-    public static Object traverseInto(Object target, LinkedList<String> path) {
-        if (path.isEmpty()) {
+    @SuppressWarnings("unchecked")
+    public static Object traverseInto(@Nullable Object target, LinkedList<String> path) {
+        if (path.isEmpty() || target == null) {
             return target;
         } else {
-            return traverseInto(((ParentAwareHashMap) target).get(path.removeFirst()), path);
+            return traverseInto(((Map<String, Object>) target).get(path.removeFirst()), path);
         }
     }
 

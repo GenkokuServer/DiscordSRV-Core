@@ -21,12 +21,16 @@ import com.discordsrv.core.api.role.Team;
 import com.discordsrv.core.api.role.TeamRoleLinker;
 import com.discordsrv.core.api.role.TeamRoleLookup;
 import com.discordsrv.core.api.user.MinecraftPlayer;
+import com.discordsrv.core.conf.annotation.Configured;
+import com.discordsrv.core.conf.annotation.Val;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.Role;
 import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.DualTreeBidiMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 
 /**
  * Leverages a local storage for role/team linking.
@@ -44,8 +48,10 @@ public class LocalTeamRoleLinker implements TeamRoleLinker {
      * @param lookup
      *         The lookup service.
      */
-    public LocalTeamRoleLinker(final BidiMap<String, String> roleStorage, final TeamRoleLookup lookup) {
-        this.roleStorage = roleStorage;
+    @Configured
+    public LocalTeamRoleLinker(final @Val("roles") Map<String, String> roleStorage,
+                               final @Val("lookup") TeamRoleLookup lookup) {
+        this.roleStorage = new DualTreeBidiMap<>(roleStorage);
         this.lookup = lookup;
     }
 

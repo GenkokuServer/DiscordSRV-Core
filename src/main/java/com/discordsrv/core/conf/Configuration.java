@@ -54,13 +54,13 @@ public class Configuration {
      *         The configs to load in as user configs.
      *
      * @throws InvocationTargetException
-     *         See {@link #constructFromConfig(Class)}.
+     *         See {@link #constructFromConfig(Class, Object...)}.
      * @throws InstantiationException
-     *         See {@link #constructFromConfig(Class)}.
+     *         See {@link #constructFromConfig(Class, Object...)}.
      * @throws ConfigurationException
-     *         See {@link #constructFromConfig(Class)}.
+     *         See {@link #constructFromConfig(Class, Object...)}.
      * @throws IllegalAccessException
-     *         See {@link #constructFromConfig(Class)}.
+     *         See {@link #constructFromConfig(Class, Object...)}.
      * @throws IOException
      *         See {@link ConfigUtil#createConfig(Yaml, InputStream...)}.
      */
@@ -82,9 +82,7 @@ public class Configuration {
         this.source = mergeConfigs(Stream.of(createConfig(yaml,
             this.getClass().getClassLoader().getResourceAsStream("dsrv/locales/" + language + "/default.yaml")),
             userConfig));
-        this.debugger =
-            constructFromReducedConfig((ParentAwareHashMap) traverseInto(source, splitPath(Debugger.class.getName())),
-                Debugger.class);
+        this.debugger = constructFromConfig(Debugger.class);
     }
 
     private static ParentAwareHashMap applyDefaultRemappings(final ParentAwareHashMap map) {
@@ -99,6 +97,8 @@ public class Configuration {
      *
      * @param type
      *         The type to be instantiated.
+     * @param extras
+     *         Extra values to inject.
      * @param <T>
      *         The type argument of the instantiated type.
      *
@@ -113,9 +113,10 @@ public class Configuration {
      * @throws InstantiationException
      *         If instantiation of the type fails.
      */
-    public <T> T constructFromConfig(Class<T> type)
+    public <T> T constructFromConfig(Class<T> type, Object... extras)
         throws ConfigurationException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        return constructFromReducedConfig((ParentAwareHashMap) traverseInto(source, splitPath(type.getName())), type);
+        return constructFromReducedConfig((ParentAwareHashMap) traverseInto(source, splitPath(type.getName())), type,
+            extras);
     }
 
     /**
@@ -123,6 +124,8 @@ public class Configuration {
      *
      * @param reduced
      *         The source of the injected values, without the class name prefixed.
+     * @param extras
+     *         Extra values to inject.
      * @param type
      *         The type to be instantiated.
      * @param <T>
@@ -139,7 +142,7 @@ public class Configuration {
      * @throws InstantiationException
      *         If instantiation of the type fails.
      */
-    public <T> T constructFromReducedConfig(ParentAwareHashMap reduced, Class<T> type)
+    public <T> T constructFromReducedConfig(ParentAwareHashMap reduced, Class<T> type, Object... extras)
         throws ConfigurationException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Constructor<?> constructor = null;
         for (Constructor<?> declared : type.getDeclaredConstructors()) {
@@ -151,13 +154,23 @@ public class Configuration {
         if (constructor == null) {
             throw new ConfigurationException("No @Configured annotation present on any declared constructors.");
         }
+        Class<?>[] parameterTypes = constructor.getParameterTypes();
         Object[] parameters = new Object[constructor.getParameterCount()];
         LinkedList<String> parameterValues = new LinkedList<>();
+        List<Object> extraList = new LinkedList<>(Arrays.asList(extras));
         for (Parameter parameter : constructor.getParameters()) {
             parameterValues.add(parameter.getAnnotation(Val.class).value());
         }
         for (int i = 0; i < parameters.length; i++) {
             parameters[i] = traverseInto(reduced, splitPath(parameterValues.removeFirst()));
+            if (parameters[i] == null) {
+                for (Object obj : extraList) {
+                    if (parameterTypes[i].isAssignableFrom(obj.getClass())) {
+                        parameters[i] = obj;
+                        break;
+                    }
+                }
+            }
         }
         T returned;
         if (debugger != null && debugger.isDebugging()) {
@@ -200,4 +213,5 @@ public class Configuration {
     public Debugger getDebugger() {
         return debugger;
     }
+
 }

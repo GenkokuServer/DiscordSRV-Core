@@ -20,6 +20,8 @@ package com.discordsrv.core.user;
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.discordsrv.core.api.user.PlayerUserLinker;
 import com.discordsrv.core.api.user.PlayerUserLookup;
+import com.discordsrv.core.conf.annotation.Configured;
+import com.discordsrv.core.conf.annotation.Val;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.User;
 
@@ -43,7 +45,8 @@ public class UplinkedPlayerUserLinker implements PlayerUserLinker {
      * @param lookup
      *         The lookup service.
      */
-    public UplinkedPlayerUserLinker(final PlayerUserLookup lookup) {
+    @Configured
+    public UplinkedPlayerUserLinker(final @Val("lookup") PlayerUserLookup lookup) {
         this.lookup = lookup;
     }
 

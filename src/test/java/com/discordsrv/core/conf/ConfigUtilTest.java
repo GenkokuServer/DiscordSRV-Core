@@ -17,9 +17,7 @@
  */
 package com.discordsrv.core.conf;
 
-import com.discordsrv.core.conf.collect.ParentAwareHashMap;
 import org.junit.Test;
-import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.naming.ConfigurationException;
@@ -38,7 +36,7 @@ import static org.junit.Assert.assertEquals;
 public class ConfigUtilTest {
 
     /**
-     * Tests {@link Configuration#constructFromConfig(Class)}, {@link ConfigUtil#flatten(Iterable)}.
+     * Tests {@link Configuration#constructFromConfig(Class, Object...)}, {@link ConfigUtil#flatten(Iterable)}.
      *
      * @throws InvocationTargetException
      *         As inherited.
@@ -58,8 +56,6 @@ public class ConfigUtilTest {
                IOException {
         String name = "Test";
         String value = "overwritten";
-        DumperOptions options = new DumperOptions();
-        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         Configuration configuration =
             new Configuration(Objects.requireNonNull(this.getClass().getClassLoader().getResource("conf.yaml")));
         ConfiguredType type = configuration.constructFromConfig(ConfiguredType.class);
@@ -68,8 +64,38 @@ public class ConfigUtilTest {
     }
 
     /**
-     * Tests {@link ConfigUtil#createConfig(Yaml, InputStream...)}, {@link Configuration#constructFromConfig(Class)},
-     * {@link ConfigUtil#mergeConfigs(Stream)}, {@link ConfigUtil#unreduceConfig(ParentAwareHashMap, Class)}.
+     * Tests {@link Configuration#constructFromConfig(Class, Object...)}, {@link ConfigUtil#flatten(Iterable)}.
+     *
+     * @throws InvocationTargetException
+     *         As inherited.
+     * @throws InstantiationException
+     *         As inherited.
+     * @throws ConfigurationException
+     *         As inherited.
+     * @throws IllegalAccessException
+     *         As inherited.
+     * @throws IOException
+     *         If the conversion process from yaml to map fails.
+     */
+    @Test
+    @SuppressWarnings("unchecked")
+    public void constructFromConfigExtrasTest()
+        throws InvocationTargetException, InstantiationException, ConfigurationException, IllegalAccessException,
+               IOException {
+        String name = "Test";
+        String value = "actual";
+        Configuration configuration = new Configuration();
+        configuration.addConfig(unreduceConfig(
+            createConfig(configuration.getYaml(), this.getClass().getClassLoader().getResourceAsStream("conf2.yaml")),
+            ConfiguredType.class));
+        ConfiguredType type = configuration.constructFromConfig(ConfiguredType.class, name);
+        assertEquals(name, type.getName());
+        assertEquals(value, type.getValue());
+    }
+
+    /**
+     * Tests {@link ConfigUtil#createConfig(Yaml, InputStream...)}, {@link Configuration#constructFromConfig(Class,
+     * Object...)}, {@link ConfigUtil#mergeConfigs(Stream)}.
      *
      * @throws InvocationTargetException
      *         As inherited.
