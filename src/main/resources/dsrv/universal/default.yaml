@@ -1,0 +1,12 @@
+com.discordsrv.core:
+    debug:
+        Debugger:
+            debug: false
+    discord:
+        DSRVJDABuilder:
+            token: 'THIS IS YOUR TOKEN'
+        commands:
+            AuthenticateCommand:
+                cooldown: 10
+
+lang: "en/us"

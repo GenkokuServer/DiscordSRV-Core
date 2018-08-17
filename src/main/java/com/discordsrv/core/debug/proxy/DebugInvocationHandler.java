@@ -56,9 +56,9 @@ public class DebugInvocationHandler implements InvocationHandler, DebugProxy {
         }
         try {
             if (method.getReturnType().isInterface()) {
-                return debugger.getProxy(method.invoke(proxy, args), method.getReturnType());
+                return debugger.getProxy(method.invoke(proxied, args), method.getReturnType());
             } else {
-                return method.invoke(proxy, args);
+                return method.invoke(proxied, args);
             }
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);

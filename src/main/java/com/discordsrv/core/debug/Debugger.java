@@ -48,7 +48,6 @@ public final class Debugger {
      * @param debug
      *         Whether or not we're debugging.
      */
-    @SuppressWarnings("ConstantConditions")
     @Configured
     public Debugger(final @Val("debug") boolean debug) {
         this.logger = LoggerFactory.getLogger("DSRVDebugger");
@@ -71,7 +70,7 @@ public final class Debugger {
     public static void logInvocation(Method method, Object[] args, Logger logger) {
         StringBuilder builder = new StringBuilder(method.getDeclaringClass().getName());
         builder.append('#').append(method.getName()).append('(');
-        if (args.length > 0) {
+        if (args != null && args.length > 0) {
             for (int i = 0; i < args.length - 1; i++) {
                 builder.append(args[i]).append(", ");
             }
@@ -98,10 +97,13 @@ public final class Debugger {
      */
     @SuppressWarnings("unchecked")
     public synchronized <T> T getProxy(Class<T> supertype, Class<?>[] parameters, Object[] arguments) {
+        if (Enhancer.isEnhanced(supertype)) {
+            return (T) enhancerMap.get(supertype.getSuperclass()).create(parameters, arguments);
+        }
         Enhancer enhancer = enhancerMap.computeIfAbsent(supertype, compute -> {
             Enhancer created = new Enhancer();
             created.setSuperclass(supertype);
-            created.setCallback(new DebugMethodInterceptor(this));
+            created.setCallback(interceptor);
             return created;
         });
         Object proxy = enhancer.create(parameters, arguments);
@@ -121,6 +123,9 @@ public final class Debugger {
      */
     @SuppressWarnings("unchecked")
     public synchronized Object getProxy(Object obj, Class<?>... types) {
+        if (Proxy.isProxyClass(obj.getClass())) {
+            return obj;
+        }
         List<Class<?>> typeList = new ArrayList<>(Arrays.asList(types));
         typeList.add(DebugProxy.class);
         for (DebugProxy proxy : proxies) {
