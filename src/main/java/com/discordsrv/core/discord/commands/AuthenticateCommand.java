@@ -69,7 +69,7 @@ public class AuthenticateCommand extends Command {
     @Configured
     public AuthenticateCommand(final @Val("name") String name, final @Val("aliases") ArrayList<String> aliases,
                                final @Val("arguments") String arguments, final @Val("help") String help,
-                               final @Val("failed_auth") String failedAuth,
+                               final @Val("cooldown") int cooldown, final @Val("failed_auth") String failedAuth,
                                final @Val("successful_auth") String successfulAuth,
                                final @Val("already_auth") String alreadyAuth,
                                final @Val("bad_config") String badConfig) {
@@ -80,7 +80,7 @@ public class AuthenticateCommand extends Command {
             Permission.MESSAGE_READ,
             Permission.MESSAGE_WRITE
         };
-        this.cooldown = 10;
+        this.cooldown = cooldown;
         this.cooldownScope = CooldownScope.USER;
         this.help = help;
         this.failedAuth = failedAuth;

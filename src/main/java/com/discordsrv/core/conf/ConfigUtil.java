@@ -17,63 +17,29 @@
  */
 package com.discordsrv.core.conf;
 
-import com.discordsrv.core.conf.annotation.Configured;
-import com.discordsrv.core.conf.annotation.Val;
 import com.discordsrv.core.conf.collect.ParentAwareHashMap;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import javax.annotation.CheckReturnValue;
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.naming.ConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Parameter;
 import java.util.*;
 import java.util.stream.Stream;
 
 /**
- * Configurator, for injecting information from configs.
+ * ConfigUtil, for injecting information from configs.
  */
 @SuppressWarnings("WeakerAccess")
 @CheckReturnValue
 @ParametersAreNonnullByDefault
-public final class Configurator {
+public final class ConfigUtil {
 
-    private Configurator() {
+    private ConfigUtil() {
         throw new UnsupportedOperationException();
-    }
-
-    /**
-     * Instantiates a type using a {@link Configured} constructor and injecting values from a config.
-     *
-     * @param source
-     *         The source of the injected values.
-     * @param type
-     *         The type to be instantiated.
-     * @param <T>
-     *         The type argument of the instantiated type.
-     *
-     * @return instance A new instance constructed via the config.
-     *
-     * @throws ConfigurationException
-     *         If there are no constructors with the {@link Configured} annotation.
-     * @throws IllegalAccessException
-     *         If the constructor attempted to be used is not accessible.
-     * @throws InvocationTargetException
-     *         Shouldn't happen, but inherited from {@link Constructor#newInstance(Object...)}.
-     * @throws InstantiationException
-     *         If instantiation of the type fails.
-     */
-    public static <T> T constructFromConfig(ParentAwareHashMap source, Class<T> type)
-        throws ConfigurationException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        return constructFromReducedConfig(
-            (ParentAwareHashMap) traverseInto(source, new LinkedList<>(Arrays.asList(type.getName().split("\\.")))),
-            type);
     }
 
     /**
@@ -92,51 +58,6 @@ public final class Configurator {
         } else {
             return traverseInto(((ParentAwareHashMap) target).get(path.removeFirst()), path);
         }
-    }
-
-    /**
-     * Instantiates a type using a {@link Configured} constructor and injecting values from a config.
-     *
-     * @param reduced
-     *         The source of the injected values, without the class name prefixed.
-     * @param type
-     *         The type to be instantiated.
-     * @param <T>
-     *         The type argument of the instantiated type.
-     *
-     * @return instance A new instance constructed via the config.
-     *
-     * @throws ConfigurationException
-     *         If there are no constructors with the {@link Configured} annotation.
-     * @throws IllegalAccessException
-     *         If the constructor attempted to be used is not accessible.
-     * @throws InvocationTargetException
-     *         Shouldn't happen, but inherited from {@link Constructor#newInstance(Object...)}.
-     * @throws InstantiationException
-     *         If instantiation of the type fails.
-     */
-    public static <T> T constructFromReducedConfig(ParentAwareHashMap reduced, Class<T> type)
-        throws ConfigurationException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        Constructor<?> constructor = null;
-        for (Constructor<?> declared : type.getDeclaredConstructors()) {
-            if (declared.isAnnotationPresent(Configured.class)) {
-                constructor = declared;
-                break;
-            }
-        }
-        if (constructor == null) {
-            throw new ConfigurationException("No @Configured annotation present on any declared constructors.");
-        }
-        Object[] parameters = new Object[constructor.getParameterCount()];
-        LinkedList<String> parameterValues = new LinkedList<>();
-        for (Parameter parameter : constructor.getParameters()) {
-            parameterValues.add(parameter.getAnnotation(Val.class).value());
-        }
-        for (int i = 0; i < parameters.length; i++) {
-            parameters[i] =
-                traverseInto(reduced, new LinkedList<>(Arrays.asList(parameterValues.removeFirst().split("\\."))));
-        }
-        return type.cast(constructor.newInstance(parameters));
     }
 
     /**
@@ -218,7 +139,7 @@ public final class Configurator {
     public static ParentAwareHashMap unflatten(Map<String, Object> flattened) {
         ParentAwareHashMap result = new ParentAwareHashMap(null, null);
         flattened.forEach((key, value) -> {
-            LinkedList<String> path = new LinkedList<>(Arrays.asList(key.split("\\.")));
+            LinkedList<String> path = splitPath(key);
             if (path.size() == 1) {
                 result.put(path.removeFirst(), value);
             } else {
@@ -304,6 +225,18 @@ public final class Configurator {
                 merger.put(key, value);
             }
         });
+    }
+
+    /**
+     * Splits the path with the . delimeter.
+     *
+     * @param path
+     *         The path to split
+     *
+     * @return splitPath The path broken into a linked list for use with ConfigUtil.
+     */
+    public static LinkedList<String> splitPath(final String path) {
+        return new LinkedList<>(Arrays.asList(path.split("\\.")));
     }
 
 }

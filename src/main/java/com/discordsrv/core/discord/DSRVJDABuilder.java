@@ -17,6 +17,8 @@
  */
 package com.discordsrv.core.discord;
 
+import com.discordsrv.core.conf.ConfigAware;
+import com.discordsrv.core.conf.Configuration;
 import com.discordsrv.core.conf.annotation.Configured;
 import com.discordsrv.core.conf.annotation.Val;
 import com.jagrosh.jdautilities.command.Command;
@@ -33,9 +35,10 @@ import javax.security.auth.login.LoginException;
 /**
  * DSRVJDABuilder type, for building JDAs for DSRV.
  */
-public class DSRVJDABuilder extends JDABuilder {
+public class DSRVJDABuilder extends JDABuilder implements ConfigAware {
 
     private final CommandClientBuilder commandClientBuilder;
+    private Configuration config;
 
     /**
      * Main configured constructor for the DSRVJDABuilder type.
@@ -78,5 +81,10 @@ public class DSRVJDABuilder extends JDABuilder {
         this.addEventListener(new EventWaiter());
         this.addEventListener(this.commandClientBuilder.build());
         return super.build();
+    }
+
+    @Override
+    public void setConfig(final Configuration config) {
+        this.config = config;
     }
 }

@@ -5,3 +5,6 @@ com:
                 ConfiguredType:
                     name: "Test"
                     value: "overwritten"
+            debug:
+                Debugger:
+                    debug: true

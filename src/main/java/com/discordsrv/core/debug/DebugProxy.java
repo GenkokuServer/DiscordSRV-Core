@@ -15,31 +15,18 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.conf.collect;
-
-import com.discordsrv.core.conf.ConfigUtil;
-import org.junit.Test;
-import org.yaml.snakeyaml.Yaml;
-
-import java.io.IOException;
-
-import static org.junit.Assert.assertEquals;
+package com.discordsrv.core.debug;
 
 /**
- * Tests {@link ParentAwareHashMap}.
+ * DebugProxy type, for establishing {@link java.lang.reflect.Proxy} instances we can track.
  */
-public class ParentAwareHashMapTest {
+public interface DebugProxy {
 
     /**
-     * Tests {@link ParentAwareHashMap#clone()}.
+     * Fetches the proxied object.
      *
-     * @throws IOException
-     *         If the compared yaml cannot load.
+     * @return proxied The proxied object.
      */
-    @Test
-    public void cloneTest() throws IOException {
-        final ParentAwareHashMap config = ConfigUtil.createConfig(new Yaml(),
-            this.getClass().getClassLoader().getResourceAsStream("dsrv/locales/en/us/default.yaml"));
-        assertEquals(config, config.clone());
-    }
+    Object getProxied();
+
 }

@@ -26,19 +26,19 @@ import javax.naming.ConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 import java.util.stream.Stream;
 
-import static com.discordsrv.core.conf.Configurator.*;
+import static com.discordsrv.core.conf.ConfigUtil.*;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Tests {@link Configurator}.
+ * Tests {@link ConfigUtil}.
  */
-public class ConfiguratorTest {
+public class ConfigUtilTest {
 
     /**
-     * Tests {@link Configurator#constructFromConfig(ParentAwareHashMap, Class)}, {@link
-     * Configurator#flatten(Iterable)}.
+     * Tests {@link Configuration#constructFromConfig(Class)}, {@link ConfigUtil#flatten(Iterable)}.
      *
      * @throws InvocationTargetException
      *         As inherited.
@@ -60,18 +60,16 @@ public class ConfiguratorTest {
         String value = "overwritten";
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        Yaml yaml = new Yaml();
-        ConfiguredType type =
-            constructFromConfig(createConfig(yaml, this.getClass().getClassLoader().getResourceAsStream("conf.yaml")),
-                ConfiguredType.class);
+        Configuration configuration =
+            new Configuration(Objects.requireNonNull(this.getClass().getClassLoader().getResource("conf.yaml")));
+        ConfiguredType type = configuration.constructFromConfig(ConfiguredType.class);
         assertEquals(name, type.getName());
         assertEquals(value, type.getValue());
     }
 
     /**
-     * Tests {@link Configurator#createConfig(Yaml, InputStream...)}, {@link Configurator#constructFromConfig(ParentAwareHashMap,
-     * Class)}, {@link Configurator#mergeConfigs(Stream)}, {@link Configurator#unreduceConfig(ParentAwareHashMap,
-     * Class)}.
+     * Tests {@link ConfigUtil#createConfig(Yaml, InputStream...)}, {@link Configuration#constructFromConfig(Class)},
+     * {@link ConfigUtil#mergeConfigs(Stream)}, {@link ConfigUtil#unreduceConfig(ParentAwareHashMap, Class)}.
      *
      * @throws InvocationTargetException
      *         As inherited.
@@ -90,12 +88,12 @@ public class ConfiguratorTest {
                IllegalAccessException {
         String name = "Test";
         String value = "actual";
-        Yaml yaml = new Yaml();
-        ParentAwareHashMap source = mergeConfigs(Stream
-            .of(createConfig(yaml, this.getClass().getClassLoader().getResourceAsStream("conf.yaml")),
-                unreduceConfig(createConfig(yaml, this.getClass().getClassLoader().getResourceAsStream("conf2.yaml")),
-                    ConfiguredType.class)));
-        ConfiguredType type = constructFromConfig(source, ConfiguredType.class);
+        Configuration configuration = new Configuration();
+        configuration.addConfig(mergeConfigs(Stream.of(createConfig(configuration.getYaml(),
+            this.getClass().getClassLoader().getResourceAsStream("conf.yaml")), unreduceConfig(
+            createConfig(configuration.getYaml(), this.getClass().getClassLoader().getResourceAsStream("conf2.yaml")),
+            ConfiguredType.class))));
+        ConfiguredType type = configuration.constructFromConfig(ConfiguredType.class);
         assertEquals(name, type.getName());
         assertEquals(value, type.getValue());
     }

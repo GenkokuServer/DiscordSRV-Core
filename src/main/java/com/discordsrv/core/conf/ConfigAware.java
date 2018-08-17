@@ -15,31 +15,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.conf.collect;
-
-import com.discordsrv.core.conf.ConfigUtil;
-import org.junit.Test;
-import org.yaml.snakeyaml.Yaml;
-
-import java.io.IOException;
-
-import static org.junit.Assert.assertEquals;
+package com.discordsrv.core.conf;
 
 /**
- * Tests {@link ParentAwareHashMap}.
+ * ConfigAware type, for establishing objects which need to be made aware of {@link Configuration}s.
  */
-public class ParentAwareHashMapTest {
+public interface ConfigAware {
 
     /**
-     * Tests {@link ParentAwareHashMap#clone()}.
+     * Sets the config of this object.
      *
-     * @throws IOException
-     *         If the compared yaml cannot load.
+     * @param config
+     *         The config provided.
      */
-    @Test
-    public void cloneTest() throws IOException {
-        final ParentAwareHashMap config = ConfigUtil.createConfig(new Yaml(),
-            this.getClass().getClassLoader().getResourceAsStream("dsrv/locales/en/us/default.yaml"));
-        assertEquals(config, config.clone());
-    }
+    void setConfig(Configuration config);
+
 }

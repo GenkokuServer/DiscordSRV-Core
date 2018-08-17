@@ -1,7 +1,6 @@
 com.discordsrv.core:
     discord:
         DSRVJDABuilder:
-            token: ""
             prefix: "!"
             game:
                 name: "for !help"

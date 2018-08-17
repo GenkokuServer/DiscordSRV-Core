@@ -74,8 +74,6 @@ public class PlayerlistCommand extends Command {
             Permission.MESSAGE_READ,
             Permission.MESSAGE_WRITE
         };
-        this.cooldown = 30;
-        this.cooldownScope = CooldownScope.GLOBAL;
         this.help = help;
         this.listHeader = listHeader;
         this.listItem = listItem;
@@ -91,19 +89,23 @@ public class PlayerlistCommand extends Command {
                     event.reactSuccess();
                     List<MinecraftPlayer> collected = result.collect(Collectors.toList());
                     StringBuffer builder =
-                        new StringBuffer(listHeader.replace("%count%", Integer.toString(collected.size()))).append('\n');
-                    collected.forEach(player -> player.getName(name -> builder.append(String.format("%s\n", listItem.replace("%player%", name)))));
+                        new StringBuffer(listHeader.replace("%count%", Integer.toString(collected.size())))
+                            .append('\n');
+                    collected.forEach(player -> player
+                        .getName(name -> builder.append(String.format("%s\n", listItem.replace("%player%", name)))));
                     event.reply(builder.toString());
                 } else {
                     event.reactError();
-                    event.reply(badConfig.replace("%owner%", event.getJDA().getUserById(event.getClient().getOwnerId()).getAsMention()));
+                    event.reply(badConfig
+                        .replace("%owner%", event.getJDA().getUserById(event.getClient().getOwnerId()).getAsMention()));
                 }
             }
 
             @Override
             public void onFailure(final @Nonnull Throwable t) {
                 event.reactError();
-                event.reply(badConfig.replace("%owner%", event.getJDA().getUserById(event.getClient().getOwnerId()).getAsMention()));
+                event.reply(badConfig
+                    .replace("%owner%", event.getJDA().getUserById(event.getClient().getOwnerId()).getAsMention()));
             }
         });
     }

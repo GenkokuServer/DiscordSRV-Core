@@ -41,7 +41,7 @@ public class ConfiguredType {
         this.value = value;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 

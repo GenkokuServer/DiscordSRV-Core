@@ -15,31 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.conf.collect;
-
-import com.discordsrv.core.conf.ConfigUtil;
-import org.junit.Test;
-import org.yaml.snakeyaml.Yaml;
-
-import java.io.IOException;
-
-import static org.junit.Assert.assertEquals;
-
 /**
- * Tests {@link ParentAwareHashMap}.
+ * Debug package for the DiscordSRV2-Core library.
  */
-public class ParentAwareHashMapTest {
-
-    /**
-     * Tests {@link ParentAwareHashMap#clone()}.
-     *
-     * @throws IOException
-     *         If the compared yaml cannot load.
-     */
-    @Test
-    public void cloneTest() throws IOException {
-        final ParentAwareHashMap config = ConfigUtil.createConfig(new Yaml(),
-            this.getClass().getClassLoader().getResourceAsStream("dsrv/locales/en/us/default.yaml"));
-        assertEquals(config, config.clone());
-    }
-}
+package com.discordsrv.core.debug;
