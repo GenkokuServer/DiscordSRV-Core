@@ -19,9 +19,12 @@ package com.discordsrv.core.conf;
 
 import com.discordsrv.core.conf.annotation.Configured;
 import com.discordsrv.core.conf.annotation.Val;
+import com.discordsrv.core.conf.collect.ParentAwareHashMap;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
 
+import javax.annotation.CheckReturnValue;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.naming.ConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +40,8 @@ import java.util.stream.Stream;
  * Configurator, for injecting information from configs.
  */
 @SuppressWarnings("WeakerAccess")
+@CheckReturnValue
+@ParametersAreNonnullByDefault
 public final class Configurator {
 
     private Configurator() {
@@ -64,13 +69,19 @@ public final class Configurator {
      * @throws InstantiationException
      *         If instantiation of the type fails.
      */
-    public static <T> T constructFromConfig(Map<String, Object> source, Class<T> type)
+    public static <T> T constructFromConfig(ParentAwareHashMap source, Class<T> type)
         throws ConfigurationException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        String prefix = type.getName();
-        Map<String, Object> reduced = new HashMap<>();
-        source.entrySet().stream().filter(entry -> entry.getKey().startsWith(prefix))
-            .forEach(entry -> reduced.put(entry.getKey().substring(prefix.length() + 1), entry.getValue()));
-        return constructFromReducedConfig(reduced, type);
+        return constructFromReducedConfig(
+            (ParentAwareHashMap) recurseInto(source, new LinkedList<>(Arrays.asList(type.getName().split("\\.")))),
+            type);
+    }
+
+    private static Object recurseInto(Object target, LinkedList<String> path) {
+        if (path.isEmpty()) {
+            return target;
+        } else {
+            return recurseInto(((ParentAwareHashMap) target).get(path.removeFirst()), path);
+        }
     }
 
     /**
@@ -94,7 +105,7 @@ public final class Configurator {
      * @throws InstantiationException
      *         If instantiation of the type fails.
      */
-    public static <T> T constructFromReducedConfig(Map<String, Object> reduced, Class<T> type)
+    public static <T> T constructFromReducedConfig(ParentAwareHashMap reduced, Class<T> type)
         throws ConfigurationException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Constructor<?> constructor = null;
         for (Constructor<?> declared : type.getDeclaredConstructors()) {
@@ -107,17 +118,14 @@ public final class Configurator {
             throw new ConfigurationException("No @Configured annotation present on any declared constructors.");
         }
         Object[] parameters = new Object[constructor.getParameterCount()];
-        List<String> parameterValues = new ArrayList<>(constructor.getParameterCount());
+        LinkedList<String> parameterValues = new LinkedList<>();
         for (Parameter parameter : constructor.getParameters()) {
             parameterValues.add(parameter.getAnnotation(Val.class).value());
         }
-        reduced.forEach((key, value) -> {
-            for (int i = 0; i < parameterValues.size(); i++) {
-                if (parameterValues.get(i).equals(key)) {
-                    parameters[i] = value;
-                }
-            }
-        });
+        for (int i = 0; i < parameters.length; i++) {
+            parameters[i] =
+                recurseInto(reduced, new LinkedList<>(Arrays.asList(parameterValues.removeFirst().split("\\."))));
+        }
         return type.cast(constructor.newInstance(parameters));
     }
 
@@ -136,8 +144,9 @@ public final class Configurator {
      *
      * @return remapped The remapped config.
      */
-    public static Map<String, Object> remapConfig(Map<String, Object> config, String original, String resultant) {
-        Map<String, Object> remapped = new HashMap<>(config.size());
+    public static ParentAwareHashMap remapConfig(ParentAwareHashMap config, String original, String resultant) {
+        Map<String, Object> flattened = flatten(Collections.singleton(config));
+        Map<String, Object> remapped = new HashMap<>(flattened.size());
         config.forEach((key, value) -> {
             if (key.startsWith(original)) {
                 remapped.put(resultant + key.substring(original.length()), value);
@@ -145,7 +154,7 @@ public final class Configurator {
                 remapped.put(key, value);
             }
         });
-        return remapped;
+        return unflatten(remapped);
     }
 
     /**
@@ -158,7 +167,7 @@ public final class Configurator {
      *
      * @return unreduced The unreduced config.
      */
-    public static Map<String, Object> unreduceConfig(Map<String, Object> reduced, Class<?> type) {
+    public static ParentAwareHashMap unreduceConfig(ParentAwareHashMap reduced, Class<?> type) {
         return remapConfig(reduced, "", type.getName() + ".");
     }
 
@@ -173,16 +182,45 @@ public final class Configurator {
     @SuppressWarnings("unchecked")
     public static Map<String, Object> flatten(Iterable<Object> config) {
         HashMap<String, Object> map = new HashMap<>();
-        config.forEach(configEntry -> {
-            ((LinkedHashMap) configEntry).forEach((key, value) -> {
-                if (value instanceof Map) {
-                    toMapRecurse((String) key, (Map<String, Object>) value, map);
-                } else {
-                    map.put((String) key, value);
-                }
-            });
-        });
+        config.forEach(configEntry -> ((Map) configEntry).forEach((key, value) -> {
+            if (value instanceof Map) {
+                toMapRecurse((String) key, (Map<String, Object>) value, map);
+            } else {
+                map.put((String) key, value);
+            }
+        }));
         return map;
+    }
+
+    /**
+     * Unflattens a path-based map into a ParentAwareHashMap (the kind used to construct from configs).
+     *
+     * @param flattened
+     *         A flattened config.
+     *
+     * @return unflattened An unflattened config.
+     */
+    public static ParentAwareHashMap unflatten(Map<String, Object> flattened) {
+        ParentAwareHashMap result = new ParentAwareHashMap(null, null);
+        flattened.forEach((key, value) -> {
+            LinkedList<String> path = new LinkedList<>(Arrays.asList(key.split("\\.")));
+            if (path.size() == 1) {
+                result.put(path.removeFirst(), value);
+            } else {
+                createRecursive(result, path).put(path.removeFirst(), value);
+            }
+        });
+        return result;
+    }
+
+    private static ParentAwareHashMap createRecursive(ParentAwareHashMap parent, LinkedList<String> path) {
+        if (path.size() == 1) {
+            return parent;
+        } else {
+            ParentAwareHashMap self =
+                (ParentAwareHashMap) parent.computeIfAbsent(path.removeFirst(), s -> new ParentAwareHashMap(parent, s));
+            return createRecursive(self, path);
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -210,15 +248,15 @@ public final class Configurator {
      * @throws IOException
      *         If an exception occurs while attempting to load/parse the yaml documents.
      */
-    public static Map<String, Object> createConfig(Yaml yaml, InputStream... streams) throws IOException {
+    public static ParentAwareHashMap createConfig(Yaml yaml, InputStream... streams) throws IOException {
         Stream<InputStream> streamList = Arrays.stream(streams);
         IOException exception = new IOException();
-        Stream<Map<String, Object>> mapStream = streamList.map(stream -> {
+        Stream<ParentAwareHashMap> mapStream = streamList.map(stream -> {
             try (Reader reader = new InputStreamReader(stream)) {
-                return flatten(yaml.loadAll(reader));
+                return unflatten(flatten(yaml.loadAll(reader))); // to resolve names like "game.name"
             } catch (IOException | YAMLException e) {
                 exception.addSuppressed(e);
-                return Collections.emptyMap();
+                return new ParentAwareHashMap(null, null);
             }
         });
         if (exception.getSuppressed().length > 0) {
@@ -235,10 +273,22 @@ public final class Configurator {
      *
      * @return merged The merged configs.
      */
-    public static Map<String, Object> mergeConfigs(Stream<Map<String, Object>> configs) {
-        Map<String, Object> res = new HashMap<>();
-        configs.forEach(res::putAll);
+    public static ParentAwareHashMap mergeConfigs(Stream<ParentAwareHashMap> configs) {
+        ParentAwareHashMap res = new ParentAwareHashMap(null, null);
+        configs.forEach(config -> mergeConfigRecurse(config, res));
         return res;
+    }
+
+    private static void mergeConfigRecurse(ParentAwareHashMap config, ParentAwareHashMap merger) {
+        config.forEach((key, value) -> {
+            if (value instanceof ParentAwareHashMap) {
+                ParentAwareHashMap insert =
+                    (ParentAwareHashMap) merger.computeIfAbsent(key, s -> new ParentAwareHashMap(merger, s));
+                mergeConfigRecurse((ParentAwareHashMap) value, insert);
+            } else {
+                merger.put(key, value);
+            }
+        });
     }
 
 }

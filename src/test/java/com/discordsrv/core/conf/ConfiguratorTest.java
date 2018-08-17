@@ -17,6 +17,7 @@
  */
 package com.discordsrv.core.conf;
 
+import com.discordsrv.core.conf.collect.ParentAwareHashMap;
 import org.junit.Test;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -24,9 +25,7 @@ import org.yaml.snakeyaml.Yaml;
 import javax.naming.ConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.discordsrv.core.conf.Configurator.*;
@@ -38,7 +37,8 @@ import static org.junit.Assert.assertEquals;
 public class ConfiguratorTest {
 
     /**
-     * Tests {@link Configurator#constructFromConfig(Map, Class)}, {@link Configurator#flatten(Iterable)}.
+     * Tests {@link Configurator#constructFromConfig(ParentAwareHashMap, Class)}, {@link
+     * Configurator#flatten(Iterable)}.
      *
      * @throws InvocationTargetException
      *         As inherited.
@@ -61,21 +61,17 @@ public class ConfiguratorTest {
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         Yaml yaml = new Yaml();
-        try (
-            InputStreamReader reader = new InputStreamReader(
-                this.getClass().getClassLoader().getResourceAsStream("conf.yaml"))
-        ) {
-            Iterable<Object> tree = yaml.loadAll(reader);
-            ConfiguredType type = constructFromConfig(flatten(tree), ConfiguredType.class);
-            assertEquals(name, type.getName());
-            assertEquals(value, type.getValue());
-        }
+        ConfiguredType type =
+            constructFromConfig(createConfig(yaml, this.getClass().getClassLoader().getResourceAsStream("conf.yaml")),
+                ConfiguredType.class);
+        assertEquals(name, type.getName());
+        assertEquals(value, type.getValue());
     }
 
     /**
-     * Tests {@link Configurator#createConfig(Yaml, InputStream...)}, {@link Configurator#constructFromConfig(Map, Class)}, {@link
-     * Configurator#mergeConfigs(Stream)}, {@link Configurator#remapConfig(Map, String, String)}, {@link
-     * Configurator#unreduceConfig(Map, Class)}.
+     * Tests {@link Configurator#createConfig(Yaml, InputStream...)}, {@link Configurator#constructFromConfig(ParentAwareHashMap,
+     * Class)}, {@link Configurator#mergeConfigs(Stream)}, {@link Configurator#remapConfig(ParentAwareHashMap, String,
+     * String)}, {@link Configurator#unreduceConfig(ParentAwareHashMap, Class)}.
      *
      * @throws InvocationTargetException
      *         As inherited.
@@ -95,7 +91,7 @@ public class ConfiguratorTest {
         String name = "Test";
         String value = "actual";
         Yaml yaml = new Yaml();
-        Map<String, Object> source = mergeConfigs(Stream
+        ParentAwareHashMap source = mergeConfigs(Stream
             .of(createConfig(yaml, this.getClass().getClassLoader().getResourceAsStream("conf.yaml")),
                 unreduceConfig(createConfig(yaml, this.getClass().getClassLoader().getResourceAsStream("conf2.yaml")),
                     ConfiguredType.class)));
