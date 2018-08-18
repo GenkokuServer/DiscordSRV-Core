@@ -36,7 +36,7 @@ import static org.junit.Assert.assertEquals;
 public class ConfigUtilTest {
 
     /**
-     * Tests {@link Configuration#constructFromConfig(Class, Object...)}, {@link ConfigUtil#flatten(Iterable)}.
+     * Tests {@link Configuration#create(Class, Object...)}, {@link ConfigUtil#flatten(Iterable)}.
      *
      * @throws InvocationTargetException
      *         As inherited.
@@ -58,13 +58,13 @@ public class ConfigUtilTest {
         String value = "overwritten";
         Configuration configuration =
             new Configuration(Objects.requireNonNull(this.getClass().getClassLoader().getResource("conf.yaml")));
-        ConfiguredType type = configuration.constructFromConfig(ConfiguredType.class);
+        ConfiguredType type = configuration.create(ConfiguredType.class);
         assertEquals(name, type.getName());
         assertEquals(value, type.getValue());
     }
 
     /**
-     * Tests {@link Configuration#constructFromConfig(Class, Object...)}, {@link ConfigUtil#flatten(Iterable)}.
+     * Tests {@link Configuration#create(Class, Object...)}, {@link ConfigUtil#flatten(Iterable)}.
      *
      * @throws InvocationTargetException
      *         As inherited.
@@ -88,13 +88,13 @@ public class ConfigUtilTest {
         configuration.addConfig(unreduceConfig(
             createConfig(configuration.getYaml(), this.getClass().getClassLoader().getResourceAsStream("conf2.yaml")),
             ConfiguredType.class));
-        ConfiguredType type = configuration.constructFromConfig(ConfiguredType.class, name);
+        ConfiguredType type = configuration.create(ConfiguredType.class, name);
         assertEquals(name, type.getName());
         assertEquals(value, type.getValue());
     }
 
     /**
-     * Tests {@link ConfigUtil#createConfig(Yaml, InputStream...)}, {@link Configuration#constructFromConfig(Class,
+     * Tests {@link ConfigUtil#createConfig(Yaml, InputStream...)}, {@link Configuration#create(Class,
      * Object...)}, {@link ConfigUtil#mergeConfigs(Stream)}.
      *
      * @throws InvocationTargetException
@@ -119,7 +119,7 @@ public class ConfigUtilTest {
             this.getClass().getClassLoader().getResourceAsStream("conf.yaml")), unreduceConfig(
             createConfig(configuration.getYaml(), this.getClass().getClassLoader().getResourceAsStream("conf2.yaml")),
             ConfiguredType.class))));
-        ConfiguredType type = configuration.constructFromConfig(ConfiguredType.class);
+        ConfiguredType type = configuration.create(ConfiguredType.class);
         assertEquals(name, type.getName());
         assertEquals(value, type.getValue());
     }

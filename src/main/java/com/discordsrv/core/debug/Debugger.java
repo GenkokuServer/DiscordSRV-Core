@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Debugger type, for debugging with the use of proxies.
@@ -68,7 +69,7 @@ public final class Debugger {
      *         The logger used for logging.
      */
     public static void logInvocation(Method method, Object[] args, Logger logger) {
-        StringBuilder builder = new StringBuilder(method.getDeclaringClass().getName());
+        StringBuilder builder = new StringBuilder(method.getDeclaringClass().getSimpleName());
         builder.append('#').append(method.getName()).append('(');
         if (args != null && args.length > 0) {
             for (int i = 0; i < args.length - 1; i++) {
@@ -153,6 +154,6 @@ public final class Debugger {
      *         The type which is being proxied.
      */
     public void logProxyCreation(Class<?>... type) {
-        logger.debug(Arrays.toString(type) + " proxy created.");
+        logger.debug(Arrays.stream(type).map(Class::getSimpleName).collect(Collectors.toList()) + " proxy created.");
     }
 }

@@ -21,6 +21,8 @@ import com.discordsrv.core.api.auth.AuthenticationStore;
 import com.discordsrv.core.api.auth.State;
 import com.discordsrv.core.api.auth.Token;
 import com.discordsrv.core.api.user.MinecraftPlayer;
+import com.discordsrv.core.conf.annotation.Configured;
+import com.discordsrv.core.conf.annotation.Val;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.tuple.Pair;
@@ -56,8 +58,9 @@ public class PlayerUserAuthenticator {
      * @param scheduledExecutorService
      *         The executor service to schedule on.
      */
-    public PlayerUserAuthenticator(final @Nonnull AuthenticationStore<MinecraftPlayer, User> userStore,
-                                   final @Nonnull ScheduledExecutorService scheduledExecutorService) {
+    @Configured
+    public PlayerUserAuthenticator(final @Nonnull @Val("store") AuthenticationStore<MinecraftPlayer, User> userStore,
+                                   final @Nonnull @Val("executor") ScheduledExecutorService scheduledExecutorService) {
         this.random = new SecureRandom();
         this.userStore = userStore;
         this.tokenMap = new ConcurrentHashMap<>();

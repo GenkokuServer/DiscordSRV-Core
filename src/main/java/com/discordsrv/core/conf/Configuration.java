@@ -54,13 +54,13 @@ public class Configuration {
      *         The configs to load in as user configs.
      *
      * @throws InvocationTargetException
-     *         See {@link #constructFromConfig(Class, Object...)}.
+     *         See {@link #create(Class, Object...)}.
      * @throws InstantiationException
-     *         See {@link #constructFromConfig(Class, Object...)}.
+     *         See {@link #create(Class, Object...)}.
      * @throws ConfigurationException
-     *         See {@link #constructFromConfig(Class, Object...)}.
+     *         See {@link #create(Class, Object...)}.
      * @throws IllegalAccessException
-     *         See {@link #constructFromConfig(Class, Object...)}.
+     *         See {@link #create(Class, Object...)}.
      * @throws IOException
      *         See {@link ConfigUtil#createConfig(Yaml, InputStream...)}.
      */
@@ -82,7 +82,7 @@ public class Configuration {
         this.source = mergeConfigs(Stream.of(createConfig(yaml,
             this.getClass().getClassLoader().getResourceAsStream("dsrv/locales/" + language + "/default.yaml")),
             userConfig));
-        this.debugger = constructFromConfig(Debugger.class);
+        this.debugger = create(Debugger.class);
     }
 
     private static ParentAwareHashMap applyDefaultRemappings(final ParentAwareHashMap map) {
@@ -113,10 +113,9 @@ public class Configuration {
      * @throws InstantiationException
      *         If instantiation of the type fails.
      */
-    public <T> T constructFromConfig(Class<T> type, Object... extras)
+    public <T> T create(Class<T> type, Object... extras)
         throws ConfigurationException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        return constructFromReducedConfig((ParentAwareHashMap) traverseInto(source, splitPath(type.getName())), type,
-            extras);
+        return createReduced((ParentAwareHashMap) traverseInto(source, splitPath(type.getName())), type, extras);
     }
 
     /**
@@ -142,7 +141,7 @@ public class Configuration {
      * @throws InstantiationException
      *         If instantiation of the type fails.
      */
-    public <T> T constructFromReducedConfig(ParentAwareHashMap reduced, Class<T> type, Object... extras)
+    public <T> T createReduced(ParentAwareHashMap reduced, Class<T> type, Object... extras)
         throws ConfigurationException, IllegalAccessException, InvocationTargetException, InstantiationException {
         Constructor<?> constructor = null;
         for (Constructor<?> declared : type.getDeclaredConstructors()) {
