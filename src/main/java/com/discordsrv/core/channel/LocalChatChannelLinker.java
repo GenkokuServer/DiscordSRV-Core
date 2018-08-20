@@ -22,6 +22,7 @@ import com.discordsrv.core.api.channel.ChatChannelLinker;
 import com.discordsrv.core.api.channel.ChatChannelLookup;
 import com.discordsrv.core.conf.annotation.Configured;
 import com.discordsrv.core.conf.annotation.Val;
+import com.discordsrv.core.api.minecraft.Console;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.TextChannel;
 import org.apache.commons.collections4.BidiMap;
@@ -36,6 +37,8 @@ public class LocalChatChannelLinker implements ChatChannelLinker {
 
     private final BidiMap<String, String> channelStorage;
     private final ChatChannelLookup lookup;
+    private final Console console;
+    private final String consoleChannelId;
 
     /**
      * Main constructor for the LocalChatChannelLinker type.
@@ -47,9 +50,12 @@ public class LocalChatChannelLinker implements ChatChannelLinker {
      */
     @Configured
     public LocalChatChannelLinker(final @Val("channels") BidiMap<String, String> channelStorage,
-                                  final @Val("lookup") ChatChannelLookup lookup) {
+                                  final @Val("lookup") ChatChannelLookup lookup, final @Val("console") Console console,
+                                  final @Val("console_channel") String id) {
         this.channelStorage = channelStorage;
         this.lookup = lookup;
+        this.console = console;
+        consoleChannelId = id;
     }
 
     @SuppressWarnings("Duplicates")
@@ -75,4 +81,18 @@ public class LocalChatChannelLinker implements ChatChannelLinker {
         }
     }
 
+    @Override
+    public void getConsoleChannel(final @Nonnull FutureCallback<TextChannel> callback) {
+        lookup.lookupChannel(consoleChannelId, callback);
+    }
+
+    @Override
+    public void getConsole(final @Nonnull FutureCallback<Console> callback) {
+        callback.onSuccess(console);
+    }
+
+    @Override
+    public String getConsoleChannelId() {
+        return consoleChannelId;
+    }
 }

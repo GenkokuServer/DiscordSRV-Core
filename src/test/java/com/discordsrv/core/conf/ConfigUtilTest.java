@@ -94,8 +94,8 @@ public class ConfigUtilTest {
     }
 
     /**
-     * Tests {@link ConfigUtil#createConfig(Yaml, InputStream...)}, {@link Configuration#create(Class,
-     * Object...)}, {@link ConfigUtil#mergeConfigs(Stream)}.
+     * Tests {@link ConfigUtil#createConfig(Yaml, InputStream...)}, {@link Configuration#create(Class, Object...)},
+     * {@link ConfigUtil#mergeConfigs(Stream)}.
      *
      * @throws InvocationTargetException
      *         As inherited.

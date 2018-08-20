@@ -20,6 +20,7 @@ package com.discordsrv.core.channel;
 import com.discordsrv.core.api.channel.Chat;
 import com.discordsrv.core.test.channel.TestChat;
 import com.discordsrv.core.test.channel.TestChatChannelLookup;
+import com.discordsrv.core.test.minecraft.TestConsole;
 import com.discordsrv.core.test.mocker.Mocker;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.TextChannel;
@@ -55,7 +56,7 @@ public class LocalChatChannelLinkerTest {
         mocker = new Mocker();
         DualTreeBidiMap<String, String> bidiMap = new DualTreeBidiMap<>();
         bidiMap.put(testMCId, testDiscordId);
-        linker = new LocalChatChannelLinker(bidiMap, new TestChatChannelLookup());
+        linker = new LocalChatChannelLinker(bidiMap, new TestChatChannelLookup(), new TestConsole(), "1234");
     }
 
     /**

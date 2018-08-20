@@ -21,7 +21,7 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.requests.restaction.MessageAction;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -33,6 +33,7 @@ import java.util.function.Function;
  * Mocks various interfaces within the JDA library.
  */
 @SuppressWarnings("WeakerAccess")
+@ParametersAreNonnullByDefault
 public class Mocker {
 
     /**
@@ -47,9 +48,7 @@ public class Mocker {
      *
      * @return proxy A proxy instance for the specified interface.
      */
-    @Nonnull
-    public static <T> T getInstance(final @Nonnull Class<? extends T> targetType,
-                                    final @Nonnull InvocationHandler handler) {
+    public static <T> T getInstance(final Class<? extends T> targetType, final InvocationHandler handler) {
         return targetType.cast(Proxy.newProxyInstance(targetType.getClassLoader(), new Class[]{
             targetType
         }, handler));
@@ -65,9 +64,8 @@ public class Mocker {
      *
      * @return jda A mocked JDA instance.
      */
-    @Nonnull
-    public JDA getMockedJDA(final @Nonnull Function<String, ? extends TextChannel> textChannelFunction,
-                            final @Nonnull Function<String, ? extends User> userFunction) {
+    public JDA getMockedJDA(final Function<String, ? extends TextChannel> textChannelFunction,
+                            final Function<String, ? extends User> userFunction, final User user) {
         return getInstance(JDA.class, new NoopInvocationHandler() {
             @Override
             public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -75,6 +73,8 @@ public class Mocker {
                     return textChannelFunction.apply((String) args[0]);
                 } else if (method.equals(JDA.class.getMethod("getUserById", String.class))) {
                     return userFunction.apply((String) args[0]);
+                } else if (method.equals(JDA.class.getMethod("getSelfUser"))) {
+                    return user;
                 } else {
                     return super.invoke(proxy, method, args);
                 }
@@ -90,13 +90,17 @@ public class Mocker {
      *
      * @return user A mocked User instance.
      */
-    @Nonnull
-    public User getMockedUser(final String id) {
-        return getInstance(User.class, new NoopInvocationHandler() {
+    public SelfUser getMockedUser(final String id) {
+        return getInstance(SelfUser.class, new NoopInvocationHandler() {
             @Override
             public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
-                if (method.equals(User.class.getMethod("getId"))) {
+                if (method.equals(SelfUser.class.getMethod("getId"))) {
                     return id;
+                } else if (method.equals(SelfUser.class.getMethod("isFake"))) {
+                    return false;
+                } else if (method.equals(Object.class.getMethod("equals", Object.class))) {
+                    Object arg = args[0];
+                    return arg instanceof User && ((User) arg).getId().equals(id);
                 } else {
                     return super.invoke(proxy, method, args);
                 }
@@ -112,7 +116,6 @@ public class Mocker {
      *
      * @return user A mocked Role instance.
      */
-    @Nonnull
     public Role getMockedRole(final String id) {
         return getInstance(Role.class, new NoopInvocationHandler() {
             @Override
@@ -134,7 +137,6 @@ public class Mocker {
      *
      * @return textChannel A mocked TextChannel instance.
      */
-    @Nonnull
     public TextChannel getSimpleMockedTextChannel(final String id) {
         return getInstance(TextChannel.class, new NoopInvocationHandler() {
             @Override
@@ -160,9 +162,8 @@ public class Mocker {
      *
      * @return textChannel A mocked TextChannel instance.
      */
-    @Nonnull
-    public TextChannel getMockedTextChannel(final String id, final @Nonnull Guild guild,
-                                            final @Nonnull Function<CharSequence, ? extends MessageAction> messageFunction) {
+    public TextChannel getMockedTextChannel(final String id, final Guild guild,
+                                            final Function<CharSequence, ? extends MessageAction> messageFunction) {
         return getInstance(TextChannel.class, new NoopInvocationHandler() {
             @Override
             public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -195,9 +196,8 @@ public class Mocker {
      *
      * @return message A mocked message instance.
      */
-    @Nonnull
-    public Message getMockedMessage(final @Nonnull String message, final long messageId,
-                                    final @Nonnull TextChannel channel, final @Nonnull User user) {
+    public Message getMockedMessage(final String message, final long messageId, final TextChannel channel,
+                                    final User user) {
         return getInstance(Message.class, new NoopInvocationHandler() {
             @Override
             public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
@@ -221,7 +221,6 @@ public class Mocker {
      *
      * @return guild A mocked Guild instance.
      */
-    @Nonnull
     public Guild getMockedGuild() {
         return getInstance(Guild.class, new NoopInvocationHandler() {
         });

@@ -8,5 +8,9 @@ com.discordsrv.core:
         commands:
             AuthenticateCommand:
                 cooldown: 10
+        listeners:
+            SynchronizerListener:
+                # to be altered by the platform-specific plugin; chat colours might not be the same.
+                format: <%name%> %message%
 
 lang: "en/us"

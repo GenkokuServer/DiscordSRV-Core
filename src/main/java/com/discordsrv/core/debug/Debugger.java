@@ -105,6 +105,7 @@ public final class Debugger {
             Enhancer created = new Enhancer();
             created.setSuperclass(supertype);
             created.setCallback(interceptor);
+            logProxyTypeCreation(supertype);
             return created;
         });
         Object proxy = enhancer.create(parameters, arguments);
@@ -155,5 +156,16 @@ public final class Debugger {
      */
     public void logProxyCreation(Class<?>... type) {
         logger.debug(Arrays.stream(type).map(Class::getSimpleName).collect(Collectors.toList()) + " proxy created.");
+    }
+
+    /**
+     * Log the creation of a proxy type.
+     *
+     * @param type
+     *         The type which is being proxied.
+     */
+    public void logProxyTypeCreation(Class<?>... type) {
+        logger.debug(
+            Arrays.stream(type).map(Class::getSimpleName).collect(Collectors.toList()) + " proxy type created.");
     }
 }

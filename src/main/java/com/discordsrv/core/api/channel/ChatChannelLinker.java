@@ -18,6 +18,7 @@
 package com.discordsrv.core.api.channel;
 
 import com.discordsrv.core.api.common.functional.Translator;
+import com.discordsrv.core.api.minecraft.Console;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.TextChannel;
 
@@ -54,5 +55,28 @@ public interface ChatChannelLinker {
      *         The callback to invoke once a translation is (not) found.
      */
     void translate(TextChannel channel, FutureCallback<Chat> callback);
+
+    /**
+     * Fetches the console channel to be used for relaying the console.
+     *
+     * @param callback
+     *         The callback for this method.
+     */
+    void getConsoleChannel(FutureCallback<TextChannel> callback);
+
+    /**
+     * Fetches the console to be used for invoking commands on the console.
+     *
+     * @param callback
+     *         The callback for this method.
+     */
+    void getConsole(FutureCallback<Console> callback);
+
+    /**
+     * Fetches the console channel's id.
+     *
+     * @return consoleChannel The console channel's id.
+     */
+    String getConsoleChannelId();
 
 }

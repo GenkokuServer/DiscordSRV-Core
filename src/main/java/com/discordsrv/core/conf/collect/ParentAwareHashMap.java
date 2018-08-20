@@ -129,4 +129,33 @@ public class ParentAwareHashMap extends HashMap<String, Object> {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Traverses into a map, creating if necessary.
+     *
+     * @param name
+     *         The name of the child map.
+     *
+     * @return map The child map.
+     *
+     * @throws IllegalArgumentException
+     *         If the entry exists, but not as a map.
+     */
+    public ParentAwareHashMap in(String name) {
+        Object value = this.computeIfAbsent(name, s -> new ParentAwareHashMap(this, s));
+        if (value instanceof ParentAwareHashMap) {
+            return (ParentAwareHashMap) value;
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    /**
+     * Traversal helper for effectively .. indexing.
+     *
+     * @return The parent map.
+     */
+    public ParentAwareHashMap up() {
+        return parent;
+    }
+
 }

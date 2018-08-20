@@ -42,7 +42,8 @@ public class MockerTest {
      */
     @Test
     public void getMockedJDA() {
-        JDA jda = mocker.getMockedJDA(mocker::getSimpleMockedTextChannel, mocker::getMockedUser);
+        //noinspection ConstantConditions
+        JDA jda = mocker.getMockedJDA(mocker::getSimpleMockedTextChannel, mocker::getMockedUser, null);
         TextChannel channel = jda.getTextChannelById(id);
         assertNotNull(channel);
         assertEquals(id, channel.getId());
@@ -83,7 +84,8 @@ public class MockerTest {
      */
     @Test
     public void getMockedGuildMessageReceivedEvent() {
-        new GuildMessageReceivedEvent(mocker.getMockedJDA(mocker::getSimpleMockedTextChannel, mocker::getMockedUser), 0,
+        new GuildMessageReceivedEvent(mocker
+            .getMockedJDA(mocker::getSimpleMockedTextChannel, mocker::getMockedUser, mocker.getMockedUser("self")), 0,
             mocker.getMockedMessage(id, 0, mocker.getMockedTextChannel(id, mocker.getMockedGuild(), (arg -> null)),
                 mocker.getMockedUser(id)));
     }

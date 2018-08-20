@@ -151,7 +151,17 @@ public final class ConfigUtil {
         return result;
     }
 
-    private static ParentAwareHashMap createRecursive(ParentAwareHashMap parent, LinkedList<String> path) {
+    /**
+     * Recursively creates ParentAwareHashMap instances within parents.
+     *
+     * @param parent
+     *         The parent map.
+     * @param path
+     *         The path to traverse.
+     *
+     * @return traversed The traversed and created map.
+     */
+    public static ParentAwareHashMap createRecursive(ParentAwareHashMap parent, LinkedList<String> path) {
         if (path.size() == 1) {
             return parent;
         } else {

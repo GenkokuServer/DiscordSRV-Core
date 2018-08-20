@@ -45,6 +45,7 @@ import java.util.function.Consumer;
 @SuppressWarnings("WeakerAccess")
 public class PlayerUserAuthenticator {
 
+    private final int tokenRadix = 36;
     private final SecureRandom random;
     private final AuthenticationStore<MinecraftPlayer, User> userStore;
     private final ConcurrentMap<UserAuthToken, MinecraftPlayer> tokenMap;
@@ -188,8 +189,8 @@ public class PlayerUserAuthenticator {
         private boolean valid;
 
         private UserAuthToken() {
-            this.ident = String
-                .format("%1$5s", Integer.toString(random.nextInt(Integer.parseInt("zzzzz", 36)), 36).toUpperCase())
+            this.ident = String.format("%1$5s",
+                Integer.toString(random.nextInt(Integer.parseInt("zzzzz", tokenRadix)), tokenRadix).toUpperCase())
                 .replace(' ', '0');
         }
 
@@ -205,7 +206,7 @@ public class PlayerUserAuthenticator {
 
         @Override
         public int hashCode() {
-            return Integer.parseInt(ident.toLowerCase(), 36);
+            return Integer.parseInt(ident.toLowerCase(), tokenRadix);
         }
 
         public boolean isValid() {
