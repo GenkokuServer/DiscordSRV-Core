@@ -22,9 +22,9 @@ import com.discordsrv.core.conf.annotation.Val;
 import com.discordsrv.core.conf.collect.ParentAwareHashMap;
 import com.discordsrv.core.debug.Debugger;
 import com.discordsrv.core.discord.DSRVJDABuilder;
-import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.naming.ConfigurationException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +41,7 @@ import static com.discordsrv.core.conf.ConfigUtil.*;
 /**
  * Configuration type, for creating configurations.
  */
+@ParametersAreNonnullByDefault
 public class Configuration {
 
     private final Yaml yaml;
@@ -49,40 +50,11 @@ public class Configuration {
 
     /**
      * Main constructor for the Configuration type.
-     *
-     * @param userConfigURLs
-     *         The configs to load in as user configs.
-     *
-     * @throws InvocationTargetException
-     *         See {@link #create(Class, Object...)}.
-     * @throws InstantiationException
-     *         See {@link #create(Class, Object...)}.
-     * @throws ConfigurationException
-     *         See {@link #create(Class, Object...)}.
-     * @throws IllegalAccessException
-     *         See {@link #create(Class, Object...)}.
-     * @throws IOException
-     *         See {@link ConfigUtil#createConfig(Yaml, InputStream...)}.
      */
-    public Configuration(final URL... userConfigURLs)
-        throws InvocationTargetException, InstantiationException, ConfigurationException, IllegalAccessException,
-               IOException {
-        DumperOptions options = new DumperOptions();
-        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
-        options.setIndent(2);
-        this.yaml = new Yaml(options);
-        List<InputStream> streams = new ArrayList<>();
-        streams.add(this.getClass().getClassLoader().getResourceAsStream("dsrv/universal/default.yaml"));
-        for (URL userConfigURL : userConfigURLs) {
-            InputStream openStream = userConfigURL.openStream();
-            streams.add(openStream);
-        }
-        ParentAwareHashMap userConfig = applyDefaultRemappings(createConfig(yaml, streams.toArray(new InputStream[0])));
-        String language = (String) traverseInto(userConfig, splitPath("lang"));
-        this.source = mergeConfigs(Stream.of(createConfig(yaml,
-            this.getClass().getClassLoader().getResourceAsStream("dsrv/locales/" + language + "/default.yaml")),
-            userConfig));
-        this.debugger = create(Debugger.class);
+    public Configuration(final Yaml yaml, final ParentAwareHashMap source, final boolean debug) {
+        this.yaml = yaml;
+        this.source = source;
+        this.debugger = new Debugger(debug);
     }
 
     private static ParentAwareHashMap applyDefaultRemappings(final ParentAwareHashMap map) {
@@ -211,6 +183,41 @@ public class Configuration {
 
     public Debugger getDebugger() {
         return debugger;
+    }
+
+    /**
+     * Creates a configuration using the default yamls.
+     *
+     * @param yaml
+     *         The yaml parser to use.
+     * @param userConfigURLs
+     *         The URLs to load as user configs.
+     *
+     * @return config The configuration constructed.
+     *
+     * @throws IOException
+     *         If a resource fails to load.
+     */
+    public static Configuration getStandardConfiguration(final Yaml yaml, final URL... userConfigURLs)
+        throws IOException {
+        List<InputStream> streams = new LinkedList<>();
+        for (URL userConfigURL : userConfigURLs) {
+            InputStream openStream = userConfigURL.openStream();
+            streams.add(openStream);
+        }
+        ParentAwareHashMap universal = applyDefaultRemappings(createConfig(yaml,
+            Configuration.class.getClassLoader().getResourceAsStream("dsrv/universal/default.yaml")));
+        ParentAwareHashMap userConfig = applyDefaultRemappings(createConfig(yaml, streams.toArray(new InputStream[0])));
+        ParentAwareHashMap langFetcher = mergeConfigs(Stream.of(universal, userConfig));
+        String language = (String) traverseInto(langFetcher, splitPath("lang"));
+        ParentAwareHashMap merged = mergeConfigs(Stream.of(universal, createConfig(yaml,
+            Configuration.class.getClassLoader().getResourceAsStream("dsrv/locales/" + language + "/default.yaml")),
+            userConfig));
+        Boolean debug = (Boolean) ConfigUtil.traverseInto(merged, splitPath(Debugger.class.getName() + ".debug"));
+        if (debug == null) {
+            debug = false;
+        }
+        return new Configuration(yaml, merged, debug);
     }
 
 }

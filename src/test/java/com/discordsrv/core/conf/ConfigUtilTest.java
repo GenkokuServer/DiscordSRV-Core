@@ -17,6 +17,9 @@
  */
 package com.discordsrv.core.conf;
 
+import com.discordsrv.core.conf.collect.ParentAwareHashMap;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
 
@@ -34,6 +37,24 @@ import static org.junit.Assert.assertEquals;
  * Tests {@link ConfigUtil}.
  */
 public class ConfigUtilTest {
+
+    private static Yaml yaml;
+
+    /**
+     * Sets up test resources.
+     */
+    @BeforeClass
+    public static void setup() {
+        yaml = new Yaml();
+    }
+
+    /**
+     * Tears down test resources.
+     */
+    @AfterClass
+    public static void tearDown() {
+        yaml = null;
+    }
 
     /**
      * Tests {@link Configuration#create(Class, Object...)}, {@link ConfigUtil#flatten(Iterable)}.
@@ -56,8 +77,8 @@ public class ConfigUtilTest {
                IOException {
         String name = "Test";
         String value = "overwritten";
-        Configuration configuration =
-            new Configuration(Objects.requireNonNull(this.getClass().getClassLoader().getResource("conf.yaml")));
+        Configuration configuration = Configuration.getStandardConfiguration(yaml,
+            Objects.requireNonNull(this.getClass().getClassLoader().getResource("conf.yaml")));
         ConfiguredType type = configuration.create(ConfiguredType.class);
         assertEquals(name, type.getName());
         assertEquals(value, type.getValue());
@@ -84,7 +105,7 @@ public class ConfigUtilTest {
                IOException {
         String name = "Test";
         String value = "actual";
-        Configuration configuration = new Configuration();
+        Configuration configuration = new Configuration(yaml, new ParentAwareHashMap(null, null), true);
         configuration.addConfig(unreduceConfig(
             createConfig(configuration.getYaml(), this.getClass().getClassLoader().getResourceAsStream("conf2.yaml")),
             ConfiguredType.class));
@@ -114,7 +135,7 @@ public class ConfigUtilTest {
                IllegalAccessException {
         String name = "Test";
         String value = "actual";
-        Configuration configuration = new Configuration();
+        Configuration configuration = new Configuration(yaml, new ParentAwareHashMap(null, null), true);
         configuration.addConfig(mergeConfigs(Stream.of(createConfig(configuration.getYaml(),
             this.getClass().getClassLoader().getResourceAsStream("conf.yaml")), unreduceConfig(
             createConfig(configuration.getYaml(), this.getClass().getClassLoader().getResourceAsStream("conf2.yaml")),

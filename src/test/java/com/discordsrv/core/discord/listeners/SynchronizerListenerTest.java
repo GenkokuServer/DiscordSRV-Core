@@ -37,6 +37,7 @@ import org.apache.commons.collections4.bidimap.DualTreeBidiMap;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.yaml.snakeyaml.Yaml;
 
 import javax.annotation.Nonnull;
 import javax.naming.ConfigurationException;
@@ -77,7 +78,9 @@ public class SynchronizerListenerTest {
     public static void setup()
         throws IOException, InstantiationException, IllegalAccessException, ConfigurationException,
                InvocationTargetException {
-        configuration = new Configuration(SynchronizerListenerTest.class.getClassLoader().getResource("conf.yaml"));
+        Yaml yaml = new Yaml();
+        configuration = Configuration
+            .getStandardConfiguration(yaml, SynchronizerListenerTest.class.getClassLoader().getResource("conf.yaml"));
         mocker = new Mocker();
         console = new TestConsole();
     }
