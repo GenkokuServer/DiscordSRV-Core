@@ -15,9 +15,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package com.discordsrv.core.dsrv.plugin.extension;
 
-rootProject.name = 'DiscordSRV2-Core'
-include 'integration'
-include 'integration:plugin'
-include 'integration:extension'
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.net.URL;
+import java.net.URLClassLoader;
 
+/**
+ * ExtensionClassLoader type, for loading extensions from jar files.
+ */
+@ParametersAreNonnullByDefault
+public class ExtensionClassLoader extends URLClassLoader {
+
+    /**
+     * Main constructor of the ExtensionClassLoader type.
+     *
+     * @param parent
+     *         The parent class loader.
+     */
+    public ExtensionClassLoader(final ClassLoader parent) {
+        super(new URL[0], parent);
+    }
+
+    @Override
+    public void addURL(final URL url) {
+        super.addURL(url);
+    }
+
+}

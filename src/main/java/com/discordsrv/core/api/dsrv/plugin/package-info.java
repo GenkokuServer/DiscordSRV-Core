@@ -15,9 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
-rootProject.name = 'DiscordSRV2-Core'
-include 'integration'
-include 'integration:plugin'
-include 'integration:extension'
-
+/**
+ * DSRV plugins API package for the DiscordSRV2-Core library.
+ */
+package com.discordsrv.core.api.dsrv.plugin;

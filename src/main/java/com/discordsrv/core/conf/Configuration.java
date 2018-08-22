@@ -65,6 +65,51 @@ public class Configuration {
     }
 
     /**
+     * Creates a configuration using the default yamls.
+     *
+     * @param yaml
+     *         The yaml parser to use.
+     * @param userConfigURLs
+     *         The URLs to load as user configs.
+     *
+     * @return config The configuration constructed.
+     *
+     * @throws IOException
+     *         If a resource fails to load.
+     */
+    public static Configuration getStandardConfiguration(final Yaml yaml, final URL... userConfigURLs)
+        throws IOException {
+        List<InputStream> streams = new LinkedList<>();
+        for (URL userConfigURL : userConfigURLs) {
+            InputStream openStream = userConfigURL.openStream();
+            streams.add(openStream);
+        }
+        ParentAwareHashMap universal = applyDefaultRemappings(createConfig(yaml,
+            Configuration.class.getClassLoader().getResourceAsStream("dsrv/universal/default.yaml")));
+        ParentAwareHashMap userConfig = applyDefaultRemappings(createConfig(yaml, streams.toArray(new InputStream[0])));
+        ParentAwareHashMap langFetcher = mergeConfigs(Stream.of(universal, userConfig));
+        String language = (String) traverseInto(langFetcher, splitPath("lang"));
+        ParentAwareHashMap merged = mergeConfigs(Stream.of(universal, createConfig(yaml,
+            Configuration.class.getClassLoader().getResourceAsStream("dsrv/locales/" + language + "/default.yaml")),
+            userConfig));
+        Boolean debug = (Boolean) ConfigUtil.traverseInto(merged, splitPath(Debugger.class.getName() + ".debug"));
+        if (debug == null) {
+            debug = false;
+        }
+        return new Configuration(yaml, merged, debug);
+    }
+
+    /**
+     * Apply a remapping to this config.
+     *
+     * @param remapping
+     *         The remapping to apply.
+     */
+    public void applyRemapping(Map<String, String> remapping) {
+        this.source = remapConfig(this.source, remapping);
+    }
+
+    /**
      * Instantiates a type using a {@link Configured} constructor and injecting values from a config.
      *
      * @param type
@@ -183,41 +228,6 @@ public class Configuration {
 
     public Debugger getDebugger() {
         return debugger;
-    }
-
-    /**
-     * Creates a configuration using the default yamls.
-     *
-     * @param yaml
-     *         The yaml parser to use.
-     * @param userConfigURLs
-     *         The URLs to load as user configs.
-     *
-     * @return config The configuration constructed.
-     *
-     * @throws IOException
-     *         If a resource fails to load.
-     */
-    public static Configuration getStandardConfiguration(final Yaml yaml, final URL... userConfigURLs)
-        throws IOException {
-        List<InputStream> streams = new LinkedList<>();
-        for (URL userConfigURL : userConfigURLs) {
-            InputStream openStream = userConfigURL.openStream();
-            streams.add(openStream);
-        }
-        ParentAwareHashMap universal = applyDefaultRemappings(createConfig(yaml,
-            Configuration.class.getClassLoader().getResourceAsStream("dsrv/universal/default.yaml")));
-        ParentAwareHashMap userConfig = applyDefaultRemappings(createConfig(yaml, streams.toArray(new InputStream[0])));
-        ParentAwareHashMap langFetcher = mergeConfigs(Stream.of(universal, userConfig));
-        String language = (String) traverseInto(langFetcher, splitPath("lang"));
-        ParentAwareHashMap merged = mergeConfigs(Stream.of(universal, createConfig(yaml,
-            Configuration.class.getClassLoader().getResourceAsStream("dsrv/locales/" + language + "/default.yaml")),
-            userConfig));
-        Boolean debug = (Boolean) ConfigUtil.traverseInto(merged, splitPath(Debugger.class.getName() + ".debug"));
-        if (debug == null) {
-            debug = false;
-        }
-        return new Configuration(yaml, merged, debug);
     }
 
 }

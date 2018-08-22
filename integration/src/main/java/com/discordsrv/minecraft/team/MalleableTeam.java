@@ -16,8 +16,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-rootProject.name = 'DiscordSRV2-Core'
-include 'integration'
-include 'integration:plugin'
-include 'integration:extension'
+package com.discordsrv.minecraft.team;
 
+public class MalleableTeam {
+
+}

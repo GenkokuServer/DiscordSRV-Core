@@ -16,6 +16,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * DSRV extensions API package for the DiscordSRV2-Core library.
+ * DSRV plugin extensions package for the DiscordSRV2-Core library.
  */
-package com.discordsrv.core.api.dsrv.extensions;
+package com.discordsrv.core.dsrv.plugin.extension;

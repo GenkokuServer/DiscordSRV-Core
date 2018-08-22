@@ -74,6 +74,8 @@ test {
         html.enabled = true
     }
     ignoreFailures = true
+    dependsOn install
+    subprojects.each { dependsOn("${it.path}:test") }
 }
 
 task wrapper(type: Wrapper) {

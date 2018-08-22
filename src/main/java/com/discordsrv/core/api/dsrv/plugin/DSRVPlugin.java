@@ -15,9 +15,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package com.discordsrv.core.api.dsrv.plugin;
 
-rootProject.name = 'DiscordSRV2-Core'
-include 'integration'
-include 'integration:plugin'
-include 'integration:extension'
+import com.discordsrv.core.api.dsrv.DiscordSRVContext;
 
+/**
+ * DSRVPlugin type, for making plugins with DSRV.
+ *
+ * @param <T>
+ *         The type of context used by this plugin.
+ */
+public interface DSRVPlugin<T extends DiscordSRVContext> {
+
+    /**
+     * Fetches the context of this plugin.
+     *
+     * @return context The context of this plugin.
+     */
+    T getContext();
+
+}

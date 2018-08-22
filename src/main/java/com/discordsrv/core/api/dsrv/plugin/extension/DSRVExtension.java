@@ -15,9 +15,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package com.discordsrv.core.api.dsrv.plugin.extension;
 
-rootProject.name = 'DiscordSRV2-Core'
-include 'integration'
-include 'integration:plugin'
-include 'integration:extension'
+import com.discordsrv.core.api.dsrv.DiscordSRVContext;
+import com.discordsrv.core.api.dsrv.plugin.DSRVPlugin;
 
+/**
+ * DSRVExtension type, for extending DSRV plugins.
+ *
+ * @param <T>
+ *         The context type that this DSRVExtension will use.
+ * @param <V>
+ *         The plugin type that this DSRVExtension will use.
+ */
+public interface DSRVExtension<T extends DiscordSRVContext, V extends DSRVPlugin<T>> {
+
+    /**
+     * Sets the plugin that this extension should use.
+     *
+     * @param plugin
+     *         The plugin described.
+     */
+    void setPlugin(V plugin);
+
+    /**
+     * Fetches the name of this extension.
+     *
+     * @return name The name of this extension.
+     */
+    String getName();
+
+}

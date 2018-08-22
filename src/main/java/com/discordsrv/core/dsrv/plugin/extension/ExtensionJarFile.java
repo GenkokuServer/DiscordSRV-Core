@@ -15,9 +15,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package com.discordsrv.core.dsrv.plugin.extension;
 
-rootProject.name = 'DiscordSRV2-Core'
-include 'integration'
-include 'integration:plugin'
-include 'integration:extension'
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.io.File;
+import java.io.IOException;
+import java.util.jar.JarFile;
 
+/**
+ * ExtensionJarFile type, for referencing jars that contain extensions.
+ */
+@ParametersAreNonnullByDefault
+public class ExtensionJarFile extends JarFile {
+
+    private final File file;
+
+    /**
+     * Main constructor for the ExtensionJarFile type.
+     *
+     * @param file
+     *         The file to load as a jar.
+     *
+     * @throws IOException
+     *         If the file referenced has an error while loading.
+     */
+    public ExtensionJarFile(final File file) throws IOException {
+        super(file);
+        this.file = file;
+    }
+
+    public File getFile() {
+        return file;
+    }
+}
