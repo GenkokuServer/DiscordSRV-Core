@@ -62,4 +62,17 @@ public interface AuthenticationStore<T, R> {
     @ParametersAreNullableByDefault
     void remove(T first, R last, @Nonnull FutureCallback<Boolean> callback);
 
+    /**
+     * Checks if a store contains either of the values.
+     *
+     * @param first
+     *         The first component of the authentication to check.
+     * @param last
+     *         The last component of the authentication to check.
+     * @param callback
+     *         The callback of this method.
+     */
+    @ParametersAreNullableByDefault
+    void contains(T first, R last, @Nonnull FutureCallback<Boolean> callback);
+
 }

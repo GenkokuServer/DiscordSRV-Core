@@ -18,7 +18,6 @@
 package com.discordsrv.core.user;
 
 import com.discordsrv.core.api.auth.AuthenticationStore;
-import com.discordsrv.core.api.auth.State;
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.discordsrv.core.api.user.PlayerUserLinker;
 import com.discordsrv.core.api.user.PlayerUserLookup;
@@ -31,6 +30,8 @@ import org.apache.commons.collections4.BidiMap;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Leverages a local storage for player/user linking.
@@ -79,14 +80,11 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
     }
 
     @Override
-    public void push(final @Nonnull MinecraftPlayer first, final @Nonnull User last,
-                     final @Nonnull FutureCallback<Boolean> callback) {
+    public synchronized void push(final @Nonnull MinecraftPlayer first, final @Nonnull User last,
+                                  final @Nonnull FutureCallback<Boolean> callback) {
         first.getUniqueIdentifier(ident -> {
             try {
                 boolean success = playerStorage.putIfAbsent(ident, last.getId()) == null;
-                if (success) {
-                    first.setAuthenticationState(State.AUTHENTICATED);
-                }
                 callback.onSuccess(success);
             } catch (Throwable t) {
                 callback.onFailure(t);
@@ -95,12 +93,11 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
     }
 
     @Override
-    public void remove(final @Nullable MinecraftPlayer first, final @Nullable User last,
-                       final @Nonnull FutureCallback<Boolean> callback) {
+    public synchronized void remove(final @Nullable MinecraftPlayer first, final @Nullable User last,
+                                    final @Nonnull FutureCallback<Boolean> callback) {
         if (first != null) {
             first.getUniqueIdentifier(key -> {
                 boolean success = playerStorage.remove(key) != null;
-                first.setAuthenticationState(State.UNAUTHENTICATED);
                 callback.onSuccess(success);
             });
         } else if (last != null) {
@@ -109,9 +106,6 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
                 lookup.lookupPlayer(player, new FutureCallback<MinecraftPlayer>() {
                     @Override
                     public void onSuccess(@Nullable final MinecraftPlayer result) {
-                        if (result != null) {
-                            result.setAuthenticationState(State.UNAUTHENTICATED);
-                        }
                         callback.onSuccess(true);
                     }
 
@@ -126,5 +120,43 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
         } else {
             callback.onFailure(new NullPointerException());
         }
+    }
+
+    @Override
+    public synchronized void contains(final MinecraftPlayer first, final User last,
+                                      @Nonnull final FutureCallback<Boolean> callback) {
+        if (playerStorage.size() == 0) {
+            callback.onSuccess(false);
+        }
+        AtomicInteger count = new AtomicInteger(playerStorage.size() * 2);
+        AtomicBoolean found = new AtomicBoolean(false);
+        Runnable onConditionCheck = () -> {
+            if (count.decrementAndGet() == 0 && !found.get()) {
+                callback.onSuccess(false);
+            }
+        };
+        playerStorage.forEach((key, value) -> {
+            if (found.get()) {
+                return;
+            }
+            if (first != null) {
+                first.getUniqueIdentifier(id -> {
+                    if (id.equals(key)) {
+                        found.set(true);
+                        callback.onSuccess(true);
+                    }
+                    onConditionCheck.run();
+                });
+            } else {
+                onConditionCheck.run();
+            }
+            if (last != null) {
+                if (last.getId().equals(value)) {
+                    found.set(true);
+                    callback.onSuccess(true);
+                }
+            }
+            onConditionCheck.run();
+        });
     }
 }

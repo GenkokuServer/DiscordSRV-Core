@@ -48,16 +48,6 @@ public class TestMinecraftPlayer implements MinecraftPlayer {
     }
 
     @Override
-    public synchronized void getAuthenticationState(final @Nonnull Consumer<State> callback) {
-        callback.accept(state);
-    }
-
-    @Override
-    public synchronized void setAuthenticationState(final @Nonnull State state) {
-        this.state = state;
-    }
-
-    @Override
     public void sendMessage(final @Nonnull String message, final @Nonnull FutureCallback<Void> resultCallback) {
         resultCallback.onSuccess(null);
     }
@@ -70,5 +60,20 @@ public class TestMinecraftPlayer implements MinecraftPlayer {
     @Override
     public void getUniqueIdentifier(final @Nonnull Consumer<UUID> callback) {
         callback.accept(this.identifier);
+    }
+
+    @Override
+    public int hashCode() {
+        return identifier.hashCode();
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return obj instanceof TestMinecraftPlayer && ((TestMinecraftPlayer) obj).identifier.equals(identifier);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s:%s", name, identifier);
     }
 }

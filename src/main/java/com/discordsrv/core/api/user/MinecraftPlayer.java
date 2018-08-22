@@ -17,16 +17,15 @@
  */
 package com.discordsrv.core.api.user;
 
-import com.discordsrv.core.api.auth.Authenticatable;
 import com.discordsrv.core.api.common.unit.Messageable;
 import com.discordsrv.core.api.common.unit.Named;
-import net.dv8tion.jda.core.entities.User;
+import com.discordsrv.core.api.common.unit.UniquelyIdentifiable;
 
 import java.util.UUID;
 
 /**
  * MinecraftPlayer type, for representing players in Minecraft servers.
  */
-public interface MinecraftPlayer extends Authenticatable<UUID, User>, Messageable<String, Void>, Named {
+public interface MinecraftPlayer extends Messageable<String, Void>, Named, UniquelyIdentifiable<UUID> {
 
 }

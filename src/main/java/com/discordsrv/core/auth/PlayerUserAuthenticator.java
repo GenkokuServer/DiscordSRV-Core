@@ -18,7 +18,6 @@
 package com.discordsrv.core.auth;
 
 import com.discordsrv.core.api.auth.AuthenticationStore;
-import com.discordsrv.core.api.auth.State;
 import com.discordsrv.core.api.auth.Token;
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.discordsrv.core.conf.annotation.Configured;
@@ -77,19 +76,29 @@ public class PlayerUserAuthenticator {
      *         The callback for this method.
      */
     public void beginAuth(final @Nonnull MinecraftPlayer player, final @Nonnull FutureCallback<Token> callback) {
-        player.getAuthenticationState(state -> {
-            try {
-                if (!state.equals(State.UNAUTHENTICATED)) {
-                    throw new IllegalStateException("User was not unauthenticated.");
-                } else {
-                    player.setAuthenticationState(State.AUTHENTICATING);
-                    UserAuthToken token = new UserAuthToken();
-                    tokenMap.put(token, player);
-                    scheduler.schedule(token::invalidate, 1, TimeUnit.MINUTES);
-                    callback.onSuccess(token);
+        userStore.contains(player, null, new FutureCallback<Boolean>() {
+            @Override
+            public void onSuccess(@Nullable final Boolean result) {
+                if (result == null) {
+                    onFailure(new NullPointerException());
+                    return;
                 }
-            } catch (Throwable t) {
-                callback.onFailure(t);
+                try {
+                    if (result || tokenMap.entrySet().stream().anyMatch(entry -> entry.getValue().equals(player))) {
+                        throw new IllegalStateException("User was not unauthenticated.");
+                    } else {
+                        UserAuthToken token = new UserAuthToken();
+                        tokenMap.put(token, player);
+                        scheduler.schedule(token::invalidate, 1, TimeUnit.MINUTES);
+                        callback.onSuccess(token);
+                    }
+                } catch (Throwable t) {
+                    callback.onFailure(t);
+                }
+            }
+
+            @Override
+            public void onFailure(final Throwable t) {
             }
         });
     }
@@ -108,6 +117,7 @@ public class PlayerUserAuthenticator {
                               final @Nonnull FutureCallback<Pair<MinecraftPlayer, User>> callback) {
         final AtomicBoolean matched = new AtomicBoolean(false);
         this.tokenMap.forEach((key, value) -> key.getUniqueIdentifier(tokenIdent -> {
+            System.out.println(value);
             if (tokenIdent.equals(tokenString)) {
                 matched.set(true);
                 userStore.push(value, user, new PushCallback(key, callback, value, user));
