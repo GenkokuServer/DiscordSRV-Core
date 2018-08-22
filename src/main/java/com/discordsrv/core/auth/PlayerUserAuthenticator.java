@@ -118,6 +118,30 @@ public class PlayerUserAuthenticator {
         }
     }
 
+    /**
+     * Removes the authentication entry from the store.
+     *
+     * @param player
+     *         The player to remove.
+     * @param callback
+     *         The callback for this method.
+     */
+    public void unauthenticate(final @Nonnull MinecraftPlayer player, final @Nonnull FutureCallback<Boolean> callback) {
+        userStore.remove(player, null, callback);
+    }
+
+    /**
+     * Removes the authentication entry from the store.
+     *
+     * @param user
+     *         The user to remove.
+     * @param callback
+     *         The callback for this method.
+     */
+    public void unauthenticate(final @Nonnull User user, final @Nonnull FutureCallback<Boolean> callback) {
+        userStore.remove(null, user, callback);
+    }
+
     private final class PushCallback implements FutureCallback<Boolean> {
 
         private final UserAuthToken key;
@@ -157,30 +181,6 @@ public class PlayerUserAuthenticator {
         public void onFailure(final @Nonnull Throwable t) {
             callback.onFailure(t);
         }
-    }
-
-    /**
-     * Removes the authentication entry from the store.
-     *
-     * @param player
-     *         The player to remove.
-     * @param callback
-     *         The callback for this method.
-     */
-    public void unauthenticate(final @Nonnull MinecraftPlayer player, final @Nonnull FutureCallback<Boolean> callback) {
-        userStore.remove(player, null, callback);
-    }
-
-    /**
-     * Removes the authentication entry from the store.
-     *
-     * @param user
-     *         The user to remove.
-     * @param callback
-     *         The callback for this method.
-     */
-    public void unauthenticate(final @Nonnull User user, final @Nonnull FutureCallback<Boolean> callback) {
-        userStore.remove(null, user, callback);
     }
 
     private final class UserAuthToken implements Token {

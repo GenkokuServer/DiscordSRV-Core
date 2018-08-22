@@ -165,7 +165,7 @@ public final class Debugger {
      *         The type which is being proxied.
      */
     public void logProxyTypeCreation(Class<?>... type) {
-        logger.debug(
-            Arrays.stream(type).map(Class::getSimpleName).collect(Collectors.toList()) + " proxy type created.");
+        logger
+            .debug(Arrays.stream(type).map(Class::getSimpleName).collect(Collectors.toList()) + " proxy type created.");
     }
 }

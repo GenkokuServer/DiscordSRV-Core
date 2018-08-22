@@ -166,7 +166,7 @@ public class SynchronizerListenerTest {
         CountDownLatch latch = new CountDownLatch(1);
         lookup.put("1234", new TestChat("Test", "1234") {
             @Override
-            public void sendMessage(@Nonnull final ChatMessage message,
+            public void sendMessage(@Nonnull final ChatMessage<Long> message,
                                     @Nonnull final FutureCallback<Void> resultCallback) {
                 System.out.println(message.getMessage());
                 if (message.getMessage().equals("Test:1234")) {

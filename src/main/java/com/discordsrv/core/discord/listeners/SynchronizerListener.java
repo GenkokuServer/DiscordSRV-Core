@@ -43,6 +43,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -124,6 +125,23 @@ public class SynchronizerListener extends ListenerAdapter {
         }
     }
 
+    @Override
+    public void onGuildMemberRoleAdd(final GuildMemberRoleAddEvent event) {
+        updateRole(event.getUser(), event.getMember().getRoles());
+    }
+
+    @Override
+    public void onGuildMemberRoleRemove(final GuildMemberRoleRemoveEvent event) {
+        updateRole(event.getUser(), event.getMember().getRoles());
+    }
+
+    @Override
+    public void onRoleDelete(final RoleDeleteEvent event) {
+        super.onRoleDelete(event);
+        event.getGuild().getMembersWithRoles(event.getRole())
+            .forEach(member -> updateRole(member.getUser(), member.getRoles()));
+    }
+
     private void onChatFound(final @Nonnull Chat chat, final GuildMessageReceivedEvent event) {
         playerUserLinker.translate(event.getAuthor(), new FutureCallback<MinecraftPlayer>() {
             @Override
@@ -148,7 +166,7 @@ public class SynchronizerListener extends ListenerAdapter {
 
     private void sendMessage(final @Nonnull Chat chat, final @Nonnull CharSequence senderName,
                              final @Nonnull String message) {
-        chat.sendMessage(new ChatMessage<String>() {
+        chat.sendMessage(new ChatMessage<Long>() {
             @Override
             public Named getSender() {
                 return (callback) -> callback.accept(senderName);
@@ -160,9 +178,9 @@ public class SynchronizerListener extends ListenerAdapter {
             }
 
             @Override
-            public void getUniqueIdentifier(@Nullable final Consumer<String> callback) {
+            public void getUniqueIdentifier(@Nullable final Consumer<Long> callback) {
                 if (callback != null) {
-                    callback.accept(null);
+                    callback.accept(TimeUnit.NANOSECONDS.convert(System.nanoTime(), TimeUnit.MILLISECONDS));
                 }
             }
         }, new FutureCallback<Void>() {
@@ -176,16 +194,6 @@ public class SynchronizerListener extends ListenerAdapter {
                 logger.warn("Exception encountered while relaying message.", t);
             }
         });
-    }
-
-    @Override
-    public void onGuildMemberRoleAdd(final GuildMemberRoleAddEvent event) {
-        updateRole(event.getUser(), event.getMember().getRoles());
-    }
-
-    @Override
-    public void onGuildMemberRoleRemove(final GuildMemberRoleRemoveEvent event) {
-        updateRole(event.getUser(), event.getMember().getRoles());
     }
 
     private void updateRole(final User user, final List<Role> roles) {
@@ -240,12 +248,5 @@ public class SynchronizerListener extends ListenerAdapter {
                 logger.warn("Exception encountered while performing player team modification.", t);
             }
         });
-    }
-
-    @Override
-    public void onRoleDelete(final RoleDeleteEvent event) {
-        super.onRoleDelete(event);
-        event.getGuild().getMembersWithRoles(event.getRole())
-            .forEach(member -> updateRole(member.getUser(), member.getRoles()));
     }
 }

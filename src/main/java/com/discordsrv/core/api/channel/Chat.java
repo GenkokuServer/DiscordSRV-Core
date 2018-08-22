@@ -28,6 +28,6 @@ import javax.annotation.concurrent.ThreadSafe;
  * Chat type, for representing Minecraft chats.
  */
 @ThreadSafe
-public interface Chat extends Translatable<String, TextChannel>, Named, Messageable<ChatMessage, Void> {
+public interface Chat extends Translatable<String, TextChannel>, Named, Messageable<ChatMessage<Long>, Void> {
 
 }

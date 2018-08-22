@@ -56,7 +56,8 @@ public class TestChat implements Chat {
     }
 
     @Override
-    public void sendMessage(final @Nonnull ChatMessage message, final @Nonnull FutureCallback<Void> resultCallback) {
+    public void sendMessage(final @Nonnull ChatMessage<Long> message,
+                            final @Nonnull FutureCallback<Void> resultCallback) {
         message.getSender().getName(s -> System.out.println(s + ":" + message.getMessage()));
     }
 }

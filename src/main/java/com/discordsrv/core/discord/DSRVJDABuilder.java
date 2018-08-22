@@ -70,6 +70,13 @@ public class DSRVJDABuilder extends JDABuilder implements ConfigAware {
         return super.setToken(token);
     }
 
+    @Override
+    public JDA build() throws LoginException {
+        this.addEventListener(new EventWaiter());
+        this.addEventListener(this.commandClientBuilder.build());
+        return super.build();
+    }
+
     /**
      * Add commands to this DSRV JDA instance.
      *
@@ -81,13 +88,6 @@ public class DSRVJDABuilder extends JDABuilder implements ConfigAware {
     public DSRVJDABuilder addCommands(final @Nonnull Command... commands) {
         commandClientBuilder.addCommands(commands);
         return this;
-    }
-
-    @Override
-    public JDA build() throws LoginException {
-        this.addEventListener(new EventWaiter());
-        this.addEventListener(this.commandClientBuilder.build());
-        return super.build();
     }
 
     @Override

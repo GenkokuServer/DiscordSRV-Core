@@ -82,12 +82,12 @@ public class ParentAwareHashMap extends HashMap<String, Object> {
         return parent;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setParent(final ParentAwareHashMap parent) {
         this.parent = parent;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public void setName(final String name) {
