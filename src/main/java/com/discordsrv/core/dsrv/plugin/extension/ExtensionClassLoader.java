@@ -31,6 +31,11 @@ import java.util.stream.Stream;
 
 /**
  * ExtensionClassLoader type, for loading extensions from jar files.
+ *
+ * @param <T>
+ *         The type of DiscordSRVContext to be used by extensions loaded by this extension class loader.
+ * @param <V>
+ *         The type of DSRVPlugins to be used by extensions loaded by this extension class loader.
  */
 @ParametersAreNonnullByDefault
 public class ExtensionClassLoader<T extends DiscordSRVContext, V extends DSRVPlugin<T>> extends URLClassLoader {
