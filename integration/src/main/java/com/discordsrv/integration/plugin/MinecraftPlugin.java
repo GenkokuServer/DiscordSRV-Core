@@ -15,18 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-
 package com.discordsrv.integration.plugin;
 
-import org.junit.BeforeClass;
+import com.discordsrv.integration.Minecraft;
 
-public class MalleableChatChannelLookupTest {
+public interface MinecraftPlugin {
 
-    private static Plugin plugin;
+    void onEnable();
 
-    @BeforeClass
-    public static void setup() {
-
-    }
+    void setMinecraft(Minecraft minecraft);
 
 }

@@ -17,11 +17,22 @@
  */
 package com.discordsrv.integration.user;
 
+import lombok.Setter;
 import lombok.Value;
+import lombok.experimental.NonFinal;
+
+import java.util.function.Consumer;
 
 @Value
 public class Player {
 
     String name;
+    @NonFinal @Setter Consumer<String> callback;
+
+    public void sendMessage(String message) {
+        if (callback != null) {
+            callback.accept(message);
+        }
+    }
 
 }

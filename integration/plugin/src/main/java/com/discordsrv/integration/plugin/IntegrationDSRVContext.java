@@ -25,15 +25,25 @@ import com.discordsrv.core.api.user.PlayerUserLinker;
 import com.discordsrv.core.api.user.PlayerUserLookup;
 import com.discordsrv.core.auth.PlayerUserAuthenticator;
 import com.discordsrv.core.conf.Configuration;
+import com.discordsrv.integration.Minecraft;
+import com.discordsrv.integration.plugin.chat.MalleableChatChannelLookup;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import net.dv8tion.jda.core.JDA;
 
 import java.util.function.Consumer;
 
+/**
+ * This is a DSRVContext implementation, but note that it is suggested that you do <strong>NOT</strong> have this be
+ * settable! Instead, use final values and configure as-necessary with malleable return values.
+ */
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@NoArgsConstructor
 public final class IntegrationDSRVContext implements DiscordSRVContext {
 
     Configuration configuration;
@@ -45,6 +55,7 @@ public final class IntegrationDSRVContext implements DiscordSRVContext {
     TeamRoleLookup teamRoleLookup;
     ChatChannelLinker chatChannelLinker;
     MalleableChatChannelLookup chatChannelLookup;
+    Minecraft minecraft;
     JDA jda;
 
 }

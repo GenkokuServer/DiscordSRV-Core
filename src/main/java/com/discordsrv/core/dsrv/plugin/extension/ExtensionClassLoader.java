@@ -17,15 +17,25 @@
  */
 package com.discordsrv.core.dsrv.plugin.extension;
 
+import com.discordsrv.core.api.dsrv.DiscordSRVContext;
+import com.discordsrv.core.api.dsrv.plugin.DSRVPlugin;
+import com.discordsrv.core.api.dsrv.plugin.extension.DSRVExtension;
+
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * ExtensionClassLoader type, for loading extensions from jar files.
  */
 @ParametersAreNonnullByDefault
-public class ExtensionClassLoader extends URLClassLoader {
+public class ExtensionClassLoader<T extends DiscordSRVContext, V extends DSRVPlugin<T>> extends URLClassLoader {
+
+    private final List<DSRVExtension<T, V>> extensions;
 
     /**
      * Main constructor of the ExtensionClassLoader type.
@@ -35,11 +45,27 @@ public class ExtensionClassLoader extends URLClassLoader {
      */
     public ExtensionClassLoader(final ClassLoader parent) {
         super(new URL[0], parent);
+        extensions = new LinkedList<>();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void addURL(final URL url) {
-        super.addURL(url);
+        try {
+            ExtensionJarFile jarFile = new ExtensionJarFile(new File(url.toURI()));
+            String classname = jarFile.getManifest().getMainAttributes().getValue("Extension-Class");
+            if (classname == null) {
+                throw new IllegalArgumentException("Extension class attribute was not found.");
+            }
+            super.addURL(url);
+            extensions.add((DSRVExtension<T, V>) this.loadClass(classname).getDeclaredConstructor().newInstance());
+        } catch (Throwable t) {
+            throw new IllegalArgumentException("URL provided does not lead to a valid plugin extension jar.", t);
+        }
+    }
+
+    public Stream<DSRVExtension<T, V>> getExtensions() {
+        return extensions.stream();
     }
 
 }

@@ -15,26 +15,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.integration.chat;
+package com.discordsrv.integration.plugin.chat;
 
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import com.discordsrv.core.api.channel.Chat;
+import com.discordsrv.core.api.channel.ChatMessage;
+import com.google.common.util.concurrent.FutureCallback;
 import lombok.Value;
-import lombok.experimental.NonFinal;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Consumer;
 
+@ParametersAreNonnullByDefault
 @Value
-@RequiredArgsConstructor
-public class Chat {
+public class ChatWrapper implements Chat {
 
-    String name;
-    @NonFinal @Setter Consumer<String> callback;
+    com.discordsrv.integration.chat.Chat chat;
 
-    public void sendMessage(String message) {
-        if (callback != null) {
-            callback.accept(message);
-        }
+    @Override
+    public void sendMessage(final ChatMessage<Long> message, final FutureCallback<Void> resultCallback) {
+        chat.sendMessage(message.getMessage());
+        resultCallback.onSuccess(null);
     }
 
+    @Override
+    public void getName(final Consumer<CharSequence> callback) {
+        callback.accept(chat.getName());
+    }
+
+    @Override
+    public void getUniqueIdentifier(final Consumer<String> callback) {
+        callback.accept(chat.getName());
+    }
 }

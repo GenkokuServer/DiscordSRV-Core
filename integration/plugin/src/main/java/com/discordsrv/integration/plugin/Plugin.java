@@ -18,25 +18,65 @@
 package com.discordsrv.integration.plugin;
 
 import com.discordsrv.core.api.dsrv.plugin.DSRVPlugin;
+import com.discordsrv.core.api.dsrv.plugin.extension.DSRVExtension;
+import com.discordsrv.core.channel.LocalChatChannelLinker;
 import com.discordsrv.core.conf.Configuration;
+import com.discordsrv.core.dsrv.plugin.extension.ExtensionClassLoader;
+import com.discordsrv.core.test.minecraft.TestConsole;
 import com.discordsrv.integration.Minecraft;
-import lombok.Setter;
+import com.discordsrv.integration.plugin.chat.ChatWrapper;
+import com.discordsrv.integration.plugin.chat.MalleableChatChannelLookup;
 import lombok.Value;
-import lombok.experimental.NonFinal;
+import org.apache.commons.collections4.bidimap.DualLinkedHashBidiMap;
 import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
 import java.io.IOException;
 
 @Value
-public class Plugin implements DSRVPlugin<IntegrationDSRVContext> {
+public class Plugin implements DSRVPlugin<IntegrationDSRVContext>, MinecraftPlugin {
 
-    @NonFinal @Setter Minecraft minecraft;
     IntegrationDSRVContext context;
 
     public Plugin() throws IOException {
         this.context = new IntegrationDSRVContext();
         Yaml yaml = new Yaml();
         this.context.setConfiguration(Configuration.getStandardConfiguration(yaml));
+        MalleableChatChannelLookup lookup = new MalleableChatChannelLookup(context);
+        lookup.getChatTranslators().add((id, callback) -> {
+            try {
+                callback.onSuccess(
+                    context.getMinecraft().getChats().stream().filter(chat -> chat.getName().equals(id)).findAny()
+                        .map(ChatWrapper::new).orElse(null));
+            } catch (Throwable t) {
+                callback.onFailure(t);
+            }
+        });
+        this.context.setChatChannelLookup(lookup);
+        this.context.setChatChannelLinker(
+            new LocalChatChannelLinker(new DualLinkedHashBidiMap<>(), this.context.getChatChannelLookup(),
+                new TestConsole(), "console-channel"));
     }
 
+    @Override
+    public void onEnable() {
+        ExtensionClassLoader<IntegrationDSRVContext, Plugin> loader =
+            new ExtensionClassLoader<>(this.getClass().getClassLoader());
+        try {
+            loader.addURL(
+                new File("extension/build/libs/extension-TEST.jar").toURI().toURL()); // assuming from :integration
+            DSRVExtension<IntegrationDSRVContext, Plugin> extension = loader.getExtensions().findAny().orElse(null);
+            if (extension == null) {
+                throw new IllegalArgumentException("Extension did not exist.");
+            }
+            extension.setPlugin(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setMinecraft(final Minecraft minecraft) {
+        this.context.setMinecraft(minecraft);
+    }
 }

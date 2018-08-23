@@ -15,16 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.integration.plugin;
+package com.discordsrv.integration.plugin.chat;
 
 import com.discordsrv.core.api.channel.Chat;
 import com.discordsrv.core.api.channel.ChatChannelLookup;
 import com.discordsrv.core.api.common.callback.MultiCallbackWrapper;
 import com.discordsrv.core.api.common.functional.Translator;
+import com.discordsrv.integration.plugin.IntegrationDSRVContext;
 import com.google.common.util.concurrent.FutureCallback;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
-import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.TextChannel;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -38,13 +38,13 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MalleableChatChannelLookup implements ChatChannelLookup {
 
-    JDA jda;
+    IntegrationDSRVContext context;
     List<Translator<String, Chat>> chatTranslators = new LinkedList<>();
 
     @Override
     public void lookupChannel(final String id, final FutureCallback<TextChannel> callback) {
         try {
-            callback.onSuccess(jda.getTextChannelById(id));
+            callback.onSuccess(context.getJda().getTextChannelById(id));
         } catch (Throwable t) {
             callback.onFailure(t);
         }

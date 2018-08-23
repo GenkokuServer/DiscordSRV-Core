@@ -15,30 +15,22 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package com.discordsrv.integration.extension;
 
-plugins {
-    id 'io.franzbecker.gradle-lombok' version '1.14'
-    id 'java'
-}
+import com.discordsrv.core.dsrv.plugin.extension.ExtensionJarFile;
+import org.junit.Test;
 
-group 'com.discordsrv'
-version 'TEST'
+import java.io.File;
+import java.io.IOException;
 
-sourceCompatibility = 1.8
+import static org.junit.Assert.assertEquals;
 
-lombok {
-    version = '1.18.2'
-    sha256 = ""
-}
+public class ExtensionTest {
 
-repositories {
-    mavenCentral()
-}
+    @Test
+    public void extensionJarManifestEntryTest() throws IOException {
+        ExtensionJarFile file = new ExtensionJarFile(new File("build/libs/extension-TEST.jar"));
+        assertEquals(Extension.class.getName(), file.getManifest().getMainAttributes().getValue("Extension-Class"));
+    }
 
-test {
-    dependsOn ":integration:plugin:test"
-}
-
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
 }
