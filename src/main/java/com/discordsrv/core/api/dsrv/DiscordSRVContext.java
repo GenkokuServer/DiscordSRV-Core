@@ -102,6 +102,6 @@ public interface DiscordSRVContext {
      *
      * @return jda The JDA.
      */
-    JDA getJDA();
+    JDA getJda();
 
 }

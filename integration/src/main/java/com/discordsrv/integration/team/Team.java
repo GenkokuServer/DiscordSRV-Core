@@ -15,9 +15,17 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package com.discordsrv.integration.team;
 
-package com.discordsrv.minecraft.team;
+import com.discordsrv.integration.user.Player;
+import lombok.Value;
 
-public class MalleableTeam {
+import java.util.List;
+
+@Value
+public class Team {
+
+    String name;
+    List<Player> players;
 
 }

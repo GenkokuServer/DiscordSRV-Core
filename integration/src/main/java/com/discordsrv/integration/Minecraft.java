@@ -15,9 +15,20 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+package com.discordsrv.integration;
 
-package com.discordsrv.minecraft;
+import com.discordsrv.integration.chat.Chat;
+import com.discordsrv.integration.team.Team;
+import com.discordsrv.integration.user.Player;
+import lombok.Value;
 
+import java.util.List;
+
+@Value
 public class Minecraft {
+
+    List<Team> teams;
+    List<Player> players;
+    List<Chat> chats;
 
 }
