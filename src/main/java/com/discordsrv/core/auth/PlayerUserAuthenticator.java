@@ -117,7 +117,6 @@ public class PlayerUserAuthenticator {
                               final @Nonnull FutureCallback<Pair<MinecraftPlayer, User>> callback) {
         final AtomicBoolean matched = new AtomicBoolean(false);
         this.tokenMap.forEach((key, value) -> key.getUniqueIdentifier(tokenIdent -> {
-            System.out.println(value);
             if (tokenIdent.equals(tokenString)) {
                 matched.set(true);
                 userStore.push(value, user, new PushCallback(key, callback, value, user));

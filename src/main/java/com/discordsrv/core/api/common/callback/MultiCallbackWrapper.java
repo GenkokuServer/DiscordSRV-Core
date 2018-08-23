@@ -27,17 +27,36 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
+/**
+ * MultiCallbackWrapper type, for merging responses of multiple callback-based methods into a single callback.
+ *
+ * @param <T>
+ *         The type of this callback.
+ */
 @ParametersAreNonnullByDefault
 public class MultiCallbackWrapper<T> implements FutureCallback<T>, Runnable {
 
     private final List<Consumer<FutureCallback<T>>> callbackConsumers;
     private final AtomicInteger callbacksRemaining;
     private final FutureCallback<T> callback;
+    /**
+     * The results encountered while processing (as passed by {@link FutureCallback#onSuccess(Object)}.
+     */
     protected final LinkedList<T> results;
+    /**
+     * The errors encountered while processing (as passed by {@link FutureCallback#onFailure(Throwable)}.
+     */
     protected final LinkedList<Throwable> errors;
 
-    public MultiCallbackWrapper(final List<Consumer<FutureCallback<T>>> callbackConsumers,
-                                final FutureCallback<T> callback) {
+    /**
+     * Main constructor for the MultiCallbackWrapper type.
+     *
+     * @param callbackConsumers
+     *         Consumers of callbacks to invoke with this callback wrapper.
+     * @param callback
+     *         The callback to invoke upon completion.
+     */
+    public MultiCallbackWrapper(final List<Consumer<FutureCallback<T>>> callbackConsumers, final FutureCallback<T> callback) {
         this.callbackConsumers = callbackConsumers;
         this.callbacksRemaining = new AtomicInteger(callbackConsumers.size());
         this.callback = callback;
@@ -66,6 +85,9 @@ public class MultiCallbackWrapper<T> implements FutureCallback<T>, Runnable {
         }
     }
 
+    /**
+     * Method to invoke upon completion.
+     */
     protected void onComplete() {
         if (this.errors.size() > 0) {
             Throwable throwable = new Throwable();

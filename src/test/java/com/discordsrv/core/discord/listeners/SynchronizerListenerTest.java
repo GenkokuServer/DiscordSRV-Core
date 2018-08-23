@@ -63,21 +63,11 @@ public class SynchronizerListenerTest {
     /**
      * Sets up before all tests are performed.
      *
-     * @throws InvocationTargetException
-     *         As inherited.
-     * @throws InstantiationException
-     *         As inherited.
-     * @throws ConfigurationException
-     *         As inherited.
-     * @throws IllegalAccessException
-     *         As inherited.
      * @throws IOException
      *         If the conversion process from yaml to map fails.
      */
     @BeforeClass
-    public static void setup()
-        throws IOException, InstantiationException, IllegalAccessException, ConfigurationException,
-               InvocationTargetException {
+    public static void setup() throws IOException {
         Yaml yaml = new Yaml();
         configuration = Configuration
             .getStandardConfiguration(yaml, SynchronizerListenerTest.class.getClassLoader().getResource("conf.yaml"));
@@ -171,7 +161,6 @@ public class SynchronizerListenerTest {
             @Override
             public void sendMessage(@Nonnull final ChatMessage<Long> message,
                                     @Nonnull final FutureCallback<Void> resultCallback) {
-                System.out.println(message.getMessage());
                 if (message.getMessage().equals("Test:1234")) {
                     latch.countDown();
                 }
