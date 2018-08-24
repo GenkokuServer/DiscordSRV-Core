@@ -19,12 +19,16 @@ package com.discordsrv.core.user;
 
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.discordsrv.core.test.mocker.Mocker;
+import com.discordsrv.core.test.security.ToggleableSecurityManager;
 import com.discordsrv.core.test.user.TestMinecraftPlayer;
 import com.discordsrv.core.test.user.TestPlayerUserLookup;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.User;
-import org.junit.Ignore;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -34,20 +38,37 @@ import static org.junit.Assert.*;
 
 /**
  * Tests for the {@link UplinkedPlayerUserLinker} class.
- * <p>
- * TODO Finish link.scarsz.me first
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class UplinkedPlayerUserLinkerTest {
 
     private final Mocker mocker = new Mocker();
+    private static UplinkedPlayerUserLinker linker;
+    private static ToggleableSecurityManager manager;
+
+    /**
+     * Sets up test resources.
+     */
+    @BeforeClass
+    public static void setup() {
+        linker = new UplinkedPlayerUserLinker(new TestPlayerUserLookup());
+        manager = new ToggleableSecurityManager();
+    }
+
+    /**
+     * Tears down test resources.
+     */
+    @AfterClass
+    public static void tearDown() {
+        linker = null;
+        manager = null;
+    }
 
     /**
      * Tests the player -> user translation.
      */
-    @Ignore // TODO remove
     @Test
-    public void translate() {
-        UplinkedPlayerUserLinker linker = new UplinkedPlayerUserLinker(new TestPlayerUserLookup());
+    public void stage1TranslatePlayer() {
         MinecraftPlayer player =
             new TestMinecraftPlayer("Scarsz", UUID.fromString("d7c1db4d-e57b-488b-b8bc-4462fe49a3e8"));
         linker.translate(player, new FutureCallback<User>() {
@@ -59,18 +80,31 @@ public class UplinkedPlayerUserLinkerTest {
 
             @Override
             public void onFailure(final @Nonnull Throwable t) {
+                t.printStackTrace();
                 fail();
             }
         });
     }
 
     /**
-     * Tests the user -> player translation.
+     * Applies a security manager which disables access to link.discordsrv.com.
      */
-    @Ignore // TODO remove
     @Test
-    public void translate1() {
-        UplinkedPlayerUserLinker linker = new UplinkedPlayerUserLinker(new TestPlayerUserLookup());
+    public void stage2ApplySecurity() {
+        manager.setAllowed(false);
+        System.setSecurityManager(manager);
+        try {
+            manager.checkConnect("link.discordsrv.com", 80);
+            fail();
+        } catch (SecurityException ignored) {
+        }
+    }
+
+    /**
+     * Tests the user -> player translation, offline.
+     */
+    @Test
+    public void stage3TranslateUserOffline() {
         User user = mocker.getMockedUser("95088531931672576");
         linker.translate(user, new FutureCallback<MinecraftPlayer>() {
             @Override
@@ -85,6 +119,53 @@ public class UplinkedPlayerUserLinkerTest {
                 fail();
             }
         });
+    }
+
+    /**
+     * Tests the player -> user translation, offline.
+     */
+    @Test
+    public void stage4TranslatePlayerOffline() {
+        stage1TranslatePlayer();
+    }
+
+    /**
+     * Perform an uncache of the known player.
+     */
+    @Test
+    public void stage5Uncache() {
+        MinecraftPlayer player =
+            new TestMinecraftPlayer("Scarsz", UUID.fromString("d7c1db4d-e57b-488b-b8bc-4462fe49a3e8"));
+        linker.uncache(player);
+    }
+
+    /**
+     * Perform a lookup which must fail due to a SecurityException (as the socket permission is still disallowed).
+     */
+    @Test
+    public void stage6FailedLookup() {
+        MinecraftPlayer player =
+            new TestMinecraftPlayer("Scarsz", UUID.fromString("d7c1db4d-e57b-488b-b8bc-4462fe49a3e8"));
+        linker.translate(player, new FutureCallback<User>() {
+            @Override
+            public void onSuccess(@Nullable final User result) {
+                fail();
+            }
+
+            @Override
+            public void onFailure(final @Nonnull Throwable t) {
+                assertTrue(t instanceof SecurityException);
+            }
+        });
+    }
+
+    /**
+     * Removes the security manager.
+     */
+    @Test
+    public void stage7RemoveSecurity() {
+        manager.setAllowed(true);
+        System.setSecurityManager(null);
     }
 
 }

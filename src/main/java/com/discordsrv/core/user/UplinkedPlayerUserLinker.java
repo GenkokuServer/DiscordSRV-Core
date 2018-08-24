@@ -24,19 +24,25 @@ import com.discordsrv.core.conf.annotation.Configured;
 import com.discordsrv.core.conf.annotation.Val;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.core.utils.IOUtil;
+import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.DualLinkedHashBidiMap;
 
-import javax.annotation.Nonnull;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.UUID;
+
+import static com.google.common.net.HttpHeaders.USER_AGENT;
 
 /**
  * Leverages link.discordsrv.com to perform lookups of player/user links.
- * <p>
- * TODO Finish link.discordsrv.com
  */
+@ParametersAreNonnullByDefault
 public class UplinkedPlayerUserLinker implements PlayerUserLinker {
 
-    private final ConcurrentMap<String, User> playerCache = new ConcurrentHashMap<>();
+    private final BidiMap<UUID, String> playerCache = new DualLinkedHashBidiMap<>();
     private final PlayerUserLookup lookup;
 
     /**
@@ -51,15 +57,98 @@ public class UplinkedPlayerUserLinker implements PlayerUserLinker {
     }
 
     @Override
-    public void translate(final @Nonnull MinecraftPlayer player, final @Nonnull FutureCallback<User> callback) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public void translate(final MinecraftPlayer player, final FutureCallback<User> callback) {
+        player.getUniqueIdentifier(uuid -> {
+            String result = playerCache.get(uuid);
+            if (result == null) {
+                try {
+                    result = lookup(uuid);
+                    if (result != null) {
+                        lookup.lookupUser(result, callback);
+                        return;
+                    }
+                } catch (Throwable t) {
+                    callback.onFailure(t);
+                    return;
+                }
+            } else {
+                lookup.lookupUser(result, callback);
+                return;
+            }
+            callback.onSuccess(null);
+        });
     }
 
     @Override
-    public void translate(final @Nonnull User user, final @Nonnull FutureCallback<MinecraftPlayer> callback) {
-        // TODO
-        throw new UnsupportedOperationException();
+    public void translate(final User user, final FutureCallback<MinecraftPlayer> callback) {
+        UUID result = playerCache.getKey(user.getId());
+        if (result == null) {
+            try {
+                result = lookup(user.getId());
+                if (result != null) {
+                    lookup.lookupPlayer(result, callback);
+                    return;
+                }
+            } catch (Throwable t) {
+                callback.onFailure(t);
+                return;
+            }
+        } else {
+            lookup.lookupPlayer(result, callback);
+            return;
+        }
+        callback.onSuccess(null);
+    }
+
+    /**
+     * Uncaches a player from the local cache. This is necessary for player rejoins (in case the player has unlinked
+     * their account).
+     *
+     * @param player
+     *         The player to uncache.
+     */
+    public void uncache(final MinecraftPlayer player) {
+        player.getUniqueIdentifier(playerCache::remove);
+    }
+
+    private String lookup(UUID uuid) throws IOException {
+        URL url = new URL("http://link.discordsrv.com/lookup?" + uuid);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("User-Agent", USER_AGENT);
+        int responseCode = con.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            try {
+                byte[] read = IOUtil.readFully(con.getInputStream());
+                String resp = new String(read).trim();
+                playerCache.put(uuid, resp);
+                return resp;
+            } catch (Throwable t) {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    private UUID lookup(String snowflake) throws IOException {
+        URL url = new URL("http://link.discordsrv.com/lookup?" + snowflake);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("User-Agent", USER_AGENT);
+        int responseCode = con.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            try {
+                byte[] read = IOUtil.readFully(con.getInputStream());
+                UUID resp = UUID.fromString(new String(read).trim());
+                playerCache.put(resp, snowflake);
+                return resp;
+            } catch (Throwable t) {
+                return null;
+            }
+        } else {
+            return null;
+        }
     }
 
 }
