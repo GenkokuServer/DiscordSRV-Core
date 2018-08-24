@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'com.discordsrv', project: 'DiscordSRV-Core', version: '2.0'
+    compile group: 'com.discordsrv', name: 'DiscordSRV-Core', version: '2.0'
 }
 ```
 
