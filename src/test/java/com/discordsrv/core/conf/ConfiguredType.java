@@ -1,5 +1,5 @@
 /*
- * DiscordSRV2-Core: A library for generic Minecraft plugin development for all DiscordSRV2 projects
+ * DiscordSRV-Core: A library for generic Minecraft plugin development for all DiscordSRV projects
  * Copyright (C) 2018 DiscordSRV
  *
  * This program is free software: you can redistribute it and/or modify
@@ -33,7 +33,7 @@ public class ConfiguredType {
      *
      * @param name
      *         The name to be tested.
-     * @param value
+     * @param value The value to be tested.
      */
     @Configured
     public ConfiguredType(final @Val("name") String name, final @Val("value") String value) {

@@ -1,5 +1,5 @@
 /*
- * DiscordSRV2-Core: A library for generic Minecraft plugin development for all DiscordSRV2 projects
+ * DiscordSRV-Core: A library for generic Minecraft plugin development for all DiscordSRV projects
  * Copyright (C) 2018 DiscordSRV
  *
  * This program is free software: you can redistribute it and/or modify
@@ -18,12 +18,12 @@
 package com.discordsrv.integration.extension;
 
 import com.discordsrv.core.api.channel.Chat;
-import com.discordsrv.core.api.dsrv.plugin.extension.DSRVExtension;
 import com.discordsrv.core.test.mocker.Mocker;
-import com.discordsrv.integration.plugin.IntegrationDSRVContext;
-import com.discordsrv.integration.plugin.Plugin;
+import com.discordsrv.integration.platform.IntegrationDSRVContext;
+import com.discordsrv.integration.platform.Plugin;
 
-public class Extension implements DSRVExtension<IntegrationDSRVContext, Plugin> {
+public class Extension implements
+    com.discordsrv.core.api.dsrv.platform.extension.Extension<IntegrationDSRVContext, Plugin> {
 
     private Plugin plugin;
 

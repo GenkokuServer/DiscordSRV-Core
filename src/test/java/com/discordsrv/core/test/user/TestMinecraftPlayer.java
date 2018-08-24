@@ -1,5 +1,5 @@
 /*
- * DiscordSRV2-Core: A library for generic Minecraft plugin development for all DiscordSRV2 projects
+ * DiscordSRV-Core: A library for generic Minecraft plugin development for all DiscordSRV projects
  * Copyright (C) 2018 DiscordSRV
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,6 @@
  */
 package com.discordsrv.core.test.user;
 
-import com.discordsrv.core.api.auth.State;
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.google.common.util.concurrent.FutureCallback;
 
@@ -32,7 +31,6 @@ public class TestMinecraftPlayer implements MinecraftPlayer {
 
     private final CharSequence name;
     private final UUID identifier;
-    private State state = State.UNAUTHENTICATED;
 
     /**
      * Main constructor for the TestMinecraftPlayer type.

@@ -1,5 +1,5 @@
 /*
- * DiscordSRV2-Core: A library for generic Minecraft plugin development for all DiscordSRV2 projects
+ * DiscordSRV-Core: A library for generic Minecraft plugin development for all DiscordSRV projects
  * Copyright (C) 2018 DiscordSRV
  *
  * This program is free software: you can redistribute it and/or modify
@@ -36,9 +36,6 @@ import java.util.function.Consumer;
 @ParametersAreNonnullByDefault
 public class MultiCallbackWrapper<T> implements FutureCallback<T>, Runnable {
 
-    private final List<Consumer<FutureCallback<T>>> callbackConsumers;
-    private final AtomicInteger callbacksRemaining;
-    private final FutureCallback<T> callback;
     /**
      * The results encountered while processing (as passed by {@link FutureCallback#onSuccess(Object)}.
      */
@@ -47,6 +44,9 @@ public class MultiCallbackWrapper<T> implements FutureCallback<T>, Runnable {
      * The errors encountered while processing (as passed by {@link FutureCallback#onFailure(Throwable)}.
      */
     protected final LinkedList<Throwable> errors;
+    private final List<Consumer<FutureCallback<T>>> callbackConsumers;
+    private final AtomicInteger callbacksRemaining;
+    private final FutureCallback<T> callback;
 
     /**
      * Main constructor for the MultiCallbackWrapper type.
@@ -56,7 +56,8 @@ public class MultiCallbackWrapper<T> implements FutureCallback<T>, Runnable {
      * @param callback
      *         The callback to invoke upon completion.
      */
-    public MultiCallbackWrapper(final List<Consumer<FutureCallback<T>>> callbackConsumers, final FutureCallback<T> callback) {
+    public MultiCallbackWrapper(final List<Consumer<FutureCallback<T>>> callbackConsumers,
+                                final FutureCallback<T> callback) {
         this.callbackConsumers = callbackConsumers;
         this.callbacksRemaining = new AtomicInteger(callbackConsumers.size());
         this.callback = callback;

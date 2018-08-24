@@ -1,5 +1,5 @@
 /*
- * DiscordSRV2-Core: A library for generic Minecraft plugin development for all DiscordSRV2 projects
+ * DiscordSRV-Core: A library for generic Minecraft plugin development for all DiscordSRV projects
  * Copyright (C) 2018 DiscordSRV
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,9 +17,9 @@
  */
 package com.discordsrv.core.dsrv.plugin.extension;
 
-import com.discordsrv.core.api.dsrv.DiscordSRVContext;
-import com.discordsrv.core.api.dsrv.plugin.DSRVPlugin;
-import com.discordsrv.core.api.dsrv.plugin.extension.DSRVExtension;
+import com.discordsrv.core.api.dsrv.Context;
+import com.discordsrv.core.api.dsrv.platform.Platform;
+import com.discordsrv.core.api.dsrv.platform.extension.Extension;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.File;
@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * ExtensionsLoader utility, for fetching the extensions for a given DSRVPlugin.
+ * ExtensionsLoader utility, for fetching the extensions for a given Platform.
  */
 @ParametersAreNonnullByDefault
 public final class ExtensionsLoader {
@@ -52,7 +52,7 @@ public final class ExtensionsLoader {
      * @return extensions The extensions in the given path, non-recursive.
      */
     @SuppressWarnings("unchecked")
-    public static <T extends DiscordSRVContext, V extends DSRVPlugin<T>> List<DSRVExtension<T, V>> getExtensions(
+    public static <T extends Context, V extends Platform<T>> List<Extension<T, V>> getExtensions(
         final File extensionsFolder) {
         if (!extensionsFolder.exists()) {
             //noinspection ResultOfMethodCallIgnored
@@ -61,7 +61,7 @@ public final class ExtensionsLoader {
         if (!extensionsFolder.isDirectory()) {
             throw new IllegalArgumentException("Extensions folder provided must be a folder.");
         }
-        List<DSRVExtension<T, V>> extensions = new LinkedList<>();
+        List<Extension<T, V>> extensions = new LinkedList<>();
         ExtensionClassLoader loader = new ExtensionClassLoader(ExtensionsLoader.class.getClassLoader());
         List<ExtensionJarFile> jars = new LinkedList<>();
         Arrays.stream(Objects.requireNonNull(extensionsFolder.listFiles())).map(file -> {
@@ -75,7 +75,7 @@ public final class ExtensionsLoader {
             try {
                 String extensionClassName = jarFile.getManifest().getMainAttributes().getValue("Extension-Class");
                 loader.addURL(jarFile.getFile().toURI().toURL());
-                return (DSRVExtension<T, V>) loader.loadClass(extensionClassName).getDeclaredConstructor()
+                return (Extension<T, V>) loader.loadClass(extensionClassName).getDeclaredConstructor()
                     .newInstance();
             } catch (Throwable ignored) {
                 return null;

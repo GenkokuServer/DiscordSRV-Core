@@ -1,5 +1,5 @@
 /*
- * DiscordSRV2-Core: A library for generic Minecraft plugin development for all DiscordSRV2 projects
+ * DiscordSRV-Core: A library for generic Minecraft plugin development for all DiscordSRV projects
  * Copyright (C) 2018 DiscordSRV
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,7 +17,7 @@
  */
 package com.discordsrv.integration;
 
-import com.discordsrv.integration.plugin.MinecraftPlugin;
+import com.discordsrv.integration.platform.MinecraftPlugin;
 import org.junit.Test;
 
 import java.io.File;
@@ -35,7 +35,7 @@ public class IntegrationTest {
         throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException,
                InvocationTargetException, InstantiationException {
         Minecraft minecraft = new Minecraft(new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
-        File pluginFile = new File("plugin/build/libs/plugin-TEST-all.jar");
+        File pluginFile = new File("platform/build/libs/platform-TEST-all.jar");
         JarFile jarFile = new JarFile(pluginFile);
         URLClassLoader loader =
             new URLClassLoader(new URL[]{pluginFile.toURI().toURL()}, this.getClass().getClassLoader());

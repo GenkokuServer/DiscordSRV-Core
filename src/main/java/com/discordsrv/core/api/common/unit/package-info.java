@@ -1,5 +1,5 @@
 /*
- * DiscordSRV2-Core: A library for generic Minecraft plugin development for all DiscordSRV2 projects
+ * DiscordSRV-Core: A library for generic Minecraft plugin development for all DiscordSRV projects
  * Copyright (C) 2018 DiscordSRV
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 /**
- * Common units API package for the DiscordSRV2-Core library.
+ * Common units API package for the DiscordSRV-Core library.
  */
 @CheckReturnValue @ParametersAreNonnullByDefault
 package com.discordsrv.core.api.common.unit;

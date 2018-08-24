@@ -1,5 +1,5 @@
 /*
- * DiscordSRV2-Core: A library for generic Minecraft plugin development for all DiscordSRV2 projects
+ * DiscordSRV-Core: A library for generic Minecraft plugin development for all DiscordSRV projects
  * Copyright (C) 2018 DiscordSRV
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,9 +17,9 @@
  */
 package com.discordsrv.core.dsrv.plugin.extension;
 
-import com.discordsrv.core.api.dsrv.DiscordSRVContext;
-import com.discordsrv.core.api.dsrv.plugin.DSRVPlugin;
-import com.discordsrv.core.api.dsrv.plugin.extension.DSRVExtension;
+import com.discordsrv.core.api.dsrv.Context;
+import com.discordsrv.core.api.dsrv.platform.Platform;
+import com.discordsrv.core.api.dsrv.platform.extension.Extension;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.File;
@@ -33,14 +33,14 @@ import java.util.stream.Stream;
  * ExtensionClassLoader type, for loading extensions from jar files.
  *
  * @param <T>
- *         The type of DiscordSRVContext to be used by extensions loaded by this extension class loader.
+ *         The type of Context to be used by extensions loaded by this extension class loader.
  * @param <V>
  *         The type of DSRVPlugins to be used by extensions loaded by this extension class loader.
  */
 @ParametersAreNonnullByDefault
-public class ExtensionClassLoader<T extends DiscordSRVContext, V extends DSRVPlugin<T>> extends URLClassLoader {
+public class ExtensionClassLoader<T extends Context, V extends Platform<T>> extends URLClassLoader {
 
-    private final List<DSRVExtension<T, V>> extensions;
+    private final List<Extension<T, V>> extensions;
 
     /**
      * Main constructor of the ExtensionClassLoader type.
@@ -63,13 +63,13 @@ public class ExtensionClassLoader<T extends DiscordSRVContext, V extends DSRVPlu
                 throw new IllegalArgumentException("Extension class attribute was not found.");
             }
             super.addURL(url);
-            extensions.add((DSRVExtension<T, V>) this.loadClass(classname).getDeclaredConstructor().newInstance());
+            extensions.add((Extension<T, V>) this.loadClass(classname).getDeclaredConstructor().newInstance());
         } catch (Throwable t) {
-            throw new IllegalArgumentException("URL provided does not lead to a valid plugin extension jar.", t);
+            throw new IllegalArgumentException("URL provided does not lead to a valid platform extension jar.", t);
         }
     }
 
-    public Stream<DSRVExtension<T, V>> getExtensions() {
+    public Stream<Extension<T, V>> getExtensions() {
         return extensions.stream();
     }
 

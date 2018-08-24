@@ -1,5 +1,5 @@
 /*
- * DiscordSRV2-Core: A library for generic Minecraft plugin development for all DiscordSRV2 projects
+ * DiscordSRV-Core: A library for generic Minecraft plugin development for all DiscordSRV projects
  * Copyright (C) 2018 DiscordSRV
  *
  * This program is free software: you can redistribute it and/or modify
@@ -98,7 +98,7 @@ public class PlayerUserAuthenticator {
             }
 
             @Override
-            public void onFailure(final Throwable t) {
+            public void onFailure(final @Nonnull Throwable t) {
             }
         });
     }

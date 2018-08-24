@@ -1,5 +1,5 @@
 /*
- * DiscordSRV2-Core: A library for generic Minecraft plugin development for all DiscordSRV2 projects
+ * DiscordSRV-Core: A library for generic Minecraft plugin development for all DiscordSRV projects
  * Copyright (C) 2018 DiscordSRV
  *
  * This program is free software: you can redistribute it and/or modify
@@ -176,7 +176,7 @@ public class SynchronizerListenerTest {
         }
     }
 
-    /* Untested, as these require an interactive environment. Will be instead tested with DiscordSRV2-Core-Tester.
+    /* Untested, as these require an interactive environment. Will be instead tested with DiscordSRV-Core-Tester.
     @Test
     public void onGuildMemberRoleAdd() {
     }
