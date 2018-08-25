@@ -26,7 +26,7 @@ import com.discordsrv.core.test.channel.TestChat;
 import com.discordsrv.core.test.channel.TestChatChannelLookup;
 import com.discordsrv.core.test.minecraft.TestConsole;
 import com.discordsrv.core.test.mocker.Mocker;
-import com.discordsrv.core.test.mocker.Values;
+import com.discordsrv.core.test.Values;
 import com.discordsrv.core.test.role.TestTeamRoleLookup;
 import com.discordsrv.core.test.user.TestPlayerUserLookup;
 import com.discordsrv.core.user.LocalPlayerUserLinker;

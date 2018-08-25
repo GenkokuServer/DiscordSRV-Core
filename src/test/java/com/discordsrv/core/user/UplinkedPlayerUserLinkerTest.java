@@ -34,6 +34,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
+import static com.discordsrv.core.test.Values.HTTP_PORT;
 import static org.junit.Assert.*;
 
 /**
@@ -94,7 +95,7 @@ public class UplinkedPlayerUserLinkerTest {
         manager.setAllowed(false);
         System.setSecurityManager(manager);
         try {
-            manager.checkConnect("link.discordsrv.com", 80);
+            manager.checkConnect("link.discordsrv.com", HTTP_PORT);
             fail();
         } catch (SecurityException ignored) {
         }

@@ -26,7 +26,7 @@ import org.junit.Test;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static com.discordsrv.core.test.mocker.Values.TIMEOUT;
+import static com.discordsrv.core.test.Values.TIMEOUT;
 import static org.junit.Assert.*;
 
 /**

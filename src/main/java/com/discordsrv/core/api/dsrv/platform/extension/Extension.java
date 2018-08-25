@@ -21,7 +21,7 @@ import com.discordsrv.core.api.dsrv.Context;
 import com.discordsrv.core.api.dsrv.platform.Platform;
 
 /**
- * Extension type, for extending DSRV plugins.
+ * Extension type, for extending DSRV platform support.
  *
  * @param <T>
  *         The context type that this Extension will use.

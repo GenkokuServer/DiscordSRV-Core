@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.test.mocker;
+package com.discordsrv.core.test;
 
 /**
  * Various values to be used within the tests (to make checkstyle stop complaining).
@@ -25,6 +25,8 @@ public final class Values {
 
     /** Timeout for latches and shutdowns. */
     public static final int TIMEOUT = 10;
+    /** Port for HTTP connections. Yay! */
+    public static final int HTTP_PORT = 80;
 
     private Values() {
         throw new UnsupportedOperationException();
