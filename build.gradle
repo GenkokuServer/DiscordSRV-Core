@@ -99,7 +99,9 @@ task wrapper(type: Wrapper) {
 
 dependencies {
     deployerJars "org.apache.maven.wagon:wagon-http:+"
-    compile group: 'net.dv8tion', name: 'JDA', version: '3.7.1_395'
+    compile (group: 'net.dv8tion', name: 'JDA', version: '3.7.1_395') {
+        exclude group: 'club.minnced', module: 'opus-java'
+    }
     compile group: 'com.jagrosh', name: 'jda-utilities-command', version: '2.1.3'
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
     compile group: 'com.google.guava', name: 'guava', version: '26.0-jre'
