@@ -30,7 +30,7 @@ public class ParentAwareHashMap extends HashMap<String, Object> {
     private String name;
 
     /**
-     * Child constructor of {@link HashMap#HashMap(int, float)}.
+     * Child constructor of initial capacity and load factor constructor.
      *
      * @param initialCapacity
      *         See {@link HashMap#HashMap(int, float)}
@@ -49,7 +49,7 @@ public class ParentAwareHashMap extends HashMap<String, Object> {
     }
 
     /**
-     * Child constructor of {@link HashMap#HashMap(int)}.
+     * Child constructor of initial capacity constructor.
      *
      * @param initialCapacity
      *         See {@link HashMap#HashMap(int)}
@@ -65,7 +65,7 @@ public class ParentAwareHashMap extends HashMap<String, Object> {
     }
 
     /**
-     * Child constructor of {@link HashMap#HashMap)}.
+     * Child constructor of default parent constructor.
      *
      * @param parent
      *         The parent of this map.

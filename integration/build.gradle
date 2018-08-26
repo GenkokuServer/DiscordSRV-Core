@@ -39,6 +39,15 @@ test {
     dependsOn ":integration:platform:test"
 }
 
+javadoc {
+    options.memberLevel = JavadocMemberLevel.PUBLIC
+    options.author()
+    options.encoding = 'UTF-8'
+    options.addBooleanOption('html5', true)
+    options.addBooleanOption('Xdoclint:none', true)
+    failOnError = false
+}
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }

@@ -38,7 +38,6 @@ configurations {
     deployerJars
 }
 
-// Javadoc Task
 javadoc {
     options.memberLevel = JavadocMemberLevel.PUBLIC
     options.author()
@@ -46,16 +45,6 @@ javadoc {
     options.addBooleanOption('html5', true)
     options.addBooleanOption('Xdoclint:none', true)
     failOnError = false
-}
-
-checkstyle {
-    configFile = rootProject.file('checkstyle.xml')
-}
-checkstyleMain {
-    source = sourceSets.main.allJava
-}
-checkstyleTest {
-    source = sourceSets.test.allJava
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -71,6 +60,16 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives sourcesJar
     archives javadocJar
+}
+
+checkstyle {
+    configFile = rootProject.file('checkstyle.xml')
+}
+checkstyleMain {
+    source = sourceSets.main.allJava
+}
+checkstyleTest {
+    source = sourceSets.test.allJava
 }
 
 uploadArchives {

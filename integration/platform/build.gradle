@@ -37,6 +37,15 @@ repositories {
     mavenCentral()
 }
 
+javadoc {
+    options.memberLevel = JavadocMemberLevel.PUBLIC
+    options.author()
+    options.encoding = 'UTF-8'
+    options.addBooleanOption('html5', true)
+    options.addBooleanOption('Xdoclint:none', true)
+    failOnError = false
+}
+
 test {
     dependsOn shadowJar
     dependsOn ":integration:extension:test"
