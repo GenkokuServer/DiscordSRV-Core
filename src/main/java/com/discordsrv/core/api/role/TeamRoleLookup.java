@@ -24,6 +24,7 @@ import net.dv8tion.jda.core.entities.Role;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.stream.Stream;
 
 /**
  * TeamRoleLinker type, for looking up {@link Team} instances and {@link Role} instances.
@@ -55,5 +56,21 @@ public interface TeamRoleLookup {
      *         The callback to invoke when (not) found.
      */
     void lookupTeam(String id, FutureCallback<Team<MinecraftPlayer>> callback);
+
+    /**
+     * Fetches all the teams which this lookup can find.
+     *
+     * @param callback
+     *         The callback to invoke when collected.
+     */
+    void getKnownTeams(FutureCallback<Stream<Team<MinecraftPlayer>>> callback);
+
+    /**
+     * Fetches all the roles which this lookup can find.
+     *
+     * @param callback
+     *         The callback to invoke when collected.
+     */
+    void getKnownRoles(FutureCallback<Stream<Role>> callback);
 
 }

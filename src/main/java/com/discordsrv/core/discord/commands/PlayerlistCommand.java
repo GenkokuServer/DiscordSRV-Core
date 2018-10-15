@@ -26,7 +26,6 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.core.Permission;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +81,7 @@ public class PlayerlistCommand extends Command {
 
     @Override
     protected void execute(final CommandEvent event) {
-        lookup.getOnline(new FutureCallback<Stream<MinecraftPlayer>>() {
+        lookup.getOnlinePlayers(new FutureCallback<Stream<MinecraftPlayer>>() {
             @Override
             public void onSuccess(@Nullable final Stream<MinecraftPlayer> result) {
                 if (result != null) {
@@ -102,7 +101,7 @@ public class PlayerlistCommand extends Command {
             }
 
             @Override
-            public void onFailure(final @Nonnull Throwable t) {
+            public void onFailure(final Throwable t) {
                 event.reactError();
                 event.reply(badConfig
                     .replace("%owner%", event.getJDA().getUserById(event.getClient().getOwnerId()).getAsMention()));

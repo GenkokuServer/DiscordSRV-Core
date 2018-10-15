@@ -29,7 +29,6 @@ import net.dv8tion.jda.core.Permission;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.tuple.Pair;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
@@ -121,7 +120,7 @@ public class AuthenticateCommand extends Command {
                                 }
 
                                 @Override
-                                public void onFailure(final @Nonnull Throwable t) {
+                                public void onFailure(final Throwable t) {
                                     event.reactWarning();
                                     event.reply(failedAuth.replace("%token%", event.getArgs()));
                                 }
@@ -130,7 +129,7 @@ public class AuthenticateCommand extends Command {
                 }
 
                 @Override
-                public void onFailure(final @Nonnull Throwable t) {
+                public void onFailure(final Throwable t) {
                     event.reactError();
                     event.reply(badConfig
                         .replace("%owner%", event.getJDA().getUserById(event.getClient().getOwnerId()).getAsMention()));

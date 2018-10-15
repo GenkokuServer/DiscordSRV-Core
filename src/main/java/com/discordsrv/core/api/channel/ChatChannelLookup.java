@@ -19,10 +19,12 @@ package com.discordsrv.core.api.channel;
 
 import com.discordsrv.core.api.common.functional.Translator;
 import com.google.common.util.concurrent.FutureCallback;
+import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.TextChannel;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.concurrent.ThreadSafe;
+import java.util.stream.Stream;
 
 /**
  * ChatChannelLinker type, for looking up {@link Chat} instances and {@link TextChannel} instances.
@@ -54,5 +56,21 @@ public interface ChatChannelLookup {
      *         The callback to invoke when (not) found.
      */
     void lookupChat(String id, FutureCallback<Chat> callback);
+
+    /**
+     * Fetches all the chats which this lookup can find.
+     *
+     * @param callback
+     *         The callback to invoke when collected.
+     */
+    void getKnownChats(FutureCallback<Stream<Chat>> callback);
+
+    /**
+     * Fetches all the channels which this lookup can find.
+     *
+     * @param callback
+     *         The callback to invoke when collected.
+     */
+    void getKnownChannels(FutureCallback<Stream<Channel>> callback);
 
 }

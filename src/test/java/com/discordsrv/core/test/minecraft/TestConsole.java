@@ -19,7 +19,6 @@ package com.discordsrv.core.test.minecraft;
 
 import com.discordsrv.core.api.minecraft.Console;
 
-import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -38,7 +37,7 @@ public class TestConsole implements Console {
         return onInvocation;
     }
 
-    public void setOnInvocation(final @Nonnull Consumer<String> onInvocation) {
+    public void setOnInvocation(final Consumer<String> onInvocation) {
         this.onInvocation = onInvocation;
     }
 }

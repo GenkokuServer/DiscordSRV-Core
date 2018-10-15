@@ -34,8 +34,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.UUID;
 
-import static com.google.common.net.HttpHeaders.USER_AGENT;
-
 /**
  * Leverages link.discordsrv.com to perform lookups of player/user links.
  */
@@ -115,7 +113,6 @@ public class UplinkedPlayerUserLinker implements PlayerUserLinker {
         URL url = new URL("http://link.discordsrv.com/lookup?" + uuid);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("User-Agent", USER_AGENT);
         int responseCode = con.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
             try {
@@ -135,7 +132,6 @@ public class UplinkedPlayerUserLinker implements PlayerUserLinker {
         URL url = new URL("http://link.discordsrv.com/lookup?" + snowflake);
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
-        con.setRequestProperty("User-Agent", USER_AGENT);
         int responseCode = con.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
             try {

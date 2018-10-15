@@ -20,7 +20,6 @@ package com.discordsrv.core.test.user;
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.google.common.util.concurrent.FutureCallback;
 
-import javax.annotation.Nonnull;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -46,17 +45,17 @@ public class TestMinecraftPlayer implements MinecraftPlayer {
     }
 
     @Override
-    public void sendMessage(final @Nonnull String message, final @Nonnull FutureCallback<Void> resultCallback) {
+    public void sendMessage(final String message, final FutureCallback<Void> resultCallback) {
         resultCallback.onSuccess(null);
     }
 
     @Override
-    public void getName(final @Nonnull Consumer<CharSequence> callback) {
+    public void getName(final Consumer<CharSequence> callback) {
         callback.accept(this.name);
     }
 
     @Override
-    public void getUniqueIdentifier(final @Nonnull Consumer<UUID> callback) {
+    public void getUniqueIdentifier(final Consumer<UUID> callback) {
         callback.accept(this.identifier);
     }
 

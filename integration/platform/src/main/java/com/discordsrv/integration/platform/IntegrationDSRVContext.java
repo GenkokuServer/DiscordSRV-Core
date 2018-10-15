@@ -24,9 +24,9 @@ import com.discordsrv.core.api.role.TeamRoleLookup;
 import com.discordsrv.core.api.user.PlayerUserLinker;
 import com.discordsrv.core.api.user.PlayerUserLookup;
 import com.discordsrv.core.auth.PlayerUserAuthenticator;
+import com.discordsrv.core.channel.MalleableChatChannelLookup;
 import com.discordsrv.core.conf.Configuration;
 import com.discordsrv.integration.Minecraft;
-import com.discordsrv.integration.platform.chat.MalleableChatChannelLookup;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -54,7 +54,7 @@ public final class IntegrationDSRVContext implements Context {
     TeamRoleLinker teamRoleLinker;
     TeamRoleLookup teamRoleLookup;
     ChatChannelLinker chatChannelLinker;
-    MalleableChatChannelLookup chatChannelLookup;
+    MalleableChatChannelLookup<IntegrationDSRVContext> chatChannelLookup;
     Minecraft minecraft;
     JDA jda;
 

@@ -26,7 +26,6 @@ import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.tuple.Pair;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.naming.AuthenticationException;
 import java.security.SecureRandom;
@@ -59,8 +58,8 @@ public class PlayerUserAuthenticator {
      *         The executor service to schedule on.
      */
     @Configured
-    public PlayerUserAuthenticator(final @Nonnull @Val("store") AuthenticationStore<MinecraftPlayer, User> userStore,
-                                   final @Nonnull @Val("executor") ScheduledExecutorService scheduledExecutorService) {
+    public PlayerUserAuthenticator(final @Val("store") AuthenticationStore<MinecraftPlayer, User> userStore,
+                                   final @Val("executor") ScheduledExecutorService scheduledExecutorService) {
         this.random = new SecureRandom();
         this.userStore = userStore;
         this.tokenMap = new ConcurrentHashMap<>();
@@ -75,7 +74,7 @@ public class PlayerUserAuthenticator {
      * @param callback
      *         The callback for this method.
      */
-    public void beginAuth(final @Nonnull MinecraftPlayer player, final @Nonnull FutureCallback<Token> callback) {
+    public void beginAuth(final MinecraftPlayer player, final FutureCallback<Token> callback) {
         userStore.contains(player, null, new FutureCallback<Boolean>() {
             @Override
             public void onSuccess(@Nullable final Boolean result) {
@@ -98,7 +97,7 @@ public class PlayerUserAuthenticator {
             }
 
             @Override
-            public void onFailure(final @Nonnull Throwable t) {
+            public void onFailure(final Throwable t) {
             }
         });
     }
@@ -113,8 +112,8 @@ public class PlayerUserAuthenticator {
      * @param callback
      *         The callback for this method.
      */
-    public void attemptVerify(final @Nonnull User user, final @Nonnull String tokenString,
-                              final @Nonnull FutureCallback<Pair<MinecraftPlayer, User>> callback) {
+    public void attemptVerify(final User user, final String tokenString,
+                              final FutureCallback<Pair<MinecraftPlayer, User>> callback) {
         final AtomicBoolean matched = new AtomicBoolean(false);
         this.tokenMap.forEach((key, value) -> key.getUniqueIdentifier(tokenIdent -> {
             if (tokenIdent.equals(tokenString)) {
@@ -135,7 +134,7 @@ public class PlayerUserAuthenticator {
      * @param callback
      *         The callback for this method.
      */
-    public void unauthenticate(final @Nonnull MinecraftPlayer player, final @Nonnull FutureCallback<Boolean> callback) {
+    public void unauthenticate(final MinecraftPlayer player, final FutureCallback<Boolean> callback) {
         userStore.remove(player, null, callback);
     }
 
@@ -147,7 +146,7 @@ public class PlayerUserAuthenticator {
      * @param callback
      *         The callback for this method.
      */
-    public void unauthenticate(final @Nonnull User user, final @Nonnull FutureCallback<Boolean> callback) {
+    public void unauthenticate(final User user, final FutureCallback<Boolean> callback) {
         userStore.remove(null, user, callback);
     }
 
@@ -187,7 +186,7 @@ public class PlayerUserAuthenticator {
         }
 
         @Override
-        public void onFailure(final @Nonnull Throwable t) {
+        public void onFailure(final Throwable t) {
             callback.onFailure(t);
         }
     }
@@ -204,7 +203,7 @@ public class PlayerUserAuthenticator {
         }
 
         @Override
-        public synchronized void getUniqueIdentifier(final @Nonnull Consumer<String> callback) {
+        public synchronized void getUniqueIdentifier(final Consumer<String> callback) {
             callback.accept(ident);
         }
 

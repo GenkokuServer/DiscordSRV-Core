@@ -30,7 +30,7 @@ public class Extension implements
     @Override
     public void setPlugin(final Plugin plugin) {
         this.plugin = plugin;
-        plugin.getContext().getChatChannelLookup().getChatTranslators().add(
+        plugin.getContext().getChatChannelLookup().addChatTranslator(
             (id, callback) -> callback.onSuccess(Mocker.getInstance(Chat.class, new Mocker.NoopInvocationHandler() {
             })));
     }

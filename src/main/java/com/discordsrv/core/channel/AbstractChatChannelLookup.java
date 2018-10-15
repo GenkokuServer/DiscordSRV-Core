@@ -15,31 +15,36 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.integration.platform.chat;
+package com.discordsrv.core.channel;
 
-import com.discordsrv.core.api.channel.Chat;
 import com.discordsrv.core.api.channel.ChatChannelLookup;
-import com.discordsrv.core.api.common.callback.MultiCallbackWrapper;
-import com.discordsrv.core.api.common.functional.Translator;
-import com.discordsrv.integration.platform.IntegrationDSRVContext;
+import com.discordsrv.core.api.dsrv.Context;
 import com.google.common.util.concurrent.FutureCallback;
-import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import net.dv8tion.jda.core.entities.TextChannel;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
+/**
+ * AbstractChatChannelLookup type, for simplifying implementations for platform development. You probably want to use
+ * {@link MalleableChatChannelLookup}.
+ *
+ * @param <T>
+ *         The specific type of context that this lookup is performing in.
+ */
 @ParametersAreNonnullByDefault
-@Value
-@RequiredArgsConstructor
-public class MalleableChatChannelLookup implements ChatChannelLookup {
+public abstract class AbstractChatChannelLookup<T extends Context> implements ChatChannelLookup {
 
-    IntegrationDSRVContext context;
-    List<Translator<String, Chat>> chatTranslators = new LinkedList<>();
+    private final T context;
+
+    /**
+     * Main constructor for the AbstractChatChannelLookup type.
+     *
+     * @param context
+     *         The context in which this lookup is performing.
+     */
+    protected AbstractChatChannelLookup(final T context) {
+        this.context = context;
+    }
 
     @Override
     public void lookupChannel(final String id, final FutureCallback<TextChannel> callback) {
@@ -50,11 +55,7 @@ public class MalleableChatChannelLookup implements ChatChannelLookup {
         }
     }
 
-    @Override
-    public void lookupChat(final String id, final FutureCallback<Chat> callback) {
-        new MultiCallbackWrapper<>(chatTranslators.stream()
-            .map(translator -> (Consumer<FutureCallback<Chat>>) internal -> translator.translate(id, internal))
-            .collect(Collectors.toList()), callback).run();
+    protected T getContext() {
+        return context;
     }
-
 }

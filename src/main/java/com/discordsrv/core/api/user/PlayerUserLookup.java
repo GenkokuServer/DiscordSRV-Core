@@ -63,6 +63,14 @@ public interface PlayerUserLookup {
      * @param callback
      *         The callback to invoke when users have been collected.
      */
-    void getOnline(FutureCallback<Stream<MinecraftPlayer>> callback);
+    void getOnlinePlayers(FutureCallback<Stream<MinecraftPlayer>> callback);
+
+    /**
+     * Fetches all online Discord users from the known guilds.
+     *
+     * @param callback
+     *         The callback to invoke when users have been collected.
+     */
+    void getOnlineUsers(FutureCallback<Stream<User>> callback);
 
 }

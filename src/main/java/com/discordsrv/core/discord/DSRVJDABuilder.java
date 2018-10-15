@@ -30,7 +30,6 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
 
-import javax.annotation.Nonnull;
 import javax.security.auth.login.LoginException;
 
 /**
@@ -85,7 +84,7 @@ public class DSRVJDABuilder extends JDABuilder implements ConfigAware {
      *
      * @return self This instance.
      */
-    public DSRVJDABuilder addCommands(final @Nonnull Command... commands) {
+    public DSRVJDABuilder addCommands(final Command... commands) {
         commandClientBuilder.addCommands(commands);
         return this;
     }

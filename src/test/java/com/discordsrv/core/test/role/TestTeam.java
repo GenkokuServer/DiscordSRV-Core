@@ -21,7 +21,6 @@ import com.discordsrv.core.api.role.Team;
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.google.common.util.concurrent.FutureCallback;
 
-import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -51,22 +50,22 @@ public class TestTeam implements Team<MinecraftPlayer> {
     }
 
     @Override
-    public void getName(final @Nonnull Consumer<CharSequence> callback) {
+    public void getName(final Consumer<CharSequence> callback) {
         callback.accept(this.name);
     }
 
     @Override
-    public void getUniqueIdentifier(final @Nonnull Consumer<String> callback) {
+    public void getUniqueIdentifier(final Consumer<String> callback) {
         callback.accept(this.identifier);
     }
 
     @Override
-    public void getMembers(final @Nonnull Consumer<Collection<MinecraftPlayer>> callback) {
+    public void getMembers(final Consumer<Collection<MinecraftPlayer>> callback) {
         callback.accept(Collections.unmodifiableCollection(players));
     }
 
     @Override
-    public void addMember(final @Nonnull MinecraftPlayer member, final @Nonnull FutureCallback<Void> callback) {
+    public void addMember(final MinecraftPlayer member, final FutureCallback<Void> callback) {
         try {
             players.add(member);
             callback.onSuccess(null);

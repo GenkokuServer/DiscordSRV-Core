@@ -33,7 +33,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -95,7 +94,7 @@ public class PlayerUserAuthenticatorTest {
             }
 
             @Override
-            public void onFailure(final @Nonnull Throwable t) {
+            public void onFailure(final Throwable t) {
                 t.printStackTrace();
                 fail();
             }
@@ -124,7 +123,7 @@ public class PlayerUserAuthenticatorTest {
                             }
 
                             @Override
-                            public void onFailure(final @Nonnull Throwable t) {
+                            public void onFailure(final Throwable t) {
                                 fail();
                             }
                         });
@@ -140,21 +139,21 @@ public class PlayerUserAuthenticatorTest {
                                     }
 
                                     @Override
-                                    public void onFailure(final @Nonnull Throwable t) {
+                                    public void onFailure(final Throwable t) {
                                         fail();
                                     }
                                 });
                             }
 
                             @Override
-                            public void onFailure(final @Nonnull Throwable t) {
+                            public void onFailure(final Throwable t) {
                                 fail();
                             }
                         });
                     }
 
                     @Override
-                    public void onFailure(final @Nonnull Throwable t) {
+                    public void onFailure(final Throwable t) {
                         fail();
                     }
                 });
@@ -162,7 +161,7 @@ public class PlayerUserAuthenticatorTest {
             }
 
             @Override
-            public void onFailure(final @Nonnull Throwable t) {
+            public void onFailure(final Throwable t) {
                 t.printStackTrace();
                 fail();
             }
@@ -182,7 +181,7 @@ public class PlayerUserAuthenticatorTest {
             }
 
             @Override
-            public void onFailure(final @Nonnull Throwable t) {
+            public void onFailure(final Throwable t) {
                 fail();
             }
         });
@@ -203,7 +202,7 @@ public class PlayerUserAuthenticatorTest {
             }
 
             @Override
-            public void onFailure(final @Nonnull Throwable t) {
+            public void onFailure(final Throwable t) {
                 fail();
             }
         });

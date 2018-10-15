@@ -15,43 +15,47 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package com.discordsrv.core.test.user;
+package com.discordsrv.core.user;
 
-import com.discordsrv.core.api.user.MinecraftPlayer;
+import com.discordsrv.core.api.dsrv.Context;
 import com.discordsrv.core.api.user.PlayerUserLookup;
-import com.discordsrv.core.test.mocker.Mocker;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.User;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.UUID;
-import java.util.stream.Stream;
 
 /**
- * A simple Test implementation of the PlayerUserLookup interface.
+ * AbstractPlayerUserLookup type, for simplifying implementations for platform development. You probably want to use
+ * {@link MalleablePlayerUserLookup}.
+ *
+ * @param <T>
+ *         The specific type of context that this lookup is performing in.
  */
 @ParametersAreNonnullByDefault
-public class TestPlayerUserLookup implements PlayerUserLookup {
+public abstract class AbstractPlayerUserLookup<T extends Context> implements PlayerUserLookup {
 
-    private final Mocker mocker = new Mocker();
+    private final T context;
+
+    /**
+     * Main constructor for the AbstractPlayerUserLookup type.
+     *
+     * @param context
+     *         The context in which this lookup is performing.
+     */
+    protected AbstractPlayerUserLookup(final T context) {
+        this.context = context;
+    }
 
     @Override
     public void lookupUser(final String id, final FutureCallback<User> callback) {
-        callback.onSuccess(mocker.getMockedUser(id));
+        try {
+            callback.onSuccess(context.getJda().getUserById(id));
+        } catch (Throwable t) {
+            callback.onFailure(t);
+        }
     }
 
-    @Override
-    public void lookupPlayer(final UUID id, final FutureCallback<MinecraftPlayer> callback) {
-        callback.onSuccess(new TestMinecraftPlayer("Test", id));
-    }
-
-    @Override
-    public void getOnlinePlayers(final FutureCallback<Stream<MinecraftPlayer>> callback) {
-        callback.onSuccess(Stream.empty());
-    }
-
-    @Override
-    public void getOnlineUsers(final FutureCallback<Stream<User>> callback) {
-        callback.onSuccess(Stream.empty());
+    protected T getContext() {
+        return context;
     }
 }

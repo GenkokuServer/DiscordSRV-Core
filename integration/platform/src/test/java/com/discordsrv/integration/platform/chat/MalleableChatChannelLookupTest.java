@@ -26,7 +26,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
@@ -57,7 +56,7 @@ public class MalleableChatChannelLookupTest {
 
     @Test
     public void lookupChat() throws InterruptedException {
-        plugin.getContext().getChatChannelLookup().getChatTranslators().add(
+        plugin.getContext().getChatChannelLookup().addChatTranslator(
             (id, callback) -> callback.onSuccess(Mocker.getInstance(Chat.class, new Mocker.NoopInvocationHandler() {
             })));
         ensureLookup();
@@ -77,7 +76,7 @@ public class MalleableChatChannelLookupTest {
             }
 
             @Override
-            public void onFailure(final @Nonnull Throwable t) {
+            public void onFailure(final Throwable t) {
                 fail();
             }
         });

@@ -20,7 +20,6 @@ package com.discordsrv.core.test.channel;
 import com.discordsrv.core.api.channel.Chat;
 import com.google.common.util.concurrent.FutureCallback;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 
 /**
@@ -31,7 +30,7 @@ public class SettableTestChatChannelLookup extends TestChatChannelLookup {
     private final HashMap<String, Chat> chatHashMap = new HashMap<>();
 
     @Override
-    public void lookupChat(final @Nonnull String id, final @Nonnull FutureCallback<Chat> callback) {
+    public void lookupChat(final String id, final FutureCallback<Chat> callback) {
         callback.onSuccess(chatHashMap.get(id));
     }
 

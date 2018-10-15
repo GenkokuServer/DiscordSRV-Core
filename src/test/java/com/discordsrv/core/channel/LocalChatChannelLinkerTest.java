@@ -31,7 +31,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static org.junit.Assert.*;
@@ -81,7 +80,7 @@ public class LocalChatChannelLinkerTest {
             }
 
             @Override
-            public void onFailure(final @Nonnull Throwable t) {
+            public void onFailure(final Throwable t) {
                 fail();
             }
         });
@@ -100,7 +99,7 @@ public class LocalChatChannelLinkerTest {
             }
 
             @Override
-            public void onFailure(final @Nonnull Throwable t) {
+            public void onFailure(final Throwable t) {
                 fail();
             }
         });

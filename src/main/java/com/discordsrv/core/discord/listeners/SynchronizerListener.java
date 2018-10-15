@@ -39,7 +39,6 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -104,7 +103,7 @@ public class SynchronizerListener extends ListenerAdapter {
                 }
 
                 @Override
-                public void onFailure(final @Nonnull Throwable t) {
+                public void onFailure(final Throwable t) {
                     logger.warn("Exception encountered while attempting to lookup console.", t);
                 }
             });
@@ -118,7 +117,7 @@ public class SynchronizerListener extends ListenerAdapter {
                 }
 
                 @Override
-                public void onFailure(final @Nonnull Throwable t) {
+                public void onFailure(final Throwable t) {
                     logger.warn("Encountered exception while performing channel translation.", t);
                 }
             });
@@ -142,7 +141,7 @@ public class SynchronizerListener extends ListenerAdapter {
             .forEach(member -> updateRole(member.getUser(), member.getRoles()));
     }
 
-    private void onChatFound(final @Nonnull Chat chat, final GuildMessageReceivedEvent event) {
+    private void onChatFound(final Chat chat, final GuildMessageReceivedEvent event) {
         playerUserLinker.translate(event.getAuthor(), new FutureCallback<MinecraftPlayer>() {
             @Override
             public void onSuccess(@Nullable final MinecraftPlayer result) {
@@ -158,14 +157,13 @@ public class SynchronizerListener extends ListenerAdapter {
             }
 
             @Override
-            public void onFailure(final @Nonnull Throwable t) {
+            public void onFailure(final Throwable t) {
                 logger.warn("Encountered exception while performing user translation.", t);
             }
         });
     }
 
-    private void sendMessage(final @Nonnull Chat chat, final @Nonnull CharSequence senderName,
-                             final @Nonnull String message) {
+    private void sendMessage(final Chat chat, final CharSequence senderName, final String message) {
         chat.sendMessage(new ChatMessage<Long>() {
             @Override
             public Named getSender() {
@@ -190,7 +188,7 @@ public class SynchronizerListener extends ListenerAdapter {
             }
 
             @Override
-            public void onFailure(final @Nonnull Throwable t) {
+            public void onFailure(final Throwable t) {
                 logger.warn("Exception encountered while relaying message.", t);
             }
         });
@@ -211,7 +209,7 @@ public class SynchronizerListener extends ListenerAdapter {
             }
 
             @Override
-            public void onFailure(final @Nonnull Throwable t) {
+            public void onFailure(final Throwable t) {
                 logger.warn("Exception encountered while performing team lookup.", t);
                 if (count.decrementAndGet() == 0) {
                     updateTeam(user, map);
@@ -230,7 +228,7 @@ public class SynchronizerListener extends ListenerAdapter {
             }
 
             @Override
-            public void onFailure(final @Nonnull Throwable t) {
+            public void onFailure(final Throwable t) {
                 logger.warn("Exception encountered while performing player lookup.", t);
             }
         });
@@ -244,7 +242,7 @@ public class SynchronizerListener extends ListenerAdapter {
             }
 
             @Override
-            public void onFailure(final @Nonnull Throwable t) {
+            public void onFailure(final Throwable t) {
                 logger.warn("Exception encountered while performing player team modification.", t);
             }
         });

@@ -21,7 +21,6 @@ import com.discordsrv.core.api.channel.Chat;
 import com.discordsrv.core.api.channel.ChatMessage;
 import com.google.common.util.concurrent.FutureCallback;
 
-import javax.annotation.Nonnull;
 import java.util.function.Consumer;
 
 /**
@@ -46,18 +45,17 @@ public class TestChat implements Chat {
     }
 
     @Override
-    public void getName(final @Nonnull Consumer<CharSequence> callback) {
+    public void getName(final Consumer<CharSequence> callback) {
         callback.accept(this.name);
     }
 
     @Override
-    public void getUniqueIdentifier(final @Nonnull Consumer<String> callback) {
+    public void getUniqueIdentifier(final Consumer<String> callback) {
         callback.accept(this.identifier);
     }
 
     @Override
-    public void sendMessage(final @Nonnull ChatMessage<Long> message,
-                            final @Nonnull FutureCallback<Void> resultCallback) {
+    public void sendMessage(final ChatMessage<Long> message, final FutureCallback<Void> resultCallback) {
         message.getSender().getName(s -> System.out.println(s + ":" + message.getMessage()));
     }
 }

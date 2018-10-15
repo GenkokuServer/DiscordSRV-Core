@@ -17,21 +17,25 @@
  */
 package com.discordsrv.integration.platform;
 
+import com.discordsrv.core.api.channel.Chat;
 import com.discordsrv.core.api.dsrv.platform.Platform;
 import com.discordsrv.core.api.dsrv.platform.extension.Extension;
 import com.discordsrv.core.channel.LocalChatChannelLinker;
+import com.discordsrv.core.channel.MalleableChatChannelLookup;
 import com.discordsrv.core.conf.Configuration;
 import com.discordsrv.core.dsrv.plugin.extension.ExtensionClassLoader;
 import com.discordsrv.core.test.minecraft.TestConsole;
 import com.discordsrv.integration.Minecraft;
 import com.discordsrv.integration.platform.chat.ChatWrapper;
-import com.discordsrv.integration.platform.chat.MalleableChatChannelLookup;
+import com.google.common.util.concurrent.FutureCallback;
 import lombok.Value;
+import net.dv8tion.jda.core.entities.Channel;
 import org.apache.commons.collections4.bidimap.DualLinkedHashBidiMap;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.stream.Stream;
 
 @Value
 public class Plugin implements Platform<IntegrationDSRVContext>, MinecraftPlugin {
@@ -42,8 +46,19 @@ public class Plugin implements Platform<IntegrationDSRVContext>, MinecraftPlugin
         this.context = new IntegrationDSRVContext();
         Yaml yaml = new Yaml();
         this.context.setConfiguration(Configuration.getStandardConfiguration(yaml));
-        MalleableChatChannelLookup lookup = new MalleableChatChannelLookup(context);
-        lookup.getChatTranslators().add((id, callback) -> {
+        MalleableChatChannelLookup<IntegrationDSRVContext> lookup =
+            new MalleableChatChannelLookup<IntegrationDSRVContext>(context) {
+                @Override
+                public void getKnownChats(final FutureCallback<Stream<Chat>> callback) {
+                    callback.onSuccess(Stream.empty());
+                }
+
+                @Override
+                public void getKnownChannels(final FutureCallback<Stream<Channel>> callback) {
+                    callback.onSuccess(Stream.empty());
+                }
+            };
+        lookup.addChatTranslator((id, callback) -> {
             try {
                 callback.onSuccess(
                     context.getMinecraft().getChats().stream().filter(chat -> chat.getName().equals(id)).findAny()

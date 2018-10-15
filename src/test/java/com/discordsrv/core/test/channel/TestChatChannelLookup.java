@@ -21,24 +21,37 @@ import com.discordsrv.core.api.channel.Chat;
 import com.discordsrv.core.api.channel.ChatChannelLookup;
 import com.discordsrv.core.test.mocker.Mocker;
 import com.google.common.util.concurrent.FutureCallback;
+import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.TextChannel;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.stream.Stream;
 
 /**
  * A simple Test implementation of the ChatChannelLookup interface.
  */
+@ParametersAreNonnullByDefault
 public class TestChatChannelLookup implements ChatChannelLookup {
 
     private final Mocker mocker = new Mocker();
 
     @Override
-    public void lookupChannel(final @Nonnull String id, final @Nonnull FutureCallback<TextChannel> callback) {
+    public void lookupChannel(final String id, final FutureCallback<TextChannel> callback) {
         callback.onSuccess(mocker.getSimpleMockedTextChannel(id));
     }
 
     @Override
-    public void lookupChat(final @Nonnull String id, final @Nonnull FutureCallback<Chat> callback) {
+    public void lookupChat(final String id, final FutureCallback<Chat> callback) {
         callback.onSuccess(new TestChat("Test", id));
+    }
+
+    @Override
+    public void getKnownChats(final FutureCallback<Stream<Chat>> callback) {
+        callback.onSuccess(Stream.empty());
+    }
+
+    @Override
+    public void getKnownChannels(final FutureCallback<Stream<Channel>> callback) {
+        callback.onSuccess(Stream.empty());
     }
 }

@@ -27,7 +27,6 @@ import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.TextChannel;
 import org.apache.commons.collections4.BidiMap;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -60,7 +59,7 @@ public class LocalChatChannelLinker implements ChatChannelLinker {
 
     @SuppressWarnings("Duplicates")
     @Override
-    public void translate(final @Nonnull Chat chat, final @Nonnull FutureCallback<TextChannel> callback) {
+    public void translate(final Chat chat, final FutureCallback<TextChannel> callback) {
         chat.getUniqueIdentifier(ident -> {
             @Nullable String result = channelStorage.get(ident);
             if (result == null) {
@@ -72,7 +71,7 @@ public class LocalChatChannelLinker implements ChatChannelLinker {
     }
 
     @Override
-    public void translate(final @Nonnull TextChannel channel, final @Nonnull FutureCallback<Chat> callback) {
+    public void translate(final TextChannel channel, final FutureCallback<Chat> callback) {
         @Nullable String result = channelStorage.getKey(channel.getId());
         if (result == null) {
             callback.onSuccess(null);
@@ -82,12 +81,12 @@ public class LocalChatChannelLinker implements ChatChannelLinker {
     }
 
     @Override
-    public void getConsoleChannel(final @Nonnull FutureCallback<TextChannel> callback) {
+    public void getConsoleChannel(final FutureCallback<TextChannel> callback) {
         lookup.lookupChannel(consoleChannelId, callback);
     }
 
     @Override
-    public void getConsole(final @Nonnull FutureCallback<Console> callback) {
+    public void getConsole(final FutureCallback<Console> callback) {
         callback.onSuccess(console);
     }
 

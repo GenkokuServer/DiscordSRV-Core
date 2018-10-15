@@ -27,7 +27,6 @@ import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.Role;
 import org.apache.commons.collections4.BidiMap;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -55,8 +54,7 @@ public class LocalTeamRoleLinker implements TeamRoleLinker {
 
     @SuppressWarnings("Duplicates")
     @Override
-    public void translate(final @Nonnull Team<MinecraftPlayer> playerTeam,
-                          final @Nonnull FutureCallback<Role> callback) {
+    public void translate(final Team<MinecraftPlayer> playerTeam, final FutureCallback<Role> callback) {
         playerTeam.getUniqueIdentifier(ident -> {
             @Nullable String result = roleStorage.get(ident);
             if (result == null) {
@@ -68,7 +66,7 @@ public class LocalTeamRoleLinker implements TeamRoleLinker {
     }
 
     @Override
-    public void translate(final @Nonnull Role role, final @Nonnull FutureCallback<Team<MinecraftPlayer>> callback) {
+    public void translate(final Role role, final FutureCallback<Team<MinecraftPlayer>> callback) {
         @Nullable String result = roleStorage.getKey(role.getId());
         if (result == null) {
             callback.onSuccess(null);

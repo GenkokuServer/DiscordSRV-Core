@@ -58,7 +58,7 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
 
     @SuppressWarnings("Duplicates")
     @Override
-    public void translate(final @Nonnull MinecraftPlayer player, final @Nonnull FutureCallback<User> callback) {
+    public void translate(final MinecraftPlayer player, final FutureCallback<User> callback) {
         player.getUniqueIdentifier(ident -> {
             @Nullable String result = playerStorage.get(ident);
             if (result == null) {
@@ -70,7 +70,7 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
     }
 
     @Override
-    public void translate(final @Nonnull User user, final @Nonnull FutureCallback<MinecraftPlayer> callback) {
+    public void translate(final User user, final FutureCallback<MinecraftPlayer> callback) {
         @Nullable UUID result = playerStorage.getKey(user.getId());
         if (result == null) {
             callback.onSuccess(null);
@@ -80,8 +80,8 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
     }
 
     @Override
-    public synchronized void push(final @Nonnull MinecraftPlayer first, final @Nonnull User last,
-                                  final @Nonnull FutureCallback<Boolean> callback) {
+    public synchronized void push(final MinecraftPlayer first, final User last,
+                                  final FutureCallback<Boolean> callback) {
         first.getUniqueIdentifier(ident -> {
             try {
                 boolean success = playerStorage.putIfAbsent(ident, last.getId()) == null;
@@ -94,7 +94,7 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
 
     @Override
     public synchronized void remove(final @Nullable MinecraftPlayer first, final @Nullable User last,
-                                    final @Nonnull FutureCallback<Boolean> callback) {
+                                    final FutureCallback<Boolean> callback) {
         if (first != null) {
             first.getUniqueIdentifier(key -> {
                 boolean success = playerStorage.remove(key) != null;
@@ -110,7 +110,7 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
                     }
 
                     @Override
-                    public void onFailure(final @Nonnull Throwable t) {
+                    public void onFailure(final Throwable t) {
                         callback.onFailure(t);
                     }
                 });
