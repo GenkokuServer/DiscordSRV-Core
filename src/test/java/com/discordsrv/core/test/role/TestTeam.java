@@ -21,6 +21,7 @@ import com.discordsrv.core.api.role.Team;
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.google.common.util.concurrent.FutureCallback;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.function.Consumer;
 /**
  * A simple test implementation of the {@link Team} type.
  */
+@ParametersAreNonnullByDefault
 public class TestTeam implements Team<MinecraftPlayer> {
 
     private final List<MinecraftPlayer> players;

@@ -27,6 +27,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.io.IOException;
 import java.lang.reflect.Proxy;
 import java.util.LinkedList;
@@ -36,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+@ParametersAreNonnullByDefault
 public class MalleableChatChannelLookupTest {
 
     private static Plugin plugin;

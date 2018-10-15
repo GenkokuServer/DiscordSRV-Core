@@ -27,6 +27,7 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.tuple.Pair;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import javax.naming.AuthenticationException;
 import java.security.SecureRandom;
 import java.util.Objects;
@@ -41,6 +42,7 @@ import java.util.function.Consumer;
  * PlayerUserAuthenticator type, for performing OAuth handshakes between users and players.
  */
 @SuppressWarnings("WeakerAccess")
+@ParametersAreNonnullByDefault
 public class PlayerUserAuthenticator {
 
     private final int tokenRadix = 36;

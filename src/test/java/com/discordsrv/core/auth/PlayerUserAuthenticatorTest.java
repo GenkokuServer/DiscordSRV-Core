@@ -34,6 +34,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -44,6 +45,7 @@ import static org.junit.Assert.*;
  * Tests {@link PlayerUserAuthenticator}.
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@ParametersAreNonnullByDefault
 public class PlayerUserAuthenticatorTest {
 
     private static Mocker mocker;

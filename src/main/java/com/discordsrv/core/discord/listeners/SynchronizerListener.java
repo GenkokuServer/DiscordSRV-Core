@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.TimeUnit;
@@ -51,6 +52,7 @@ import java.util.function.UnaryOperator;
 /**
  * SynchronizerListener type, for synchronizing between Minecraft and Discord.
  */
+@ParametersAreNonnullByDefault
 public class SynchronizerListener extends ListenerAdapter {
 
     private final PlayerUserLinker playerUserLinker;

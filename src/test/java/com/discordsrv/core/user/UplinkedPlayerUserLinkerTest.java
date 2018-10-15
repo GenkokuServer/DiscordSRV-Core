@@ -31,6 +31,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
 
 import static com.discordsrv.core.test.Values.HTTP_PORT;
@@ -40,6 +41,7 @@ import static org.junit.Assert.*;
  * Tests for the {@link UplinkedPlayerUserLinker} class.
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@ParametersAreNonnullByDefault
 public class UplinkedPlayerUserLinkerTest {
 
     private final Mocker mocker = new Mocker();

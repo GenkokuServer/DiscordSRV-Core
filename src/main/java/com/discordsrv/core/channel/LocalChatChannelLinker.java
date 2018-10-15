@@ -28,10 +28,12 @@ import net.dv8tion.jda.core.entities.TextChannel;
 import org.apache.commons.collections4.BidiMap;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Leverages a local storage for chat/channel linking.
  */
+@ParametersAreNonnullByDefault
 public class LocalChatChannelLinker implements ChatChannelLinker {
 
     private final BidiMap<String, String> channelStorage;

@@ -20,11 +20,13 @@ package com.discordsrv.core.test.channel;
 import com.discordsrv.core.api.channel.Chat;
 import com.google.common.util.concurrent.FutureCallback;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashMap;
 
 /**
  * A simple Test implementation of the ChatChannelLookup interface.
  */
+@ParametersAreNonnullByDefault
 public class SettableTestChatChannelLookup extends TestChatChannelLookup {
 
     private final HashMap<String, Chat> chatHashMap = new HashMap<>();

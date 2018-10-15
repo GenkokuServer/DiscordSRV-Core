@@ -20,12 +20,14 @@ package com.discordsrv.core.test.user;
 import com.discordsrv.core.api.user.MinecraftPlayer;
 import com.google.common.util.concurrent.FutureCallback;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
 import java.util.function.Consumer;
 
 /**
  * A simple test implementation of the {@link MinecraftPlayer} type.
  */
+@ParametersAreNonnullByDefault
 public class TestMinecraftPlayer implements MinecraftPlayer {
 
     private final CharSequence name;

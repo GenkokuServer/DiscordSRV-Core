@@ -33,6 +33,7 @@ import net.dv8tion.jda.core.entities.Channel;
 import org.apache.commons.collections4.bidimap.DualLinkedHashBidiMap;
 import org.yaml.snakeyaml.Yaml;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
 import java.util.stream.Stream;
@@ -49,12 +50,12 @@ public class Plugin implements Platform<IntegrationDSRVContext>, MinecraftPlugin
         MalleableChatChannelLookup<IntegrationDSRVContext> lookup =
             new MalleableChatChannelLookup<IntegrationDSRVContext>(context) {
                 @Override
-                public void getKnownChats(final FutureCallback<Stream<Chat>> callback) {
+                public void getKnownChats(@Nonnull final FutureCallback<Stream<Chat>> callback) {
                     callback.onSuccess(Stream.empty());
                 }
 
                 @Override
-                public void getKnownChannels(final FutureCallback<Stream<Channel>> callback) {
+                public void getKnownChannels(@Nonnull final FutureCallback<Stream<Channel>> callback) {
                     callback.onSuccess(Stream.empty());
                 }
             };

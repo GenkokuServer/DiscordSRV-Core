@@ -29,6 +29,8 @@ import org.apache.commons.collections4.BidiMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.ParametersAreNullableByDefault;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -36,6 +38,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Leverages a local storage for player/user linking.
  */
+@ParametersAreNonnullByDefault
 public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationStore<MinecraftPlayer, User> {
 
     private final BidiMap<UUID, String> playerStorage;
@@ -93,7 +96,8 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
     }
 
     @Override
-    public synchronized void remove(final @Nullable MinecraftPlayer first, final @Nullable User last,
+    @ParametersAreNullableByDefault
+    public synchronized void remove(final MinecraftPlayer first, final User last,
                                     final FutureCallback<Boolean> callback) {
         if (first != null) {
             first.getUniqueIdentifier(key -> {
@@ -123,6 +127,7 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
     }
 
     @Override
+    @ParametersAreNullableByDefault
     public synchronized void contains(final MinecraftPlayer first, final User last,
                                       @Nonnull final FutureCallback<Boolean> callback) {
         if (playerStorage.size() == 0) {

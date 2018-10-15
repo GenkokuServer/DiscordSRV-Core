@@ -30,11 +30,13 @@ import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.utils.tuple.Pair;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 
 /**
  * AuthenticateCommand type, for authenticating users.
  */
+@ParametersAreNonnullByDefault
 public class AuthenticateCommand extends Command {
 
     private final String failedAuth;

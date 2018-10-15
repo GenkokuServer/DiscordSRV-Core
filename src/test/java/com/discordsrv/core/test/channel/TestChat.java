@@ -21,11 +21,13 @@ import com.discordsrv.core.api.channel.Chat;
 import com.discordsrv.core.api.channel.ChatMessage;
 import com.google.common.util.concurrent.FutureCallback;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Consumer;
 
 /**
  * A simple test implementation of the {@link Chat} type.
  */
+@ParametersAreNonnullByDefault
 public class TestChat implements Chat {
 
     private final CharSequence name;

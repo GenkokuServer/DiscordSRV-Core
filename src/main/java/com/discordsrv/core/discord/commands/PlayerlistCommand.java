@@ -27,6 +27,7 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import net.dv8tion.jda.core.Permission;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +36,7 @@ import java.util.stream.Stream;
 /**
  * PlayerlistCommand type, for listing the online players.
  */
+@ParametersAreNonnullByDefault
 public class PlayerlistCommand extends Command {
 
     private final String listHeader;

@@ -31,6 +31,7 @@ import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -39,6 +40,7 @@ import static org.junit.Assert.*;
  * Tests {@link LocalPlayerUserLinker}.
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@ParametersAreNonnullByDefault
 public class LocalPlayerUserLinkerTest {
 
     private static LocalPlayerUserLinker linker;

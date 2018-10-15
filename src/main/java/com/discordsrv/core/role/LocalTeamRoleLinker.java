@@ -28,10 +28,12 @@ import net.dv8tion.jda.core.entities.Role;
 import org.apache.commons.collections4.BidiMap;
 
 import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 /**
  * Leverages a local storage for role/team linking.
  */
+@ParametersAreNonnullByDefault
 public class LocalTeamRoleLinker implements TeamRoleLinker {
 
     private final BidiMap<String, String> roleStorage;

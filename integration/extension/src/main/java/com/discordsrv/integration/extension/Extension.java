@@ -25,11 +25,8 @@ import com.discordsrv.integration.platform.Plugin;
 public class Extension implements
     com.discordsrv.core.api.dsrv.platform.extension.Extension<IntegrationDSRVContext, Plugin> {
 
-    private Plugin plugin;
-
     @Override
     public void setPlugin(final Plugin plugin) {
-        this.plugin = plugin;
         plugin.getContext().getChatChannelLookup().addChatTranslator(
             (id, callback) -> callback.onSuccess(Mocker.getInstance(Chat.class, new Mocker.NoopInvocationHandler() {
             })));

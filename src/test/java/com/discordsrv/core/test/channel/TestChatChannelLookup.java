@@ -24,6 +24,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.Channel;
 import net.dv8tion.jda.core.entities.TextChannel;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.stream.Stream;
 
@@ -46,12 +47,12 @@ public class TestChatChannelLookup implements ChatChannelLookup {
     }
 
     @Override
-    public void getKnownChats(final FutureCallback<Stream<Chat>> callback) {
+    public void getKnownChats(@Nonnull final FutureCallback<Stream<Chat>> callback) {
         callback.onSuccess(Stream.empty());
     }
 
     @Override
-    public void getKnownChannels(final FutureCallback<Stream<Channel>> callback) {
+    public void getKnownChannels(@Nonnull final FutureCallback<Stream<Channel>> callback) {
         callback.onSuccess(Stream.empty());
     }
 }
