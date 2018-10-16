@@ -41,7 +41,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -224,8 +226,9 @@ public class SynchronizerListener extends ListenerAdapter {
         playerUserLinker.translate(user, new FutureCallback<MinecraftPlayer>() {
             @Override
             public void onSuccess(@Nullable final MinecraftPlayer result) {
-                if (!roleMap.isEmpty() && result != null) {
-                    updateTeam(result, roleMap.lastEntry().getValue());
+                if (result != null) {
+                    roleMap.entrySet().stream().max(Comparator.comparing(Map.Entry::getKey))
+                        .ifPresent(entry -> updateTeam(result, entry.getValue()));
                 }
             }
 
