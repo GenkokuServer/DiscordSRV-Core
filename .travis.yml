@@ -1,6 +1,6 @@
 language: java
 jdk:
-- oraclejdk10
+- oraclejdk11
 before_install: chmod a+x gradlew
 deploy:
     skip_cleanup: true
