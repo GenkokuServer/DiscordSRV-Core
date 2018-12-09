@@ -123,7 +123,6 @@ public final class Debugger {
      *
      * @return proxy The proxy instance.
      */
-    @SuppressWarnings("unchecked")
     public synchronized Object getProxy(Object obj, Class<?>... types) {
         if (Proxy.isProxyClass(obj.getClass())) {
             return obj;

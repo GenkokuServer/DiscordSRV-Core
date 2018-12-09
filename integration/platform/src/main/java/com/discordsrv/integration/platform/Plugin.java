@@ -31,6 +31,7 @@ import com.google.common.util.concurrent.FutureCallback;
 import lombok.Value;
 import net.dv8tion.jda.core.entities.Channel;
 import org.apache.commons.collections4.bidimap.DualLinkedHashBidiMap;
+import org.apache.commons.collections4.bidimap.DualTreeBidiMap;
 import org.yaml.snakeyaml.Yaml;
 
 import javax.annotation.Nonnull;
@@ -70,8 +71,8 @@ public class Plugin implements Platform<IntegrationDSRVContext>, MinecraftPlugin
         });
         this.context.setChatChannelLookup(lookup);
         this.context.setChatChannelLinker(
-            new LocalChatChannelLinker(new DualLinkedHashBidiMap<>(), this.context.getChatChannelLookup(),
-                new TestConsole(), "console-channel"));
+            new LocalChatChannelLinker(new DualTreeBidiMap<>(), this.context.getChatChannelLookup(), new TestConsole(),
+                "console-channel"));
     }
 
     @Override

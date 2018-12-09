@@ -18,6 +18,7 @@
 package com.discordsrv.core.conf;
 
 import com.discordsrv.core.conf.collect.ParentAwareHashMap;
+import org.apache.commons.collections4.BidiMap;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -99,7 +100,6 @@ public class ConfigUtilTest {
      *         If the conversion process from yaml to map fails.
      */
     @Test
-    @SuppressWarnings("unchecked")
     public void constructFromConfigExtrasTest()
         throws InvocationTargetException, InstantiationException, ConfigurationException, IllegalAccessException,
                IOException {
@@ -112,6 +112,34 @@ public class ConfigUtilTest {
         ConfiguredType type = configuration.create(ConfiguredType.class, name);
         assertEquals(name, type.getName());
         assertEquals(value, type.getValue());
+    }
+
+    /**
+     * Ensures that map => map conversions occur normally.
+     *
+     * @throws InvocationTargetException
+     *         As inherited.
+     * @throws InstantiationException
+     *         As inherited.
+     * @throws ConfigurationException
+     *         As inherited.
+     * @throws IllegalAccessException
+     *         As inherited.
+     * @throws IOException
+     *         If the conversion process from yaml to map fails.
+     */
+    @Test
+    public void constructFromConfigMapTest()
+        throws IOException, InvocationTargetException, InstantiationException, ConfigurationException,
+               IllegalAccessException {
+        Configuration configuration = new Configuration(yaml, new ParentAwareHashMap(null, null), true);
+        configuration.addConfig(mergeConfigs(Stream.of(createConfig(configuration.getYaml(),
+            this.getClass().getClassLoader().getResourceAsStream("conf.yaml")), createConfig(configuration.getYaml(),
+            this.getClass().getClassLoader().getResourceAsStream("conf3.yaml")))));
+        MapConfiguredType mapConfiguredType = configuration.create(MapConfiguredType.class);
+        BidiMap<String, String> map = mapConfiguredType.getMap();
+        assertEquals("value1", map.get("key1"));
+        assertEquals("value2", map.get("key2"));
     }
 
     /**

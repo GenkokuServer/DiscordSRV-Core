@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.net.URL;
 import java.util.*;
@@ -184,7 +185,21 @@ public class Configuration {
                     if (parameterTypes[i].isAssignableFrom(obj.getClass())) {
                         parameters[i] = obj;
                         break;
+                    } else if (obj instanceof Map && Map.class.isAssignableFrom(parameterTypes[i])) {
+                        try {
+                            Constructor<?> mapConstructor = parameterTypes[i].getConstructor(Map.class);
+                            parameters[i] = mapConstructor.newInstance((Map) obj);
+                        } catch (NoSuchMethodException ignored) {
+                            break;
+                        }
                     }
+                }
+            } else if (Map.class.isAssignableFrom(parameterTypes[i]) && !Modifier
+                .isAbstract(parameterTypes[i].getModifiers()) && parameters[i] instanceof Map) {
+                try {
+                    Constructor<?> mapConstructor = parameterTypes[i].getConstructor(Map.class);
+                    parameters[i] = mapConstructor.newInstance((Map) parameters[i]);
+                } catch (NoSuchMethodException ignored) {
                 }
             }
         }

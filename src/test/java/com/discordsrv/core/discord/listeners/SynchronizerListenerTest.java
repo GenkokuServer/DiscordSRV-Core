@@ -21,18 +21,17 @@ import com.discordsrv.core.api.channel.ChatMessage;
 import com.discordsrv.core.channel.LocalChatChannelLinker;
 import com.discordsrv.core.conf.Configuration;
 import com.discordsrv.core.role.LocalTeamRoleLinker;
+import com.discordsrv.core.test.Values;
 import com.discordsrv.core.test.channel.SettableTestChatChannelLookup;
 import com.discordsrv.core.test.channel.TestChat;
 import com.discordsrv.core.test.channel.TestChatChannelLookup;
 import com.discordsrv.core.test.minecraft.TestConsole;
 import com.discordsrv.core.test.mocker.Mocker;
-import com.discordsrv.core.test.Values;
 import com.discordsrv.core.test.role.TestTeamRoleLookup;
 import com.discordsrv.core.test.user.TestPlayerUserLookup;
 import com.discordsrv.core.user.LocalPlayerUserLinker;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
-import org.apache.commons.collections4.BidiMap;
 import org.apache.commons.collections4.bidimap.DualTreeBidiMap;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -103,8 +102,8 @@ public class SynchronizerListenerTest {
     public void onGuildMessageReceivedConsole()
         throws InstantiationException, IllegalAccessException, ConfigurationException, InvocationTargetException,
                InterruptedException {
-        BidiMap<UUID, String> playerStorage = new DualTreeBidiMap<>();
-        BidiMap<String, String> chatStorage = new DualTreeBidiMap<>(), teamStorage = new DualTreeBidiMap<>();
+        DualTreeBidiMap<UUID, String> playerStorage = new DualTreeBidiMap<>();
+        DualTreeBidiMap<String, String> chatStorage = new DualTreeBidiMap<>(), teamStorage = new DualTreeBidiMap<>();
         SynchronizerListener listener = configuration
             .create(SynchronizerListener.class, new LocalPlayerUserLinker(playerStorage, new TestPlayerUserLookup()),
                 new LocalChatChannelLinker(chatStorage, new TestChatChannelLookup(), console, "console-channel"),
@@ -142,8 +141,8 @@ public class SynchronizerListenerTest {
     public void onGuildMessageReceived()
         throws InstantiationException, IllegalAccessException, ConfigurationException, InvocationTargetException,
                InterruptedException {
-        BidiMap<UUID, String> playerStorage = new DualTreeBidiMap<>();
-        BidiMap<String, String> chatStorage = new DualTreeBidiMap<>(), teamStorage = new DualTreeBidiMap<>();
+        DualTreeBidiMap<UUID, String> playerStorage = new DualTreeBidiMap<>();
+        DualTreeBidiMap<String, String> chatStorage = new DualTreeBidiMap<>(), teamStorage = new DualTreeBidiMap<>();
         SettableTestChatChannelLookup lookup = new SettableTestChatChannelLookup();
         SynchronizerListener listener = configuration
             .create(SynchronizerListener.class, new LocalPlayerUserLinker(playerStorage, new TestPlayerUserLookup()),

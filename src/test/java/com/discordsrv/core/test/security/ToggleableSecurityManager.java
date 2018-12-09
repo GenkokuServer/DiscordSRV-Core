@@ -33,16 +33,16 @@ public class ToggleableSecurityManager extends SecurityManager {
     private boolean allowed = true;
 
     @Override
-    public void checkConnect(final String host, final int port) {
-        if (!allowed) {
-            throw new SecurityException();
+    public void checkPermission(final Permission perm) {
+        if (!allowed && alwaysPermitted.stream().noneMatch(permitted -> permitted.equals(perm.getClass()))) {
+            super.checkPermission(perm);
         }
     }
 
     @Override
-    public void checkPermission(final Permission perm) {
-        if (!allowed && alwaysPermitted.stream().noneMatch(permitted -> permitted.equals(perm.getClass()))) {
-            super.checkPermission(perm);
+    public void checkConnect(final String host, final int port) {
+        if (!allowed) {
+            throw new SecurityException();
         }
     }
 

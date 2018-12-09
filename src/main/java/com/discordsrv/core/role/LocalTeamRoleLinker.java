@@ -26,6 +26,7 @@ import com.discordsrv.core.conf.annotation.Val;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.Role;
 import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.DualTreeBidiMap;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -48,7 +49,7 @@ public class LocalTeamRoleLinker implements TeamRoleLinker {
      *         The lookup service.
      */
     @Configured
-    public LocalTeamRoleLinker(final @Val("roles") BidiMap<String, String> roleStorage,
+    public LocalTeamRoleLinker(final @Val("roles") DualTreeBidiMap<String, String> roleStorage,
                                final @Val("lookup") TeamRoleLookup lookup) {
         this.roleStorage = roleStorage;
         this.lookup = lookup;

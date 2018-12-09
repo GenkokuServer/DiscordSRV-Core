@@ -26,6 +26,7 @@ import com.discordsrv.core.conf.annotation.Val;
 import com.google.common.util.concurrent.FutureCallback;
 import net.dv8tion.jda.core.entities.User;
 import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.DualTreeBidiMap;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,7 +54,7 @@ public class LocalPlayerUserLinker implements PlayerUserLinker, AuthenticationSt
      *         The lookup service.
      */
     @Configured
-    public LocalPlayerUserLinker(final @Val("users") BidiMap<UUID, String> playerStorage,
+    public LocalPlayerUserLinker(final @Val("users") DualTreeBidiMap<UUID, String> playerStorage,
                                  final @Val("lookup") PlayerUserLookup lookup) {
         this.playerStorage = playerStorage;
         this.lookup = lookup;

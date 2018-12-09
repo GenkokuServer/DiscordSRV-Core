@@ -1,0 +1,11 @@
+com:
+    discordsrv:
+        core:
+            conf:
+                MapConfiguredType:
+                    map:
+                        key1: "value1"
+                        key2: "value2"
+            debug:
+                Debugger:
+                    debug: true

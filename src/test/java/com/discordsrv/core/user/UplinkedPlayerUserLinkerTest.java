@@ -44,9 +44,9 @@ import static org.junit.Assert.*;
 @ParametersAreNonnullByDefault
 public class UplinkedPlayerUserLinkerTest {
 
-    private final Mocker mocker = new Mocker();
     private static UplinkedPlayerUserLinker linker;
     private static ToggleableSecurityManager manager;
+    private final Mocker mocker = new Mocker();
 
     /**
      * Sets up test resources.

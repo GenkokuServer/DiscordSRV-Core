@@ -15,38 +15,35 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
 package com.discordsrv.core.conf;
 
 import com.discordsrv.core.conf.annotation.Configured;
 import com.discordsrv.core.conf.annotation.Val;
+import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.DualTreeBidiMap;
+
+import javax.annotation.Nonnull;
 
 /**
- * An example configured type.
+ * An example configured type with a map.
  */
-public class ConfiguredType {
+public class MapConfiguredType {
 
-    private final String name;
-    private final String value;
+    private final BidiMap<String, String> map;
 
     /**
      * A configured constructor.
      *
-     * @param name
-     *         The name to be tested.
-     * @param value
-     *         The value to be tested.
+     * @param map
+     *         The map to be tested.
      */
     @Configured
-    public ConfiguredType(final @Val("name") String name, final @Val("value") String value) {
-        this.name = name;
-        this.value = value;
+    public MapConfiguredType(final @Nonnull @Val("map") DualTreeBidiMap<String, String> map) {
+        this.map = map;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getValue() {
-        return value;
+    public BidiMap<String, String> getMap() {
+        return map;
     }
 }
